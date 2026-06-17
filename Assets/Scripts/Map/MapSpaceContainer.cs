@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Map;
+using UnityEditor;
 using UnityEngine;
 
 public class MapSpaceContainer : MonoBehaviour
@@ -123,7 +124,7 @@ public class MapSpaceContainer : MonoBehaviour
             return null;
         }
 
-        var space = Instantiate(mapSpacePrefab, transform);
+        var space = (MapSpacePrefab)PrefabUtility.InstantiatePrefab(mapSpacePrefab, transform);
         space.Initialize(q, r);
         space.transform.position = GetWorldPosition(q, r);
         space.name = $"Space ({q}, {r})";

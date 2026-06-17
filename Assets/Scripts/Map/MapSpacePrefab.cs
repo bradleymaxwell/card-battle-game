@@ -1,8 +1,10 @@
 using Map;
+using Targeting;
 using UnityEngine;
 
-public class MapSpacePrefab : MonoBehaviour
+public class MapSpacePrefab : MonoBehaviour, ITargetable
 {
+    [SerializeField] private Material targetMaterial;
     [SerializeField] private int q;
     public int Q => q;
     
@@ -10,6 +12,14 @@ public class MapSpacePrefab : MonoBehaviour
     public int R => r;
     
     private MapSpace Space { get; set; }
+    private Material _originMaterial;
+    private Renderer _renderer;
+    
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+        _originMaterial = _renderer.material;
+    }
     
     public void Initialize(int q, int r)
     {
@@ -20,5 +30,15 @@ public class MapSpacePrefab : MonoBehaviour
     public void Bind(MapSpace space)
     {
         Space = space;
+    }
+
+    public void OnTarget()
+    {
+        _renderer.material = targetMaterial;
+    }
+
+    public void OnUntarget()
+    {
+        _renderer.material = _originMaterial;
     }
 }

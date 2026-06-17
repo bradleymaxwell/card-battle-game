@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: FirstBattleConfig
   m_EditorClassIdentifier: Assembly-CSharp::Battles.BattleConfig
   enemyUnits:
-  - unitPrefab: {fileID: 1946394557484171333, guid: 2cfd8f8a8993146dd80222f510d6d16d, type: 3}
+  - unit: {fileID: 11400000, guid: b64acefe97d5341e893ecbbb373817ff, type: 2}
     startQ: 1
     startR: 2
+  playerUnits:
+  - unit: {fileID: 11400000, guid: 8673616fb74ca44c18024907f18b102c, type: 2}
+    startQ: -1
+    startR: -1

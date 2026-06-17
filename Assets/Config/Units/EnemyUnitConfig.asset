@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b989ac8f69d490c8237c4950bf937b8, type: 3}
   m_Name: EnemyUnitConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitConfig
-  prefab: {fileID: 0}
-  attack: 0
-  health: 0
+  prefab: {fileID: 1946394557484171333, guid: 2cfd8f8a8993146dd80222f510d6d16d, type: 3}
+  attack: 5
+  health: 30

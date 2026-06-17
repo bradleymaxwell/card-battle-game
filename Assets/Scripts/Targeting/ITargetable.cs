@@ -2,6 +2,7 @@ namespace Targeting
 {
     public interface ITargetable
     {
-        void Target();
+        void OnTarget();
+        void OnUntarget();
     }
 }
