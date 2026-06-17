@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Units;
 using UnityEngine;
 
 namespace Battles
@@ -9,13 +10,16 @@ namespace Battles
     {
         [SerializeField] private List<BattleUnitConfig> enemyUnits;
         public IReadOnlyList<BattleUnitConfig> EnemyUnits => enemyUnits;
+        
+        [SerializeField] private List<BattleUnitConfig> playerUnits;
+        public IReadOnlyList<BattleUnitConfig> PlayerUnits => playerUnits;
     }
     
     [Serializable]
     public class BattleUnitConfig
     {
-        [SerializeField] private UnitPrefab unitPrefab;
-        public UnitPrefab UnitPrefab => unitPrefab;
+        [SerializeField] private UnitConfig unit;
+        public UnitConfig Unit => unit;
 
         [SerializeField] private int startQ;
         public int StartQ => startQ;

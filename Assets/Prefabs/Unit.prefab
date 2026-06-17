@@ -103,3 +103,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b7575dc531a4884a8042fb9e6631bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitPrefab
+  yOffset: 1

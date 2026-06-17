@@ -1,3 +1,4 @@
+using System;
 using Battles;
 using Map;
 using UnityEngine;
@@ -9,7 +10,8 @@ namespace Units
         private readonly Logger _logger = new(nameof(UnitService));
         private readonly MapService _mapService;
         private readonly PoolService _poolService;
- 
+        public event Action<IUnit> OnUnitDefeated;
+        
         public UnitService() : this(Locator.Get<MapService>(), Locator.Get<PoolService>())
         {
         }
@@ -19,31 +21,34 @@ namespace Units
             _mapService = mapService;
             _poolService = poolService;
         }
-        
-        public void Perform(IUnit unit, IAction action)
-        {
-            if (!unit.Actions.Contains(action))
-            {
-                _logger.LogError($"{action} is not part of {unit}'s actions and cannot be performed");
-                return;
-            }
 
-            if (!action.CanPerform())
+        public IUnit Spawn(BattleUnitConfig config, TeamType team)
+        {
+            var unitPrefab = _poolService.Get(config.Unit.Prefab);
+            var unit = new Unit
             {
-                _logger.LogError($"{action} cannot perform {unit}'s action");
-                return;
-            }
+                Team = team,
+                Config = config.Unit
+            };
             
-            action.OnPerform();
-        }
-
-        public IUnit Spawn(BattleUnitConfig config)
-        {
-            var unitPrefab = _poolService.Get(config.UnitPrefab);
-            var unit = new Unit();
+            ResetHealth(unit);
             unitPrefab.Bind(unit);
             _mapService.Set(unit, config.StartQ, config.StartR);
             return unit;
+        }
+
+        public void Damage(IUnit unit, int damage)
+        {
+            unit.CurrentHealth = Mathf.Max(0, unit.CurrentHealth - damage);
+            if (unit.CurrentHealth <= 0)
+            {
+                OnUnitDefeated?.Invoke(unit);
+            }
+        }
+
+        private void ResetHealth(IUnit unit)
+        {
+            unit.CurrentHealth = unit.Config.Health;
         }
     }
 }
