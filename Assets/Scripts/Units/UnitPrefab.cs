@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class UnitPrefab : MonoBehaviour, IPoolable
 {
+    [SerializeField] private float yOffset = 1f;
     private IUnit Unit { get; set; }
     private MapService _mapService;
-
+    
     private void Awake()
     {
         _mapService = Locator.Get<MapService>();
@@ -33,6 +34,6 @@ public class UnitPrefab : MonoBehaviour, IPoolable
     private void OnMapSpaceUpdated(MapSpace mapSpace)
     {
         var mapSpacePrefab = _mapService.GetPrefab(mapSpace);
-        transform.position = new Vector3(mapSpacePrefab.transform.position.x, transform.position.y, mapSpacePrefab.transform.position.z);
+        transform.position = new Vector3(mapSpacePrefab.transform.position.x, yOffset, mapSpacePrefab.transform.position.z);
     }
 }
