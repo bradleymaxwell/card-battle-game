@@ -22,17 +22,20 @@ namespace Map
             }
         }
 
-        public void Set(IUnit unit, int q, int r)
+        public void Move(IUnit unit, int q, int r)
         {
-            var space = _mapSpaces.FirstOrDefault(m => m.Q == q && m.R == r);
-            if (space == null || space.Occupant != null)
+            var newSpace = _mapSpaces.FirstOrDefault(m => m.Q == q && m.R == r);
+            if (newSpace == null || newSpace.Occupant != null)
             {
                 _logger.LogError($"Cannot add unit to map at q={q}, r={r} because no space exists there or already occupied.");
                 return;
             }
             
-            space.SetOccupant(unit);
-            unit.OnMapSpaceChanged?.Invoke(space);
+            var oldSpace = GetSpace(unit);
+            oldSpace?.SetOccupant(null);
+
+            newSpace.SetOccupant(unit);
+            unit.OnMapSpaceChanged?.Invoke(newSpace);
         }
 
         public MapSpacePrefab GetPrefab(MapSpace mapSpace)
@@ -44,6 +47,11 @@ namespace Map
             
             _logger.LogError($"map space {mapSpace} not bound to any prefab");
             return null;
+        }
+
+        public MapSpace GetSpace(IUnit unit)
+        {
+            return _mapSpaces.FirstOrDefault(m => m.Occupant == unit);
         }
     }
 }

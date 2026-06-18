@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Units
@@ -13,5 +14,8 @@ namespace Units
         
         [SerializeField] private int health;
         public int Health => health;
+
+        [SerializeField] private List<ActionConfig> actions;
+        public IReadOnlyList<ActionConfig> Actions => actions;
     }
 }

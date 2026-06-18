@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Battles;
 using Map;
 using UnityEngine;
@@ -28,13 +29,23 @@ namespace Units
             var unit = new Unit
             {
                 Team = team,
-                Config = config.Unit
+                Config = config.Unit,
+                Actions = config.Unit.Actions?.Select(a => a.Action).ToList()
             };
             
             ResetHealth(unit);
             unitPrefab.Bind(unit);
-            _mapService.Set(unit, config.StartQ, config.StartR);
+            _mapService.Move(unit, config.StartQ, config.StartR);
             return unit;
+        }
+
+        public void Perform(IUnit unit, IAction action, MapSpace targetSpace)
+        {
+            var unitSpace = _mapService.GetSpace(unit);
+            if (action.CanPerform(unitSpace, targetSpace))
+            {
+                action.OnPerform(unitSpace, targetSpace);
+            }
         }
 
         public void Damage(IUnit unit, int damage)
@@ -46,7 +57,7 @@ namespace Units
             }
         }
 
-        private void ResetHealth(IUnit unit)
+        private static void ResetHealth(IUnit unit)
         {
             unit.CurrentHealth = unit.Config.Health;
         }

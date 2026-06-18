@@ -11,7 +11,7 @@ public class MapSpacePrefab : MonoBehaviour, ITargetable
     [SerializeField] private int r;
     public int R => r;
     
-    private MapSpace Space { get; set; }
+    public MapSpace Space { get; private set; }
     private Material _originMaterial;
     private Renderer _renderer;
     
