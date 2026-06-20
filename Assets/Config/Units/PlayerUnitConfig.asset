@@ -15,3 +15,5 @@ MonoBehaviour:
   prefab: {fileID: 1190919035251747360, guid: f970a0ff6daac4bac9c341986f0a18a9, type: 3}
   attack: 10
   health: 50
+  actions:
+  - {fileID: 11400000, guid: f4259610bc34544afbf4cb81663317f8, type: 2}

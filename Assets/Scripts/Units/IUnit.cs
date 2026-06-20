@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using Battles;
 using Map;
+using Targeting;
 
 namespace Units
 {
-    public interface IUnit
+    public interface IUnit : ISelectable
     {
         Action<MapSpace> OnMapSpaceChanged { get; set; }
         TeamType Team { get; }

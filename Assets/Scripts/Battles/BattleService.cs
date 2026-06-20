@@ -12,27 +12,21 @@ public class BattleService : IDisposable
 {
     private readonly MapService _mapService;
     private readonly UnitService _unitService;
-    private readonly InputAction _clickAction;
-    private readonly TargetService _targetService;
     private IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
     public TeamType Turn { get; private set; }
     
     public BattleService() : this(
         Locator.Get<MapService>(), 
-        Locator.Get<UnitService>(),
-        Locator.Get<InputService>(),
-        Locator.Get<TargetService>())
+        Locator.Get<UnitService>())
     {
     }
-    
-    public BattleService(MapService mapService, UnitService unitService, InputService inputService, TargetService targetService)
+
+    public BattleService(MapService mapService, UnitService unitService)
     {
         _mapService = mapService;
         _unitService = unitService;
-        _clickAction = inputService.GetAction(PlayerInputConstants.UI, PlayerInputConstants.Click);
-        _targetService = targetService;
     }
-    
+
     public void Initialize(BattleConfig battleConfig, MapSpaceContainer mapSpaceContainer)
     {
         _mapService.Initialize(mapSpaceContainer);
@@ -54,8 +48,7 @@ public class BattleService : IDisposable
         _unitsByTeam[TeamType.Enemy] = enemyTeam;
         _unitsByTeam[TeamType.Player] = playerTeam;
         _unitService.OnUnitDefeated += OnUnitDefeated;
-        _clickAction.performed += OnPlayerClick;
-        Turn = TeamType.Player;
+        StartTurn(TeamType.Player);
     }
 
     private void OnUnitDefeated(IUnit unit)
@@ -69,26 +62,11 @@ public class BattleService : IDisposable
         }
     }
 
-    private void OnPlayerClick(InputAction.CallbackContext context)
+    private void StartTurn(TeamType team)
     {
-        if (Turn != TeamType.Player)
-        {
-            return;
-        }
-        
-        var playerTarget = _targetService.GetTarget(TeamType.Player);
-        if (playerTarget == null || playerTarget is not MapSpacePrefab mapSpacePrefab)
-        {
-            return;
-        }
-        
-        // todo: temporary for testing out the movement
-        var unit = _unitsByTeam[TeamType.Player].FirstOrDefault();
-        var action = unit?.Actions.FirstOrDefault();
-        if (action != null)
-        {
-            _unitService.Perform(unit, action, mapSpacePrefab.Space);
-        }
+        Turn = team;
+        var firstUnit = _unitsByTeam[team].FirstOrDefault();
+        _unitService.SetActiveUnit(team, firstUnit);
     }
     
     private void End(TeamType wonTeam)
@@ -100,11 +78,6 @@ public class BattleService : IDisposable
         if (_unitService != null)
         {
             _unitService.OnUnitDefeated -= OnUnitDefeated;
-        }
-
-        if (_clickAction != null)
-        {
-            _clickAction.performed -= OnPlayerClick;
         }
     }
 }

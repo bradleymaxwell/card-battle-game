@@ -13,5 +13,7 @@ namespace Units
         public UnitConfig Config { get; set; }
         public int Energy { get; set; }
         public int CurrentHealth { get; set; }
+        public System.Action OnSelect { get; set; }
+        public System.Action OnDeselect { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Battles;
 using Map;
+using Targeting;
 using UnityEngine;
 
 namespace Units
@@ -11,16 +13,20 @@ namespace Units
         private readonly Logger _logger = new(nameof(UnitService));
         private readonly MapService _mapService;
         private readonly PoolService _poolService;
+        private readonly SelectService _selectService;
         public event Action<IUnit> OnUnitDefeated;
+        public event Action<TeamType, IUnit> OnActiveUnitChanged;
+        private readonly Dictionary<TeamType, IUnit> _activeUnitByTeam = new Dictionary<TeamType, IUnit>();
         
-        public UnitService() : this(Locator.Get<MapService>(), Locator.Get<PoolService>())
+        public UnitService() : this(Locator.Get<MapService>(), Locator.Get<PoolService>(), Locator.Get<SelectService>())
         {
         }
         
-        public UnitService(MapService mapService, PoolService poolService)
+        public UnitService(MapService mapService, PoolService poolService, SelectService selectService)
         {
             _mapService = mapService;
             _poolService = poolService;
+            _selectService = selectService;
         }
 
         public IUnit Spawn(BattleUnitConfig config, TeamType team)
@@ -39,13 +45,46 @@ namespace Units
             return unit;
         }
 
-        public void Perform(IUnit unit, IAction action, MapSpace targetSpace)
+        public void Perform(IUnit unit, IAction action)
         {
+            
             var unitSpace = _mapService.GetSpace(unit);
-            if (action.CanPerform(unitSpace, targetSpace))
+            var selectConfig = new SelectContextConfig
             {
-                action.OnPerform(unitSpace, targetSpace);
+                Team = unit.Team,
+                RequiredAmount = 1
+            };
+            
+            _selectService.RequestSelection<MapSpace>(
+                selectConfig, 
+                mapSpace => action.CanPerform(unitSpace, mapSpace),
+                selectedMapSpaces => action.OnPerform(unitSpace, selectedMapSpaces.First())
+                );
+        }
+
+        public void SetActiveUnit(TeamType team, IUnit unit)
+        {
+            if (_activeUnitByTeam.TryGetValue(team, out var previousUnit))
+            {
+                if (previousUnit == unit)
+                {
+                    return;
+                }
             }
+            
+            _activeUnitByTeam[team] = unit;
+            OnActiveUnitChanged?.Invoke(team, unit);
+        }
+
+        public void DeactivateUnit(TeamType team)
+        {
+            _activeUnitByTeam.Remove(team);
+            OnActiveUnitChanged?.Invoke(team, null);
+        }
+
+        public IUnit GetActiveUnit(TeamType team)
+        {
+            return _activeUnitByTeam.GetValueOrDefault(team);
         }
 
         public void Damage(IUnit unit, int damage)

@@ -1,13 +1,14 @@
+using Targeting;
 using Units;
+using Action = System.Action;
 
 namespace Map
 {
-    public class MapSpace
+    public class MapSpace : ISelectable
     {
         public int Q { get; }
         public int R { get; }
-        public IUnit Occupant { get; private set; }
-        private readonly Logger _logger = new(nameof(MapSpace));
+        public IUnit Occupant { get; set; }
         
         public MapSpace(int q, int r)
         {
@@ -15,15 +16,7 @@ namespace Map
             R = r;
         }
 
-        public void SetOccupant(IUnit unit)
-        {
-            if (Occupant != null)
-            {
-                _logger.LogError($"Occupant is already set to {Occupant}");
-                return;
-            }
-            
-            Occupant = unit;
-        }
+        public Action OnSelect { get; set; }
+        public Action OnDeselect { get; set; }
     }
 }

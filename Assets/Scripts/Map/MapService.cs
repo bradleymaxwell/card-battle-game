@@ -27,14 +27,17 @@ namespace Map
             var newSpace = _mapSpaces.FirstOrDefault(m => m.Q == q && m.R == r);
             if (newSpace == null || newSpace.Occupant != null)
             {
-                _logger.LogError($"Cannot add unit to map at q={q}, r={r} because no space exists there or already occupied.");
+                _logger.LogError($"Cannot move unit to map at q={q}, r={r} because no space exists there or already occupied.");
                 return;
             }
             
             var oldSpace = GetSpace(unit);
-            oldSpace?.SetOccupant(null);
+            if (oldSpace != null)
+            {
+                oldSpace.Occupant = null;
+            }
 
-            newSpace.SetOccupant(unit);
+            newSpace.Occupant = unit;
             unit.OnMapSpaceChanged?.Invoke(newSpace);
         }
 

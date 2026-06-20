@@ -4,20 +4,22 @@ using Targeting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerTargetTracker : MonoBehaviour
+public class PlayerHoverTracker : MonoBehaviour
 {
     [SerializeField] private LayerMask targetMask = ~0;
-    private TargetService _targetService;
+    private InputAction _clickAction;
     private Camera _camera;
     private InputAction _pointAction;
-    private ITargetable _target;
+    private IHoverable _target;
+    private SelectService _selectService;
     
     private void Awake()
     {
-        _targetService = Locator.Get<TargetService>();
         _camera = Camera.main;
         var inputService = Locator.Get<InputService>();
         _pointAction = inputService.GetAction(PlayerInputConstants.UI, PlayerInputConstants.Point);
+        _clickAction = inputService.GetAction(PlayerInputConstants.UI, PlayerInputConstants.Click);
+        _selectService = Locator.Get<SelectService>();
     }
     
     private void Update()
@@ -25,6 +27,11 @@ public class PlayerTargetTracker : MonoBehaviour
         UpdateTarget();
     }
 
+    private void OnEnable()
+    {
+        _clickAction.performed += OnPlayerClick;
+    }
+    
     private void UpdateTarget()
     {
         if (_camera == null || _pointAction == null)
@@ -42,14 +49,15 @@ public class PlayerTargetTracker : MonoBehaviour
             return;
         }
 
-        var target = hit.collider.GetComponentInParent<ITargetable>();
+        var target = hit.collider.GetComponentInParent<IHoverable>();
         if (target == _target)
         {
             return;
         }
-
+        
+        _target?.OnUnhover();
         _target = target;
-        _targetService.UpdateTarget(_target, TeamType.Player);
+        _target?.OnHover();
     }
 
     private void ClearTarget()
@@ -59,7 +67,12 @@ public class PlayerTargetTracker : MonoBehaviour
             return;
         }
 
+        _target?.OnUnhover();
         _target = null;
-        _targetService.UpdateTarget(null, TeamType.Player);
+    }
+
+    private void OnPlayerClick(InputAction.CallbackContext context)
+    {
+        _target?.OnHoverClick();
     }
 }
