@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Battles;
-using UnityEngine;
 
 namespace Targeting
 {
@@ -11,14 +10,15 @@ namespace Targeting
         
         public void RequestSelection<T>(SelectContextConfig contextConfig, Func<T, bool> validateSelection, Action<IEnumerable<T>> onSelectionConfirmed) where T : ISelectable
         {
-            if (!contextConfig.IsOverriding && _activeContextByTeam.ContainsKey(contextConfig.Team))
+            var activeContextFound = _activeContextByTeam.TryGetValue(contextConfig.Team, out var activeContext);
+            if (!contextConfig.IsOverriding && activeContextFound)
             {
                 return;
             }
             
             var context = new SelectContext<T>(contextConfig, validateSelection, onSelectionConfirmed);
+            activeContext?.DeselectAll();
             _activeContextByTeam[contextConfig.Team] = context;
-            Debug.Log($"selection count: {context.SelectionCount}");
         }
 
         public void Select(ISelectable selectable, TeamType team)
@@ -43,11 +43,9 @@ namespace Targeting
                 return;
             }
             
-            Debug.Log($"selection count: {activeContext.SelectionCount}");
             activeContext.AddToSelection(selectable);
             selectable.OnSelect?.Invoke();
             
-            Debug.Log($"selection count: {activeContext.SelectionCount}");
             if (activeContext.SelectionCount >= activeContext.Config.RequiredAmount && activeContext.Config.AutoConfirm)
             {
                 ConfirmSelection(activeContext);

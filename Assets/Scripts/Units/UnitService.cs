@@ -12,36 +12,37 @@ namespace Units
     {
         private readonly Logger _logger = new(nameof(UnitService));
         private readonly MapService _mapService;
-        private readonly PoolService _poolService;
         private readonly SelectService _selectService;
         public event Action<IUnit> OnUnitDefeated;
         public event Action<TeamType, IUnit> OnActiveUnitChanged;
-        private readonly Dictionary<TeamType, IUnit> _activeUnitByTeam = new Dictionary<TeamType, IUnit>();
+        public event Action<IUnit> OnUnitSpawned;
+        private readonly Dictionary<TeamType, IUnit> _activeUnitByTeam = new();
+        public IList<IUnit> Units { get; } = new List<IUnit>();
         
-        public UnitService() : this(Locator.Get<MapService>(), Locator.Get<PoolService>(), Locator.Get<SelectService>())
+        public UnitService() : this(Locator.Get<MapService>(), Locator.Get<SelectService>())
         {
         }
         
-        public UnitService(MapService mapService, PoolService poolService, SelectService selectService)
+        public UnitService(MapService mapService, SelectService selectService)
         {
             _mapService = mapService;
-            _poolService = poolService;
             _selectService = selectService;
         }
 
         public IUnit Spawn(BattleUnitConfig config, TeamType team)
         {
-            var unitPrefab = _poolService.Get(config.Unit.Prefab);
             var unit = new Unit
             {
                 Team = team,
                 Config = config.Unit,
                 Actions = config.Unit.Actions?.Select(a => a.Action).ToList()
             };
-            
+
             ResetHealth(unit);
-            unitPrefab.Bind(unit);
             _mapService.Move(unit, config.StartQ, config.StartR);
+            
+            Units.Add(unit);
+            OnUnitSpawned?.Invoke(unit);
             return unit;
         }
 
@@ -89,7 +90,7 @@ namespace Units
 
         public void Damage(IUnit unit, int damage)
         {
-            unit.CurrentHealth = Mathf.Max(0, unit.CurrentHealth - damage);
+            SetHealth(unit, unit.CurrentHealth - damage);
             if (unit.CurrentHealth <= 0)
             {
                 OnUnitDefeated?.Invoke(unit);
@@ -98,7 +99,18 @@ namespace Units
 
         private static void ResetHealth(IUnit unit)
         {
-            unit.CurrentHealth = unit.Config.Health;
+            SetHealth(unit, unit.Config.Health);
+        }
+
+        private static void SetHealth(IUnit unit, int health)
+        {
+            if (unit.CurrentHealth == health)
+            {
+                return;
+            }
+            
+            unit.CurrentHealth = Mathf.Clamp(health, 0, unit.Config.Health);
+            unit.OnCurrentHealthChanged?.Invoke(unit.CurrentHealth);
         }
     }
 }

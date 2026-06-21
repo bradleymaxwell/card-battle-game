@@ -14,5 +14,6 @@ namespace Units
         UnitConfig Config { get; }
         int Energy { get; }
         IList<IAction> Actions { get; }
+        Action<int> OnCurrentHealthChanged { get; set; }
     }
 }

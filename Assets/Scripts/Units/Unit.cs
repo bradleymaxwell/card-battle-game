@@ -8,6 +8,7 @@ namespace Units
     public class Unit : IUnit
     {
         public IList<IAction> Actions { get; set; }
+        public Action<int> OnCurrentHealthChanged { get; set; }
         public Action<MapSpace> OnMapSpaceChanged { get; set; }
         public TeamType Team { get; set; }
         public UnitConfig Config { get; set; }

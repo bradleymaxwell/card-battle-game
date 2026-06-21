@@ -5,8 +5,9 @@ using UnityEngine;
 public class UnitPrefab : MonoBehaviour, IPoolable
 {
     [SerializeField] private float yOffset = 1f;
-    private IUnit Unit { get; set; }
+    public IUnit Unit { get; private set; }
     private MapService _mapService;
+    private Logger _logger = new(nameof(UnitPrefab));
     
     private void Awake()
     {
@@ -17,6 +18,8 @@ public class UnitPrefab : MonoBehaviour, IPoolable
     {
         Unit = unit;
         unit.OnMapSpaceChanged += OnMapSpaceUpdated;
+        var space = _mapService.GetSpace(unit);
+        OnMapSpaceUpdated(space);
     }
 
     public void Reset()
@@ -29,11 +32,11 @@ public class UnitPrefab : MonoBehaviour, IPoolable
         Unit = null;
     }
 
-    public GameObject Prefab { get; set; }
-
     private void OnMapSpaceUpdated(MapSpace mapSpace)
     {
         var mapSpacePrefab = _mapService.GetPrefab(mapSpace);
         transform.position = new Vector3(mapSpacePrefab.transform.position.x, yOffset, mapSpacePrefab.transform.position.z);
     }
+    
+    public GameObject Prefab { get; set; }
 }

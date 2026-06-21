@@ -6,7 +6,7 @@ namespace Targeting
 {
     public class SelectContext<T> : ISelectContext where T : ISelectable
     {
-        private IList<T> _selection = new List<T>();
+        private readonly IList<T> _selection = new List<T>();
         public SelectContextConfig Config { get; }
 
         private readonly Func<T, bool> _validateSelection;
@@ -44,7 +44,7 @@ namespace Targeting
         {
             foreach (var selection in _selection.ToList())
             {
-                selection?.OnDeselect();
+                selection.OnDeselect?.Invoke();
                 _selection.Remove(selection);
             }
         }
@@ -57,7 +57,7 @@ namespace Targeting
         public void RemoveFromSelection(ISelectable selectable)
         {
             _selection.Remove((T)selectable);
-            selectable.OnDeselect();
+            selectable.OnDeselect?.Invoke();
         }
     }
 }
