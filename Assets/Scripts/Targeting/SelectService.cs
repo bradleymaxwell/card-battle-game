@@ -7,6 +7,7 @@ namespace Targeting
     public class SelectService
     {
         private readonly IDictionary<TeamType, ISelectContext> _activeContextByTeam = new Dictionary<TeamType, ISelectContext>();
+        public event Action<TeamType, ISelectContext> OnActiveContextChanged;
         
         public void RequestSelection<T>(SelectContextConfig contextConfig, Func<T, bool> validateSelection, Action<IEnumerable<T>> onSelectionConfirmed) where T : ISelectable
         {
@@ -19,6 +20,7 @@ namespace Targeting
             var context = new SelectContext<T>(contextConfig, validateSelection, onSelectionConfirmed);
             activeContext?.DeselectAll();
             _activeContextByTeam[contextConfig.Team] = context;
+            OnActiveContextChanged?.Invoke(contextConfig.Team, context);
         }
 
         public void Select(ISelectable selectable, TeamType team)
@@ -73,6 +75,7 @@ namespace Targeting
             activeContext.OnSelectionConfirmed();
             activeContext.DeselectAll();
             _activeContextByTeam.Remove(activeContext.Config.Team);
+            OnActiveContextChanged?.Invoke(activeContext.Config.Team, null);
         }
     }
 }

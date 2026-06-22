@@ -8,5 +8,6 @@ namespace Units
         bool CanPerform(MapSpace userSpace, MapSpace targetSpace);
         void OnPerform(MapSpace userSpace, MapSpace targetSpace);
         Sprite Icon { get; }
+        ActionConfig Config { get; }
     }
 }

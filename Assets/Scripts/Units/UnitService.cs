@@ -35,10 +35,12 @@ namespace Units
             {
                 Team = team,
                 Config = config.Unit,
-                Actions = config.Unit.Actions?.Select(a => a.Action).ToList()
+                Actions = config.Unit.Actions?.Select(a => a.Action).ToList(),
+                Energy = 10
             };
 
             ResetHealth(unit);
+            AdjustEnergy(unit, 5);
             _mapService.Move(unit, config.StartQ, config.StartR);
             
             Units.Add(unit);
@@ -50,17 +52,19 @@ namespace Units
         {
             
             var unitSpace = _mapService.GetSpace(unit);
-            var selectConfig = new SelectContextConfig
-            {
-                Team = unit.Team,
-                RequiredAmount = 1
-            };
+            var selectConfig = new SelectContextConfig(unit.Team, SelectContextType.Map);
             
             _selectService.RequestSelection<MapSpace>(
                 selectConfig, 
                 mapSpace => action.CanPerform(unitSpace, mapSpace),
-                selectedMapSpaces => action.OnPerform(unitSpace, selectedMapSpaces.First())
+                selectedMapSpaces => OnPerform(unit, action, unitSpace, selectedMapSpaces.First())
                 );
+        }
+
+        private static void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace)
+        {
+            action.OnPerform(userSpace, targetSpace);
+            AdjustEnergy(unit, -action.Config.EnergyCost);
         }
 
         public void SetActiveUnit(TeamType team, IUnit unit)
@@ -97,6 +101,21 @@ namespace Units
             }
         }
 
+        public static void AdjustEnergy(IUnit unit, int change)
+        {
+            if (change == 0)
+            {
+                return;
+            }
+            
+            var energyBefore = unit.CurrentEnergy;
+            unit.CurrentEnergy = Mathf.Clamp(unit.CurrentEnergy + change, 0, unit.Energy);
+            if (unit.CurrentEnergy != energyBefore)
+            {
+                unit.OnCurrentEnergyChanged?.Invoke(unit.CurrentEnergy);
+            }
+        }
+        
         private static void ResetHealth(IUnit unit)
         {
             SetHealth(unit, unit.Config.Health);

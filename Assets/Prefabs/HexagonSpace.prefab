@@ -690,6 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f410ac0b642e24ad4a440516ab800f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpacePrefab
-  targetMaterial: {fileID: 2100000, guid: 8770661c9ea7448229c7453cc7df45e5, type: 2}
+  hoverMaterial: {fileID: 2100000, guid: 8770661c9ea7448229c7453cc7df45e5, type: 2}
+  invalidMaterial: {fileID: 2100000, guid: c8a6eabf5459445c8825b0a91892797c, type: 2}
   q: 0
   r: 0

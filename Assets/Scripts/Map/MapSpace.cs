@@ -1,3 +1,4 @@
+using System;
 using Targeting;
 using Units;
 using Action = System.Action;
@@ -18,5 +19,14 @@ namespace Map
 
         public Action OnSelect { get; set; }
         public Action OnDeselect { get; set; }
+
+        public int GetDistanceTo(MapSpace other)
+        {
+            var qDistance = Math.Abs(Q - other.Q);
+            var rDistance = Math.Abs(R - other.R);
+            var sDistance = Math.Abs((-Q - R) - (-other.Q - other.R));
+
+            return (qDistance + rDistance + sDistance) / 2;
+        }
     }
 }

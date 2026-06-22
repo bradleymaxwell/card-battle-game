@@ -5,18 +5,24 @@ namespace Units
 {
     public abstract class Action : IAction
     {
-        private readonly ActionConfig _config;
-        public Sprite Icon => _config.Icon;
+        public ActionConfig Config { get; }
+        public Sprite Icon => Config.Icon;
         
         protected Action(ActionConfig config)
         {
-            _config = config;
+            Config = config;
         }
         
         public virtual bool CanPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var hasEnergy = userSpace.Occupant.Energy - _config.EnergyCost >= 0;
-            return hasEnergy;
+            var hasEnergy = userSpace.Occupant.CurrentEnergy - Config.EnergyCost >= 0;
+            var inRange = true;
+            if (Config is IRangedAction rangedAction)
+            {
+                inRange = userSpace.GetDistanceTo(targetSpace) <= rangedAction.Range;
+            }
+            
+            return hasEnergy && inRange;
         }
 
         public abstract void OnPerform(MapSpace userSpace, MapSpace targetSpace);

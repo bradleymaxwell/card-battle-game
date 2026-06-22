@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BasicAttackActionConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.BasicAttackActionConfig
   energyCost: 0
-  name: 
-  icon: {fileID: 0}
+  name: Attack
+  icon: {fileID: 21300000, guid: 030d61925e2f98f4d86e171153ec39e1, type: 3}
   description: 
+  range: 1

@@ -65,8 +65,13 @@ public class BattleService : IDisposable
     private void StartTurn(TeamType team)
     {
         Turn = team;
-        var firstUnit = _unitsByTeam[team].FirstOrDefault();
+        var teamUnits = _unitsByTeam[team];
+        var firstUnit = teamUnits.FirstOrDefault();
         _unitService.SetActiveUnit(team, firstUnit);
+        foreach (var unit in teamUnits)
+        {
+            UnitService.AdjustEnergy(unit, 2);
+        }
     }
     
     private void End(TeamType wonTeam)

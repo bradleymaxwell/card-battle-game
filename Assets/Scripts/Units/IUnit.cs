@@ -12,8 +12,10 @@ namespace Units
         TeamType Team { get; }
         int CurrentHealth { get; set; }
         UnitConfig Config { get; }
+        int CurrentEnergy { get; set; }
         int Energy { get; }
         IList<IAction> Actions { get; }
         Action<int> OnCurrentHealthChanged { get; set; }
+        Action<int> OnCurrentEnergyChanged { get; set; }
     }
 }

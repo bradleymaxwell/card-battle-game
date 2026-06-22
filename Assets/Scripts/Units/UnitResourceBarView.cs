@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class UnitResourceBarView : MonoBehaviour, IPoolable
 {
     [SerializeField] private Slider healthSlider;
+    [SerializeField] private Slider energySlider;
     [SerializeField] private Vector2 offset = new(0f, 55f);
     [SerializeField] private Color enemyHealthColor = Color.red;
     [SerializeField] private Color friendlyHealthColor = Color.green;
@@ -13,7 +14,11 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     private RectTransform _rectTransform;
     private Camera _camera;
     private Image _fillImage;
-    private Logger _logger = new(nameof(UnitResourceBarView));
+    private readonly Logger _logger = new(nameof(UnitResourceBarView));
+    private Vector2 _lastAnchoredPosition;
+    private Vector3 _lastWorldPosition;
+    private bool _hasLastAnchoredPosition;
+    private bool _hasLastWorldPosition;
     
     private void Awake()
     {
@@ -32,6 +37,7 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     {
         _unitPrefab = unitPrefab;
         _unitPrefab.Unit.OnCurrentHealthChanged += Refresh;
+        _unitPrefab.Unit.OnCurrentEnergyChanged += Refresh;
         _fillImage.color = unitPrefab.Unit.Team switch
         {
             TeamType.Player => friendlyHealthColor,
@@ -54,10 +60,12 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         _unitPrefab = null;
     }
 
-    private void Refresh(int currentHealth)
+    private void Refresh(int _)
     {
         healthSlider.maxValue = _unitPrefab.Unit.Config.Health;
         healthSlider.value = _unitPrefab.Unit.CurrentHealth;
+        energySlider.maxValue = _unitPrefab.Unit.Energy;
+        energySlider.value = _unitPrefab.Unit.CurrentEnergy;
     }
 
     private void UpdateScreenPosition()
@@ -77,17 +85,33 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
                 screenPosition,
                 _canvas.worldCamera,
                 out var localPosition);
-
+            
+            if (_hasLastAnchoredPosition && Vector2.SqrMagnitude(_lastAnchoredPosition - localPosition) < 0.01f)
+            {
+                return;
+            }
+            
+            _lastAnchoredPosition = localPosition;
+            _hasLastAnchoredPosition = true;
             _rectTransform.anchoredPosition = localPosition;
             return;
         }
-
+        
+        if (_hasLastWorldPosition && Vector3.SqrMagnitude(_lastWorldPosition - screenPosition) < 0.01f)
+        {
+            return;
+        }
+        
+        _lastWorldPosition = screenPosition;
+        _hasLastWorldPosition = true;
         _rectTransform.position = screenPosition;
     }
 
     public void Reset()
     {
         Unbind();
+        _hasLastAnchoredPosition = false;
+        _hasLastWorldPosition = false;
     }
 
     public GameObject Prefab { get; set; }

@@ -13,7 +13,10 @@ namespace Units
 
         public override bool CanPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            return base.CanPerform(userSpace, targetSpace) && targetSpace.Occupant != null;
+            return base.CanPerform(userSpace, targetSpace) 
+                   && userSpace != targetSpace 
+                   && targetSpace.Occupant != null
+                   && targetSpace.Occupant.Team != userSpace.Occupant.Team;
         }
 
         public override void OnPerform(MapSpace userSpace, MapSpace targetSpace)
