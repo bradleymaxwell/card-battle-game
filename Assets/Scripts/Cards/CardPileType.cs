@@ -2,7 +2,7 @@ namespace Cards
 {
     public enum CardPileType
     {
-        Deck,
+        Draw,
         Hand,
         Discard
     }

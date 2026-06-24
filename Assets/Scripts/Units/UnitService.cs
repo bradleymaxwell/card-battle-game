@@ -115,6 +115,23 @@ namespace Units
             }
         }
 
+        public void AdjustHealth(IUnit unit, int change)
+        {
+            if (change == 0)
+            {
+                return;
+            }
+
+            if (change < 0)
+            {
+                Damage(unit, change);
+            }
+            else
+            {
+                SetHealth(unit, unit.CurrentHealth + change);
+            }
+        }
+
         private void Eliminate(IUnit unit)
         {
             _mapService.Remove(unit);

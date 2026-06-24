@@ -3,6 +3,7 @@ namespace Battles
     public enum TeamType
     {
         Player,
-        Enemy
+        Enemy,
+        Any
     }
 }

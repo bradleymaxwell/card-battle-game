@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cards;
 using Units;
 using UnityEngine;
 
@@ -8,11 +9,19 @@ namespace Battles
     [CreateAssetMenu(menuName = "Game Config/Battle")]
     public class BattleConfig : ScriptableObject
     {
+        [Header("Player")]
+        [SerializeField] private List<BattleUnitConfig> playerUnits;
+        public IReadOnlyList<BattleUnitConfig> PlayerUnits => playerUnits;
+        
+        [SerializeField] private DeckConfig playerDeck;
+        public DeckConfig PlayerDeck => playerDeck;
+        
+        [Header("Enemy")]
         [SerializeField] private List<BattleUnitConfig> enemyUnits;
         public IReadOnlyList<BattleUnitConfig> EnemyUnits => enemyUnits;
         
-        [SerializeField] private List<BattleUnitConfig> playerUnits;
-        public IReadOnlyList<BattleUnitConfig> PlayerUnits => playerUnits;
+        [SerializeField] private DeckConfig enemyDeck;
+        public DeckConfig EnemyDeck => enemyDeck;
     }
     
     [Serializable]

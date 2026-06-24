@@ -2,34 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Battles;
-using DefaultNamespace;
 using Map;
-using Targeting;
 using Units;
-using UnityEngine.InputSystem;
 
 public class BattleService : IDisposable
 {
     private readonly MapService _mapService;
     private readonly UnitService _unitService;
+    private readonly CardService _cardService;
     private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
     public TeamType Turn { get; private set; }
     
     public BattleService() : this(
         Locator.Get<MapService>(), 
-        Locator.Get<UnitService>())
+        Locator.Get<UnitService>(),
+        Locator.Get<CardService>())
     {
     }
 
-    public BattleService(MapService mapService, UnitService unitService)
+    public BattleService(MapService mapService, UnitService unitService, CardService cardService)
     {
         _mapService = mapService;
         _unitService = unitService;
+        _cardService = cardService;
     }
 
     public void Initialize(BattleConfig battleConfig, MapSpaceContainer mapSpaceContainer)
     {
         _mapService.Initialize(mapSpaceContainer);
+        _cardService.Initialize(battleConfig.PlayerDeck, battleConfig.EnemyDeck);
         _unitsByTeam.Clear();
         var enemyTeam = new List<IUnit>();
         foreach (var unitConfig in battleConfig.EnemyUnits)
@@ -77,6 +78,8 @@ public class BattleService : IDisposable
         {
             _unitService.AdjustEnergy(unit, 2);
         }
+        
+        _cardService.Draw(team, 1);
     }
     
     private void End(TeamType wonTeam)
