@@ -50,10 +50,8 @@ namespace Units
 
         public void Perform(IUnit unit, IAction action)
         {
-            
             var unitSpace = _mapService.GetSpace(unit);
             var selectConfig = new SelectContextConfig(unit.Team, SelectContextType.Map);
-            
             _selectService.RequestSelection<MapSpace>(
                 selectConfig, 
                 mapSpace => action.CanPerform(unitSpace, mapSpace),
@@ -61,10 +59,10 @@ namespace Units
                 );
         }
 
-        private static void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace)
+        private void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace)
         {
-            action.OnPerform(userSpace, targetSpace);
-            AdjustEnergy(unit, -action.Config.EnergyCost);
+            var result = action.OnPerform(userSpace, targetSpace);
+            AdjustEnergy(unit, -result.EnergyConsumed);
         }
 
         public void SetActiveUnit(TeamType team, IUnit unit)
@@ -97,11 +95,11 @@ namespace Units
             SetHealth(unit, unit.CurrentHealth - damage);
             if (unit.CurrentHealth <= 0)
             {
-                OnUnitDefeated?.Invoke(unit);
+                Eliminate(unit);
             }
         }
 
-        public static void AdjustEnergy(IUnit unit, int change)
+        public void AdjustEnergy(IUnit unit, int change)
         {
             if (change == 0)
             {
@@ -112,8 +110,15 @@ namespace Units
             unit.CurrentEnergy = Mathf.Clamp(unit.CurrentEnergy + change, 0, unit.Energy);
             if (unit.CurrentEnergy != energyBefore)
             {
+                _mapService.InvalidateReachableSpacesCache(unit);
                 unit.OnCurrentEnergyChanged?.Invoke(unit.CurrentEnergy);
             }
+        }
+
+        private void Eliminate(IUnit unit)
+        {
+            _mapService.Remove(unit);
+            OnUnitDefeated?.Invoke(unit);
         }
         
         private static void ResetHealth(IUnit unit)

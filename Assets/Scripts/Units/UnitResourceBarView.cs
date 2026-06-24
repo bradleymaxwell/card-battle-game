@@ -1,4 +1,5 @@
 using Battles;
+using Units;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,6 +56,11 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         {
             return;
         }
+
+        if (_unitPrefab.Unit == null)
+        {
+            return;
+        }
         
         _unitPrefab.Unit.OnCurrentHealthChanged -= Refresh;
         _unitPrefab = null;
@@ -106,7 +112,7 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         _hasLastWorldPosition = true;
         _rectTransform.position = screenPosition;
     }
-
+    
     public void Reset()
     {
         Unbind();

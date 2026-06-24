@@ -25,6 +25,6 @@ namespace Units
             return hasEnergy && inRange;
         }
 
-        public abstract void OnPerform(MapSpace userSpace, MapSpace targetSpace);
+        public abstract ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace);
     }
 }

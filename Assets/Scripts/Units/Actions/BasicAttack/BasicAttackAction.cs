@@ -5,9 +5,11 @@ namespace Units
     public class BasicAttackAction : Action
     {
         private readonly UnitService _unitService;
+        private readonly BasicAttackActionConfig _config;
         
         public BasicAttackAction(BasicAttackActionConfig config) : base(config)
         {
+            _config = config;
             _unitService = Locator.Get<UnitService>();
         }
 
@@ -19,9 +21,11 @@ namespace Units
                    && targetSpace.Occupant.Team != userSpace.Occupant.Team;
         }
 
-        public override void OnPerform(MapSpace userSpace, MapSpace targetSpace)
+        public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
+            var result = new ActionPerformResult(_config.EnergyCost);
             _unitService.Damage(targetSpace.Occupant, userSpace.Occupant.Config.Attack);
+            return result;
         }
     }
 }

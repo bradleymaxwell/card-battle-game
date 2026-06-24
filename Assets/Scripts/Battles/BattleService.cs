@@ -12,7 +12,7 @@ public class BattleService : IDisposable
 {
     private readonly MapService _mapService;
     private readonly UnitService _unitService;
-    private IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
+    private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
     public TeamType Turn { get; private set; }
     
     public BattleService() : this(
@@ -58,7 +58,12 @@ public class BattleService : IDisposable
         if (teamUnits.Count <= 0)
         {
             var wonTeam = 1 - unit.Team;
+            _unitService.DeactivateUnit(unit.Team);
             End(wonTeam);
+        }
+        else
+        {
+            _unitService.SetActiveUnit(unit.Team, teamUnits.First());
         }
     }
 
@@ -70,12 +75,13 @@ public class BattleService : IDisposable
         _unitService.SetActiveUnit(team, firstUnit);
         foreach (var unit in teamUnits)
         {
-            UnitService.AdjustEnergy(unit, 2);
+            _unitService.AdjustEnergy(unit, 2);
         }
     }
     
     private void End(TeamType wonTeam)
     {
+        
     }
     
     public void Dispose()

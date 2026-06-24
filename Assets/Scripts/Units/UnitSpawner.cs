@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Units;
 using UnityEngine;
 
@@ -7,6 +9,7 @@ public class UnitSpawner : MonoBehaviour
     [SerializeField] private UnitResourceBarView resourceBarViewPrefab;
     private UnitService _unitService;
     private PoolService _poolService;
+    private IDictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>> _unitViews = new Dictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>>();
     
     private void Awake()
     {
@@ -22,6 +25,16 @@ public class UnitSpawner : MonoBehaviour
     private void OnEnable()
     {
         _unitService.OnUnitSpawned += OnUnitSpawned;
+        _unitService.OnUnitDefeated += OnUnitDefeated;
+    }
+
+    private void OnDisable()
+    {
+        if (_unitService != null)
+        {
+            _unitService.OnUnitSpawned -= OnUnitSpawned;
+            _unitService.OnUnitDefeated -= OnUnitDefeated;
+        }
     }
     
     private void OnUnitSpawned(IUnit unit)
@@ -31,5 +44,19 @@ public class UnitSpawner : MonoBehaviour
         var resourceBarView = _poolService.Get(resourceBarViewPrefab);
         resourceBarView.transform.SetParent(canvas.transform, false);
         resourceBarView.Bind(unitView);
+        _unitViews.Add(unit, new Tuple<UnitPrefab, UnitResourceBarView>(unitView, resourceBarView));
+    }
+
+    private void OnUnitDefeated(IUnit unit)
+    {
+        var viewsFound = _unitViews.TryGetValue(unit, out var views);
+        if (!viewsFound)
+        {
+            return;
+        }
+        
+        _poolService.Return(views.Item1);
+        _poolService.Return(views.Item2);
+        _unitViews.Remove(unit);
     }
 }
