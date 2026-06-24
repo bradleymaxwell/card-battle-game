@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ddac13c8e594383a996d8e58e33618d, type: 3}
   m_Name: StarterDeck
   m_EditorClassIdentifier: Assembly-CSharp::Cards.DeckConfig
-  entries: []
+  entries:
+  - card: {fileID: 11400000, guid: 23d079ebb6d18472f826eb7daf1706e0, type: 2}
+    count: 4
+  - card: {fileID: 11400000, guid: 65c81e01e75184cf390d1d0868e2f704, type: 2}
+    count: 4
+  - card: {fileID: 11400000, guid: 0f7215663a2df4799837db3649c75a23, type: 2}
+    count: 4
+  - card: {fileID: 11400000, guid: d9a6fbb9e14dc48789afac7ec53b2d40, type: 2}
+    count: 4

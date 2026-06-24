@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8685d5f71039422fab56106f6ecb5d57, type: 3}
   m_Name: BasicDamageCard
   m_EditorClassIdentifier: Assembly-CSharp::Cards.AdjustHealth.AdjustHealthCardConfig
-  name: 
-  icon: {fileID: 0}
-  manaCost: 0
-  adjustment: 0
+  name: Fireball
+  icon: {fileID: 21300000, guid: dd3885098198d104888439be4c590aba, type: 3}
+  manaCost: 3
+  adjustment: -4

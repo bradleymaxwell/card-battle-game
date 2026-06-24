@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94b0873f14f541ae9d18e01cbeb0529f, type: 3}
   m_Name: BasicAttackActionConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.BasicAttackActionConfig
-  energyCost: 0
+  energyCost: 1
   name: Attack
   icon: {fileID: 21300000, guid: 030d61925e2f98f4d86e171153ec39e1, type: 3}
   description: 

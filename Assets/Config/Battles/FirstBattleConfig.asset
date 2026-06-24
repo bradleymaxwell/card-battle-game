@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d4b349add334264a902f7c3a75f13a2, type: 3}
   m_Name: FirstBattleConfig
   m_EditorClassIdentifier: Assembly-CSharp::Battles.BattleConfig
-  enemyUnits:
-  - unit: {fileID: 11400000, guid: b64acefe97d5341e893ecbbb373817ff, type: 2}
-    startQ: 1
-    startR: 2
   playerUnits:
   - unit: {fileID: 11400000, guid: 8673616fb74ca44c18024907f18b102c, type: 2}
     startQ: -1
     startR: -1
+  playerDeck: {fileID: 11400000, guid: 36b4e8830fe7549048c30c7d52877084, type: 2}
+  enemyUnits:
+  - unit: {fileID: 11400000, guid: b64acefe97d5341e893ecbbb373817ff, type: 2}
+    startQ: 1
+    startR: 2
+  enemyDeck: {fileID: 11400000, guid: 36b4e8830fe7549048c30c7d52877084, type: 2}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7ad422428f2454d9dfcbf72722f66f3, type: 3}
   m_Name: New Move Action Config
   m_EditorClassIdentifier: Assembly-CSharp::Units.MoveActionConfig
-  energyCost: 0
+  energyCost: 1
   name: Move
   icon: {fileID: 21300000, guid: c46be55a65cb30e44b7c89e3c0d531da, type: 3}
   description: 

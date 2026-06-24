@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8685d5f71039422fab56106f6ecb5d57, type: 3}
   m_Name: BasicHealCard
   m_EditorClassIdentifier: Assembly-CSharp::Cards.AdjustHealth.AdjustHealthCardConfig
-  name: 
-  icon: {fileID: 0}
-  manaCost: 0
-  adjustment: 0
+  name: Potion
+  icon: {fileID: 21300000, guid: c3aab7237df394c4890e647a4ae580ea, type: 3}
+  manaCost: 5
+  adjustment: 10
