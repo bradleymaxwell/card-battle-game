@@ -12,6 +12,7 @@ public class BattleService : IDisposable
     private readonly CardService _cardService;
     private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
     public TeamType Turn { get; private set; }
+    public event Action<TeamType> OnTurnChanged;
     
     public BattleService() : this(
         Locator.Get<MapService>(), 
@@ -52,6 +53,16 @@ public class BattleService : IDisposable
         StartTurn(TeamType.Player);
     }
 
+    public void EndTurn(TeamType team)
+    {
+        if (team != Turn)
+        {
+            return;
+        }
+        
+        StartTurn(1 - team);
+    }
+
     private void OnUnitDefeated(IUnit unit)
     {
         var teamUnits = _unitsByTeam[unit.Team];
@@ -78,8 +89,13 @@ public class BattleService : IDisposable
         {
             _unitService.AdjustEnergy(unit, 2);
         }
+
+        if (team == TeamType.Player)
+        {
+            _cardService.Draw(1);
+        }
         
-        _cardService.Draw(1);
+        OnTurnChanged?.Invoke(team);
     }
     
     private void End(TeamType wonTeam)
