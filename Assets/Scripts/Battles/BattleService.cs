@@ -30,7 +30,7 @@ public class BattleService : IDisposable
     public void Initialize(BattleConfig battleConfig, MapSpaceContainer mapSpaceContainer)
     {
         _mapService.Initialize(mapSpaceContainer);
-        _cardService.Initialize(battleConfig.PlayerDeck, battleConfig.EnemyDeck);
+        _cardService.Initialize(battleConfig.PlayerDeck);
         _unitsByTeam.Clear();
         var enemyTeam = new List<IUnit>();
         foreach (var unitConfig in battleConfig.EnemyUnits)
@@ -79,7 +79,7 @@ public class BattleService : IDisposable
             _unitService.AdjustEnergy(unit, 2);
         }
         
-        _cardService.Draw(team, 1);
+        _cardService.Draw(1);
     }
     
     private void End(TeamType wonTeam)

@@ -8,19 +8,18 @@ namespace Targeting
     {
         private readonly IDictionary<TeamType, ISelectContext> _activeContextByTeam = new Dictionary<TeamType, ISelectContext>();
         public event Action<TeamType, ISelectContext> OnActiveContextChanged;
-        
-        public void RequestSelection<T>(SelectContextConfig contextConfig, Func<T, bool> validateSelection, Action<IEnumerable<T>> onSelectionConfirmed) where T : ISelectable
+
+        public void RequestSelection(ISelectContext context)
         {
-            var activeContextFound = _activeContextByTeam.TryGetValue(contextConfig.Team, out var activeContext);
-            if (!contextConfig.IsOverriding && activeContextFound)
+            var activeContextFound = _activeContextByTeam.TryGetValue(context.Config.Team, out var activeContext);
+            if (!context.Config.IsOverriding && activeContextFound)
             {
                 return;
             }
             
-            var context = new SelectContext<T>(contextConfig, validateSelection, onSelectionConfirmed);
             activeContext?.DeselectAll();
-            _activeContextByTeam[contextConfig.Team] = context;
-            OnActiveContextChanged?.Invoke(contextConfig.Team, context);
+            _activeContextByTeam[context.Config.Team] = context;
+            OnActiveContextChanged?.Invoke(context.Config.Team, context);
         }
 
         public void Select(ISelectable selectable, TeamType team)

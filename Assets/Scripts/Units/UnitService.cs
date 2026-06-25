@@ -52,11 +52,13 @@ namespace Units
         {
             var unitSpace = _mapService.GetSpace(unit);
             var selectConfig = new SelectContextConfig(unit.Team, SelectContextType.Map);
-            _selectService.RequestSelection<MapSpace>(
+            var context = new SelectContext<MapSpace>(
                 selectConfig, 
                 mapSpace => action.CanPerform(unitSpace, mapSpace),
                 selectedMapSpaces => OnPerform(unit, action, unitSpace, selectedMapSpaces.First())
                 );
+            
+            _selectService.RequestSelection(context);
         }
 
         private void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace)
@@ -92,7 +94,7 @@ namespace Units
 
         public void Damage(IUnit unit, int damage)
         {
-            SetHealth(unit, unit.CurrentHealth - damage);
+            SetHealth(unit, unit.CurrentHealth - Mathf.Abs(damage));
             if (unit.CurrentHealth <= 0)
             {
                 Eliminate(unit);
@@ -101,7 +103,7 @@ namespace Units
 
         public void AdjustEnergy(IUnit unit, int change)
         {
-            if (change == 0)
+            if (unit == null || change == 0)
             {
                 return;
             }
@@ -117,7 +119,7 @@ namespace Units
 
         public void AdjustHealth(IUnit unit, int change)
         {
-            if (change == 0)
+            if (unit == null || change == 0)
             {
                 return;
             }
