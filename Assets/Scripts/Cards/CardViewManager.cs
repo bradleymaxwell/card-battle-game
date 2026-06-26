@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using Battles;
 using Targeting;
 using TMPro;
@@ -17,6 +19,7 @@ namespace Cards
         private PoolService _poolService;
         private SelectService _selectService;
         private ICard _selectedCard;
+        private IDictionary<ICard, CardView> _viewsByCard = new Dictionary<ICard, CardView>(); 
         
         private void Awake()
         {
@@ -31,6 +34,7 @@ namespace Cards
             _cardService.OnCardDrawn += OnCardDrawn;
             _cardService.OnManaChanged += RefreshMana;
             _selectService.OnActiveContextChanged += OnActiveContextChanged;
+            _cardService.OnCardMoved += OnCardMoved;
             
             var deck = _cardService.GetDeck();
             if (deck == null)
@@ -70,6 +74,7 @@ namespace Cards
             cardView.OnUnhovered += OnHoveredChanged;
             cardView.Bind(card);
             cardView.transform.SetParent(playerHandContainer.transform, false);
+            _viewsByCard.Add(card, cardView);
         }
 
         private void OnHoveredChanged(ICard card)
@@ -113,6 +118,23 @@ namespace Cards
             {
                 OnSelectedCardChanged(null);
             }
+        }
+
+        private void OnCardMoved(ICard card, CardPileType from, CardPileType to)
+        {
+            if (from != CardPileType.Hand)
+            {
+                return;
+            }
+            
+            var found = _viewsByCard.TryGetValue(card, out var cardView);
+            if (!found)
+            {
+                return;
+            }
+            
+            _poolService.Return(cardView);
+            _viewsByCard.Remove(card);
         }
     }
 }

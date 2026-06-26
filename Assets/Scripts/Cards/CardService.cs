@@ -90,8 +90,7 @@ public class CardService
         for (var i = 0; i < cardsToDraw; i++)
         {
             var card = drawPile[0];
-            drawPile.RemoveAt(0);
-            deck.CardPiles[CardPileType.Hand].Add(card);
+            Move(deck, card, CardPileType.Draw, CardPileType.Hand);
             OnCardDrawn?.Invoke(card);
         }
     }
