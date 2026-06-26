@@ -1,3 +1,5 @@
+using Battles;
+using Targeting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +15,14 @@ namespace Cards
         [SerializeField] private TextMeshProUGUI manaText;
         private CardService _cardService;
         private PoolService _poolService;
+        private SelectService _selectService;
         private ICard _selectedCard;
         
         private void Awake()
         {
             _cardService = Locator.Get<CardService>();
             _poolService = Locator.Get<PoolService>();
+            _selectService = Locator.Get<SelectService>();
         }
 
         private void OnEnable()
@@ -26,6 +30,7 @@ namespace Cards
             _cardService.OnSelectedCardChanged += OnSelectedCardChanged;
             _cardService.OnCardDrawn += OnCardDrawn;
             _cardService.OnManaChanged += RefreshMana;
+            _selectService.OnActiveContextChanged += OnActiveContextChanged;
             
             var deck = _cardService.GetDeck();
             if (deck == null)
@@ -86,8 +91,8 @@ namespace Cards
             }
             else
             {
-                inspectedCardView.Bind(card);
                 inspectedCardView.gameObject.SetActive(true);
+                inspectedCardView.Bind(card);
             }
         }
 
@@ -95,6 +100,19 @@ namespace Cards
         {
             manaSlider.value = mana;
             manaText.text = $"{mana}/{manaSlider.maxValue}";
+        }
+        
+        private void OnActiveContextChanged(TeamType team, ISelectContext context)
+        {
+            if (team != TeamType.Player)
+            {
+                return;
+            }
+
+            if (_selectedCard != null)
+            {
+                OnSelectedCardChanged(null);
+            }
         }
     }
 }
