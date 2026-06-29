@@ -31,14 +31,25 @@ namespace Units
 
         public IUnit Spawn(BattleUnitConfig config, TeamType team)
         {
-            var unit = new Unit
+            Unit unit;
+            if (config.Brain != null)
             {
-                Team = team,
-                Config = config.Unit,
-                Actions = config.Unit.Actions?.Select(a => a.Action).ToList(),
-                Energy = 10
-            };
+                var npcUnit = new NpcUnit
+                {
+                    Brain = config.Brain.Brain
+                };
+                
+                unit = npcUnit;
+            }
+            else
+            {
+                unit = new Unit();
+            }
 
+            unit.Team = team;
+            unit.Config = config.Unit;
+            unit.Actions = config.Unit.Actions?.Select(a => a.Action).ToList();
+            
             ResetHealth(unit);
             AdjustEnergy(unit, 5);
             _mapService.Move(unit, config.StartQ, config.StartR);

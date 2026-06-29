@@ -6,6 +6,9 @@ namespace Units
     [CreateAssetMenu(menuName = "Game Config/Unit")]
     public class UnitConfig : ScriptableObject
     {
+        [SerializeField] private new string name;
+        public string Name => name;
+        
         [SerializeField] private UnitPrefab prefab;
         public UnitPrefab Prefab => prefab;
 

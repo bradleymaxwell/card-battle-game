@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AI;
 using Cards;
 using Units;
 using UnityEngine;
@@ -35,5 +36,8 @@ namespace Battles
         
         [SerializeField] private int startR;
         public int StartR => startR;
+
+        [SerializeField] private UnitBrainConfig brain;
+        public UnitBrainConfig Brain => brain;
     }
 }

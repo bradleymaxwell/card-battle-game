@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AI;
 using Battles;
 using Map;
 using Units;
@@ -11,8 +12,10 @@ public class BattleService : IDisposable
     private readonly UnitService _unitService;
     private readonly CardService _cardService;
     private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
-    public TeamType Turn { get; private set; }
+    private TeamType Turn { get; set; }
     public event Action<TeamType> OnTurnChanged;
+    private Dictionary<NpcUnit, UnitTurnIntention> _nextTurnIntentionsByUnit = new();
+    private bool _isEnded;
     
     public BattleService() : this(
         Locator.Get<MapService>(), 
@@ -50,6 +53,7 @@ public class BattleService : IDisposable
         _unitsByTeam[TeamType.Enemy] = enemyTeam;
         _unitsByTeam[TeamType.Player] = playerTeam;
         _unitService.OnUnitDefeated += OnUnitDefeated;
+        _isEnded = false;
         StartTurn(TeamType.Player);
     }
 
@@ -61,6 +65,11 @@ public class BattleService : IDisposable
         }
         
         StartTurn(1 - team);
+    }
+
+    public IList<IUnit> GetTeamUnits(TeamType team)
+    {
+        return _unitsByTeam.TryGetValue(team, out var units) ? units : new List<IUnit>();
     }
 
     private void OnUnitDefeated(IUnit unit)
@@ -96,11 +105,57 @@ public class BattleService : IDisposable
         }
         
         OnTurnChanged?.Invoke(team);
+        if (team == TeamType.Enemy)
+        {
+            PlayEnemyTurn();
+        }
+    }
+
+    private void PlayEnemyTurn()
+    {
+        var context = GetBattleContext();
+        var enemyUnits = _unitsByTeam[TeamType.Enemy];
+        foreach (var unit in enemyUnits)
+        {
+            var npc = (NpcUnit)unit;
+            if (_nextTurnIntentionsByUnit.TryGetValue(npc, out var intention))
+            {
+                intention.OnExecute?.Invoke();
+                _nextTurnIntentionsByUnit.Remove(npc);
+            }
+            else
+            {
+                intention = npc.Brain.GetTurnIntention();
+                intention?.OnExecute?.Invoke();
+            }
+             
+            if (_isEnded)
+            {
+                break;
+            }
+            
+            var nextIntention = npc.Brain.GetTurnIntention();
+            if (nextIntention != null)
+            {
+                _nextTurnIntentionsByUnit[npc] = nextIntention;
+            }
+        }
+        
+        if (!_isEnded)
+        {
+            EndTurn(TeamType.Enemy);
+        }
     }
     
     private void End(TeamType wonTeam)
     {
-        
+        _isEnded = true;
+    }
+
+    private BattleContext GetBattleContext()
+    {
+        var context = new BattleContext();
+        return context;
     }
     
     public void Dispose()

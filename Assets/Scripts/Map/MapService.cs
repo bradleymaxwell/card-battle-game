@@ -59,6 +59,11 @@ namespace Map
             return _mapSpaces.FirstOrDefault(m => m.Occupant == unit);
         }
 
+        public MapSpace GetSpace(int q, int r)
+        {
+            return _mapSpaces.FirstOrDefault(m => m.Q == q && m.R == r);
+        }
+
         public void Remove(IUnit unit)
         {
             var space = GetSpace(unit);
@@ -119,6 +124,63 @@ namespace Map
             _reachableSpacesByUnit[startSpace.Occupant] = reachablePaths;
 
             return reachablePaths;
+        }
+        
+        public MapSpace GetClosestReachableSpace(IUnit unit, int q, int r, int maxDistance)
+        {
+            var startSpace = GetSpace(unit);
+            if (startSpace == null)
+            {
+                return null;
+            }
+
+            var targetSpace = GetSpace(q, r);
+            if (targetSpace == null)
+            {
+                return null;
+            }
+            
+            var reachablePaths = GetReachablePaths(startSpace, maxDistance);
+            if (reachablePaths.Count <= 0)
+            {
+                return null;
+            }
+            
+            return reachablePaths
+                .OrderBy(entry => entry.Key.GetDistanceTo(targetSpace))
+                .ThenBy(entry => entry.Value.Count)
+                .Select(entry => entry.Key)
+                .FirstOrDefault();
+        }
+        
+        public IList<MapSpace> GetAllEdgeSpaces()
+        {
+            return _mapSpaces.Where(space => GetNeighbors(space).Count() < 6).ToList();
+        }
+        
+        public IEnumerable<MapSpace> GetNeighbors(MapSpace mapSpace)
+        {
+            var neighborOffsets = new[]
+            {
+                (-1, 0),
+                (1, 0),
+                (-1, 1),
+                (0, 1),
+                (0, -1),
+                (1, -1)
+            };
+
+            foreach (var (offsetQ, offsetR) in neighborOffsets)
+            {
+                var neighbor = _mapSpaces.FirstOrDefault(m =>
+                    m.Q == mapSpace.Q + offsetQ &&
+                    m.R == mapSpace.R + offsetR);
+
+                if (neighbor != null)
+                {
+                    yield return neighbor;
+                }
+            }
         }
         
         private IDictionary<MapSpace, IList<MapSpace>> BuildReachablePaths(
@@ -187,31 +249,6 @@ namespace Map
 
             path.Reverse();
             return path;
-        }
-        
-        private IEnumerable<MapSpace> GetNeighbors(MapSpace mapSpace)
-        {
-            var neighborOffsets = new[]
-            {
-                (-1, 0),
-                (1, 0),
-                (-1, 1),
-                (0, 1),
-                (0, -1),
-                (1, -1)
-            };
-
-            foreach (var (offsetQ, offsetR) in neighborOffsets)
-            {
-                var neighbor = _mapSpaces.FirstOrDefault(m =>
-                    m.Q == mapSpace.Q + offsetQ &&
-                    m.R == mapSpace.R + offsetR);
-
-                if (neighbor != null)
-                {
-                    yield return neighbor;
-                }
-            }
         }
     }
 }
