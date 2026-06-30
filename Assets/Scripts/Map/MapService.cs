@@ -183,6 +183,22 @@ namespace Map
             }
         }
         
+        public IList<MapSpace> GetNearbySpaces(
+            MapSpace centerSpace,
+            int radius,
+            bool includeCenterSpace = false)
+        {
+            if (centerSpace == null || radius < 0)
+            {
+                return new List<MapSpace>();
+            }
+
+            return _mapSpaces
+                .Where(space => includeCenterSpace || space != centerSpace)
+                .Where(space => centerSpace.GetDistanceTo(space) <= radius)
+                .ToList();
+        }
+        
         private IDictionary<MapSpace, IList<MapSpace>> BuildReachablePaths(
             MapSpace startSpace,
             int maxDistance)

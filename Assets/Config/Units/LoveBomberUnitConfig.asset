@@ -10,8 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b989ac8f69d490c8237c4950bf937b8, type: 3}
-  m_Name: EnemyUnitConfig
+  m_Name: LoveBomberUnitConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitConfig
+  name: The Love Bomber
   prefab: {fileID: 1946394557484171333, guid: 2cfd8f8a8993146dd80222f510d6d16d, type: 3}
   attack: 5
-  health: 30
+  health: 2000
+  actions:
+  - {fileID: 11400000, guid: 34febf729b6254cce87ca65d0b279179, type: 2}
+  - {fileID: 11400000, guid: 0b1725793505745248e363ae4eb35a48, type: 2}

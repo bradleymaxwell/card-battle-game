@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56bd49b2728745b2850cd10fd0f46e01, type: 3}
   m_Name: LoveBomberBrain
   m_EditorClassIdentifier: Assembly-CSharp::AI.LoveBomber.LoveBomberBrainConfig
-  motherOfAllLoveBombsThreshold: 0
+  motherOfAllLoveBombsThreshold: 10

@@ -16,9 +16,11 @@ MonoBehaviour:
   - unit: {fileID: 11400000, guid: 8673616fb74ca44c18024907f18b102c, type: 2}
     startQ: -1
     startR: -1
+    brain: {fileID: 0}
   playerDeck: {fileID: 11400000, guid: 36b4e8830fe7549048c30c7d52877084, type: 2}
   enemyUnits:
   - unit: {fileID: 11400000, guid: b64acefe97d5341e893ecbbb373817ff, type: 2}
     startQ: 1
     startR: 2
+    brain: {fileID: 11400000, guid: 20102a3e5d4894c06916bc6ee1078de4, type: 2}
   enemyDeck: {fileID: 11400000, guid: 36b4e8830fe7549048c30c7d52877084, type: 2}

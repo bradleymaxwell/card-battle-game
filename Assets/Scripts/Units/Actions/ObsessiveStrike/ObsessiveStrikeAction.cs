@@ -16,6 +16,11 @@ namespace Units.ObsessiveStrike
             _config = config;
             _unitService = Locator.Get<UnitService>();
         }
+        
+        public override bool CanPerform(MapSpace userSpace, MapSpace targetSpace)
+        {
+            return base.CanPerform(userSpace, targetSpace) && targetSpace.Occupant != null;
+        }
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
