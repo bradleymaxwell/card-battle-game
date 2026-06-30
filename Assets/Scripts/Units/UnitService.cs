@@ -29,14 +29,14 @@ namespace Units
             _selectService = selectService;
         }
 
-        public IUnit Spawn(BattleUnitConfig config, TeamType team)
+        public IUnit Spawn(SpawnConfig config)
         {
             Unit unit;
-            if (config.Brain != null)
+            if (config.BrainConfig)
             {
                 var npcUnit = new NpcUnit
                 {
-                    Brain = config.Brain.Brain
+                    Brain = config.BrainConfig.Brain
                 };
                 
                 unit = npcUnit;
@@ -46,13 +46,13 @@ namespace Units
                 unit = new Unit();
             }
 
-            unit.Team = team;
-            unit.Config = config.Unit;
-            unit.Actions = config.Unit.Actions?.Select(a => a.Action).ToList();
+            unit.Team = config.Team;
+            unit.Config = config.UnitConfig;
+            unit.Actions = config.UnitConfig.Actions?.Select(a => a.Action).ToList();
             
             ResetHealth(unit);
             AdjustEnergy(unit, 5);
-            _mapService.Move(unit, config.StartQ, config.StartR);
+            _mapService.Move(unit, config.Q, config.R);
             
             Units.Add(unit);
             OnUnitSpawned?.Invoke(unit);
@@ -145,7 +145,7 @@ namespace Units
             }
         }
 
-        private void Eliminate(IUnit unit)
+        public void Eliminate(IUnit unit)
         {
             _mapService.Remove(unit);
             OnUnitDefeated?.Invoke(unit);

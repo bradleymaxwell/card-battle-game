@@ -39,14 +39,20 @@ public class BattleService : IDisposable
         var enemyTeam = new List<IUnit>();
         foreach (var unitConfig in battleConfig.EnemyUnits)
         {
-            var unit = _unitService.Spawn(unitConfig, TeamType.Enemy);
+            var config = new SpawnConfig(unitConfig.Unit, unitConfig.StartQ, unitConfig.StartR, TeamType.Enemy)
+            {
+                BrainConfig = unitConfig.Brain
+            };
+            
+            var unit = _unitService.Spawn(config);
             enemyTeam.Add(unit);
         }
         
         var playerTeam = new List<IUnit>();
         foreach (var unitConfig in battleConfig.PlayerUnits)
         {
-            var unit = _unitService.Spawn(unitConfig, TeamType.Player);
+            var config = new SpawnConfig(unitConfig.Unit, unitConfig.StartQ, unitConfig.StartR, TeamType.Player);
+            var unit = _unitService.Spawn(config);
             playerTeam.Add(unit);
         }
 

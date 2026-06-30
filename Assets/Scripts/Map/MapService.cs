@@ -183,10 +183,10 @@ namespace Map
             }
         }
         
-        public IList<MapSpace> GetNearbySpaces(
+        public IList<MapSpace> GetAreaSpaces(
             MapSpace centerSpace,
             int radius,
-            bool includeCenterSpace = false)
+            bool includeCenterSpace = true)
         {
             if (centerSpace == null || radius < 0)
             {
