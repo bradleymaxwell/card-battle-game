@@ -15,7 +15,9 @@ MonoBehaviour:
   name: The Love Bomber
   prefab: {fileID: 1946394557484171333, guid: 2cfd8f8a8993146dd80222f510d6d16d, type: 3}
   attack: 5
-  health: 2000
+  health: 1000
   actions:
   - {fileID: 11400000, guid: 34febf729b6254cce87ca65d0b279179, type: 2}
   - {fileID: 11400000, guid: 0b1725793505745248e363ae4eb35a48, type: 2}
+  - {fileID: 11400000, guid: b064261132ac342f99b46178f0f3ea2a, type: 2}
+  - {fileID: 11400000, guid: c9c8e88c1e8854a15b414ca2bde1a2fd, type: 2}

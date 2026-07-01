@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ea9897b766b468bba6b05953cfc3979, type: 3}
-  m_Name: ToxicLovePotion_LoveBomber
-  m_EditorClassIdentifier: Assembly-CSharp::Units.ToxicLovePotion.ToxicLovePotionActionConfig
-  energyCost: 0
-  name: Toxic Love Potion
+  m_Script: {fileID: 11500000, guid: a7ad422428f2454d9dfcbf72722f66f3, type: 3}
+  m_Name: MoveAction_CreeperCupid
+  m_EditorClassIdentifier: Assembly-CSharp::Units.MoveActionConfig
+  energyCost: 1
+  name: 'Chase '
   icon: {fileID: 0}
   description: 
-  radius: 1
-  damage: 100

@@ -4,6 +4,7 @@ using System.Linq;
 using AI;
 using Battles;
 using Map;
+using NUnit.Framework;
 using Units;
 
 public class BattleService : IDisposable
@@ -12,6 +13,7 @@ public class BattleService : IDisposable
     private readonly UnitService _unitService;
     private readonly CardService _cardService;
     private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
+    private readonly Logger _logger = new(nameof(BattleService));
     private TeamType Turn { get; set; }
     public event Action<TeamType> OnTurnChanged;
     private Dictionary<NpcUnit, UnitTurnIntention> _nextTurnIntentionsByUnit = new();
@@ -59,6 +61,7 @@ public class BattleService : IDisposable
         _unitsByTeam[TeamType.Enemy] = enemyTeam;
         _unitsByTeam[TeamType.Player] = playerTeam;
         _unitService.OnUnitDefeated += OnUnitDefeated;
+        _unitService.OnUnitSpawned += OnUnitSpawned;
         _isEnded = false;
         StartTurn(TeamType.Player);
     }
@@ -119,9 +122,9 @@ public class BattleService : IDisposable
 
     private void PlayEnemyTurn()
     {
-        var context = GetBattleContext();
         var enemyUnits = _unitsByTeam[TeamType.Enemy];
-        foreach (var unit in enemyUnits)
+        var turnUnits = new List<IUnit>(enemyUnits);
+        foreach (var unit in turnUnits)
         {
             var npc = (NpcUnit)unit;
             if (_nextTurnIntentionsByUnit.TryGetValue(npc, out var intention))
@@ -132,6 +135,7 @@ public class BattleService : IDisposable
             else
             {
                 intention = npc.Brain.GetTurnIntention();
+                _logger.Log(intention.Description);
                 intention?.OnExecute?.Invoke();
             }
              
@@ -143,6 +147,7 @@ public class BattleService : IDisposable
             var nextIntention = npc.Brain.GetTurnIntention();
             if (nextIntention != null)
             {
+                _logger.Log($"Next: {nextIntention.Description}");
                 _nextTurnIntentionsByUnit[npc] = nextIntention;
             }
         }
@@ -158,10 +163,19 @@ public class BattleService : IDisposable
         _isEnded = true;
     }
 
-    private BattleContext GetBattleContext()
+    private void OnUnitSpawned(IUnit unit)
     {
-        var context = new BattleContext();
-        return context;
+        var team = _unitsByTeam[unit.Team];
+        team.Add(unit);
+        if (unit is NpcUnit npc)
+        {
+            var intention = npc.Brain.GetTurnIntention();
+            if (intention != null)
+            {
+                _nextTurnIntentionsByUnit[npc] = intention;
+                _logger.Log($"Next: {intention.Description}");
+            }
+        }
     }
     
     public void Dispose()

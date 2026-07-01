@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Units.CreeperCupid
 {
-    [CreateAssetMenu(menuName = "Game Config/Action/Creeper Cupid", fileName =  "CreeperCupidActionConfig")]
+    [CreateAssetMenu(menuName = "Game Config/Action/Summon Creeper Cupid", fileName =  "SummonCreeperCupidActionConfig")]
     public class SummonCreeperCupidActionConfig : ActionConfig
     {
         [SerializeField] private UnitConfig cupidUnit;

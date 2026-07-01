@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ea9897b766b468bba6b05953cfc3979, type: 3}
-  m_Name: ToxicLovePotion_LoveBomber
-  m_EditorClassIdentifier: Assembly-CSharp::Units.ToxicLovePotion.ToxicLovePotionActionConfig
+  m_Script: {fileID: 11500000, guid: 5556f960764445dc973368fe32de4b37, type: 3}
+  m_Name: KissOfDeathAction_CreeperCupid
+  m_EditorClassIdentifier: Assembly-CSharp::Units.KissOfDeath.KissOfDeathActionConfig
   energyCost: 0
-  name: Toxic Love Potion
+  name: Kiss of Death
   icon: {fileID: 0}
   description: 
   radius: 1
-  damage: 100
+  damage: 50
+  range: 1

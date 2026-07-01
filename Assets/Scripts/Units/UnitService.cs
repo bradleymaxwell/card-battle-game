@@ -49,10 +49,17 @@ namespace Units
             unit.Team = config.Team;
             unit.Config = config.UnitConfig;
             unit.Actions = config.UnitConfig.Actions?.Select(a => a.Action).ToList();
+            unit.Energy = 10;
             
             ResetHealth(unit);
             AdjustEnergy(unit, 5);
             _mapService.Move(unit, config.Q, config.R);
+            
+            // initializing npc unit brain after unit is fully set up
+            if (unit is NpcUnit npc)
+            {
+                npc.Brain.Initialize(npc);
+            }
             
             Units.Add(unit);
             OnUnitSpawned?.Invoke(unit);

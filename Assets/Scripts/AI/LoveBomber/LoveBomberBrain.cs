@@ -53,7 +53,7 @@ public class LoveBomberBrain : IUnitBrain
             return intention;
         }
 
-        var actionChoice = Random.Range(CreeperCupid, ToxicLovePotion + 1);
+        var actionChoice = Random.Range(ToxicLovePotion, CreeperCupid + 1);
         switch (actionChoice)
         {
             case ToxicLovePotion:
@@ -65,7 +65,7 @@ public class LoveBomberBrain : IUnitBrain
         }
 
         _isObsessiveStrikeTurn = true;
-        return null;
+        return intention;
     }
 
     private void SetCreeperCupidAs(UnitTurnIntention intention)
@@ -76,7 +76,8 @@ public class LoveBomberBrain : IUnitBrain
         {
             _unitService.Perform(_unit, action);
             var edgeSpaces = _mapService.GetAllEdgeSpaces();
-            var space = edgeSpaces[Random.Range(0, edgeSpaces.Count)];
+            var availableEdgeSpaces = edgeSpaces.Where(s => s.Occupant == null);
+            var space = availableEdgeSpaces.ElementAt(Random.Range(0, edgeSpaces.Count));
             _selectService.Select(space, TeamType.Enemy);
         };
     }
