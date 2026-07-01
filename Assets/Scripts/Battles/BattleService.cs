@@ -144,6 +144,12 @@ public class BattleService : IDisposable
                 break;
             }
             
+            // if the unit is removed from the battle, then skip getting their next intention
+            if (!_unitsByTeam[unit.Team].Contains(unit))
+            {
+                continue;
+            }
+            
             var nextIntention = npc.Brain.GetTurnIntention();
             if (nextIntention != null)
             {
