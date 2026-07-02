@@ -10,6 +10,7 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     [SerializeField] private Vector2 offset = new(0f, 55f);
     [SerializeField] private Color enemyHealthColor = Color.red;
     [SerializeField] private Color friendlyHealthColor = Color.green;
+    [SerializeField] private Color activeUnitColor = Color.softYellow;
     private UnitPrefab _unitPrefab;
     private Canvas _canvas;
     private RectTransform _rectTransform;
@@ -20,6 +21,8 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     private Vector3 _lastWorldPosition;
     private bool _hasLastAnchoredPosition;
     private bool _hasLastWorldPosition;
+    private UnitService _unitService;
+    private bool _isUnitActive;
     
     private void Awake()
     {
@@ -27,6 +30,7 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         _rectTransform = GetComponent<RectTransform>();
         _camera = Camera.main;
         _fillImage = healthSlider.fillRect.GetComponent<Image>();
+        _unitService = Locator.Get<UnitService>();
     }
 
     private void LateUpdate()
@@ -39,17 +43,55 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         _unitPrefab = unitPrefab;
         _unitPrefab.Unit.OnCurrentHealthChanged += Refresh;
         _unitPrefab.Unit.OnCurrentEnergyChanged += Refresh;
-        _fillImage.color = unitPrefab.Unit.Team switch
+        _unitService.OnActiveUnitChanged += OnActiveUnitChanged;
+        var activeUnit = _unitService.GetActiveUnit(_unitPrefab.Unit.Team);
+        if (activeUnit == _unitPrefab.Unit)
+        {
+            _isUnitActive = true;
+        }
+        
+        SetHealthBarColor();
+        _logger.Log($"{gameObject.name} bound to {unitPrefab.Unit.Team}");
+        Refresh(_unitPrefab.Unit.CurrentHealth);
+    }
+
+    private void OnActiveUnitChanged(TeamType team, IUnit unit)
+    {
+        if (team != TeamType.Player)
+        {
+            return;
+        }
+
+        if (_isUnitActive && unit != _unitPrefab.Unit)
+        {
+            _isUnitActive = false;
+            SetHealthBarColor();
+            return;
+        }
+        
+        if (!_isUnitActive && unit == _unitPrefab.Unit)
+        {
+            _isUnitActive = true;
+            SetHealthBarColor();
+        }
+    }
+
+    private void SetHealthBarColor()
+    {
+        if (_isUnitActive)
+        {
+            _fillImage.color = activeUnitColor;
+            return;
+        }
+        
+        _fillImage.color = _unitPrefab.Unit.Team switch
         {
             TeamType.Player => friendlyHealthColor,
             TeamType.Enemy => enemyHealthColor,
             _ => _fillImage.color
         };
-        
-        _logger.Log($"{gameObject.name} bound to {unitPrefab.Unit.Team}");
-        Refresh(_unitPrefab.Unit.CurrentHealth);
     }
-
+    
     public void Unbind()
     {
         if (!_unitPrefab)

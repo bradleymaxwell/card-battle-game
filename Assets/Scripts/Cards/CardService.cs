@@ -10,12 +10,13 @@ public class CardService
 {
     private readonly Dictionary<TeamType, Deck> _decks = new();
     private readonly Logger _logger = new(nameof(CardService));
-    private SelectService _selectService;
+    private readonly SelectService _selectService;
     public event Action<ICard> OnSelectedCardChanged;
     public event Action<ICard> OnCardDrawn;
     public event Action<int> OnManaChanged;
     public event Action<ICard, CardPileType, CardPileType> OnCardMoved;
-
+    private bool _isActive;
+    
     public CardService() : this(Locator.Get<SelectService>())
     {
     }
@@ -46,6 +47,11 @@ public class CardService
 
     public void Select(ICard card)
     {
+        if (!_isActive)
+        {
+            return;
+        }
+        
         if (card == null || !card.CanPlay())
         {
             return;
@@ -70,6 +76,11 @@ public class CardService
         OnSelectedCardChanged?.Invoke(card);
     }
 
+    public void SetActive(bool isActive)
+    {
+        _isActive = isActive;
+    }
+
     private void OnPlay(ICard card, Deck deck, IEnumerable<ISelectable> targets)
     {
         AdjustMana(deck, -card.ManaCost);
@@ -90,8 +101,12 @@ public class CardService
         for (var i = 0; i < cardsToDraw; i++)
         {
             var card = drawPile[0];
-            Move(deck, card, CardPileType.Draw, CardPileType.Hand);
-            OnCardDrawn?.Invoke(card);
+            var destination = deck.CardPiles[CardPileType.Hand].Count < 10 ? CardPileType.Hand : CardPileType.Discard;
+            Move(deck, card, CardPileType.Draw, destination);
+            if (destination == CardPileType.Hand)
+            {
+                    OnCardDrawn?.Invoke(card);
+            }
         }
     }
 
@@ -137,9 +152,16 @@ public class CardService
             }
         };
         
-        AdjustMana(deck, 10);
+        SetManaCap(1);
+        AdjustMana(deck, 1);
         _decks[TeamType.Player] = deck;
         return deck;
+    }
+
+    public void SetManaCap(int manaCap)
+    {
+        var deck = GetDeck();
+        deck.
     }
     
     private void AdjustMana(Deck deck, int mana, bool enforceCap = true)
@@ -150,6 +172,11 @@ public class CardService
         {
             OnManaChanged?.Invoke(deck.CurrentMana);
         }
+    }
+
+    public void ResetMana()
+    {
+        
     }
     
     private void Move(Deck deck, ICard card, CardPileType from, CardPileType to)

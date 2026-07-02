@@ -107,8 +107,10 @@ public class BattleService : IDisposable
         {
             _unitService.AdjustEnergy(unit, 2);
         }
-
-        if (team == TeamType.Player)
+        
+        var isPlayerTurn = team == TeamType.Player;
+        _cardService.SetActive(isPlayerTurn);
+        if (isPlayerTurn)
         {
             _cardService.Draw(1);
         }

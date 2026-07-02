@@ -98,29 +98,34 @@ public class LoveBomberBrain : IUnitBrain
 
     private void SetObsessiveStrikeAs(UnitTurnIntention intention)
     {
-        var action = _unit.Actions[ObsessiveStrike];
-        intention.Description = $"{_unit.Config.Name} is going to hit someone with an {action.Config.Name}";
+        var obsessiveStrike = _unit.Actions[ObsessiveStrike];
+        intention.Description = $"{_unit.Config.Name} is going to hit someone with an {obsessiveStrike.Config.Name}";
         intention.OnExecute = () =>
         {
             // find nearest player unit that has an available space next to them
             var units = _battleService.GetTeamUnits(TeamType.Player);
             var sortedUnits = units.OrderBy(u => _mapService.GetSpace(_unit).GetDistanceTo(_mapService.GetSpace(u))).ToList();
-            var targetMoveSpace = _mapService.GetSpace(sortedUnits[0]);
+            var startSpace = _mapService.GetSpace(_unit);
             var targetUnitSpace = _mapService.GetSpace(sortedUnits[0]);
-            foreach (var unit in sortedUnits)
+            if (!obsessiveStrike.CanPerform(startSpace, targetUnitSpace))
             {
-                var unitSpace = _mapService.GetSpace(unit);
-                var space = _mapService.GetNeighbors(unitSpace).FirstOrDefault(n => n.Occupant == null);
-                if (space != null)
+                var targetMoveSpace = _mapService.GetSpace(sortedUnits[0]);
+                foreach (var unit in sortedUnits)
                 {
-                    targetMoveSpace = space;
-                    targetUnitSpace = unitSpace;
-                    break;
+                    var unitSpace = _mapService.GetSpace(unit);
+                    var space = _mapService.GetNeighbors(unitSpace).FirstOrDefault(n => n.Occupant == null);
+                    if (space != null)
+                    {
+                        targetMoveSpace = space;
+                        targetUnitSpace = unitSpace;
+                        break;
+                    }
                 }
+                
+                _mapService.Move(_unit, targetMoveSpace.Q, targetMoveSpace.R);
             }
             
-            _mapService.Move(_unit, targetMoveSpace.Q, targetMoveSpace.R);
-            _unitService.Perform(_unit, action);
+            _unitService.Perform(_unit, obsessiveStrike);
             _selectService.Select(targetUnitSpace, TeamType.Enemy);
             _isObsessiveStrikeTurn = false;
         };

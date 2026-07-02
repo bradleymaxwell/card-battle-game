@@ -6,5 +6,6 @@ namespace Cards
     {
         public IDictionary<CardPileType, IList<ICard>> CardPiles { get; } = new Dictionary<CardPileType, IList<ICard>>();
         public int CurrentMana { get; set; }
+        public int ManaCap { get; set; }
     }
 }
