@@ -19,7 +19,8 @@ namespace Cards
         private PoolService _poolService;
         private SelectService _selectService;
         private ICard _selectedCard;
-        private IDictionary<ICard, CardView> _viewsByCard = new Dictionary<ICard, CardView>(); 
+        private IDictionary<ICard, CardView> _viewsByCard = new Dictionary<ICard, CardView>();
+        private Deck _deck;
         
         private void Awake()
         {
@@ -36,13 +37,13 @@ namespace Cards
             _selectService.OnActiveContextChanged += OnActiveContextChanged;
             _cardService.OnCardMoved += OnCardMoved;
             
-            var deck = _cardService.GetDeck();
-            if (deck == null)
+            _deck = _cardService.GetDeck();
+            if (_deck == null)
             {
                 return;
             }
             
-            if (deck.CardPiles.TryGetValue(CardPileType.Hand, out var hand) && hand.Count > 0)
+            if (_deck.CardPiles.TryGetValue(CardPileType.Hand, out var hand) && hand.Count > 0)
             {
                 foreach (var card in hand)
                 {
@@ -50,7 +51,7 @@ namespace Cards
                 }
             }
             
-            RefreshMana(deck.CurrentMana);
+            RefreshMana(_deck.CurrentMana);
         }
         
         private void OnSelectedCardChanged(ICard card)
@@ -103,8 +104,9 @@ namespace Cards
 
         private void RefreshMana(int mana)
         {
+            _deck ??= _cardService.GetDeck();
             manaSlider.value = mana;
-            manaText.text = $"{mana}/{manaSlider.maxValue}";
+            manaText.text = $"{mana}/{_deck?.ManaCap ?? 10}";
         }
         
         private void OnActiveContextChanged(TeamType team, ISelectContext context)

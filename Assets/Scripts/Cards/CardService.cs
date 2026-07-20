@@ -152,31 +152,37 @@ public class CardService
             }
         };
         
-        SetManaCap(1);
+        SetManaCap(deck, 1);
         AdjustMana(deck, 1);
         _decks[TeamType.Player] = deck;
         return deck;
     }
 
-    public void SetManaCap(int manaCap)
+    public void IncrementManaCap(int amount = 1, int limit = 10)
     {
         var deck = GetDeck();
-        deck.
+        deck.ManaCap = Mathf.Min(deck.ManaCap + amount, limit);
+    }
+    
+    public void ResetMana()
+    {
+        var deck = GetDeck();
+        AdjustMana(deck, deck.ManaCap);
+    }
+    
+    private void SetManaCap(Deck deck, int manaCap)
+    {
+        deck.ManaCap = manaCap;
     }
     
     private void AdjustMana(Deck deck, int mana, bool enforceCap = true)
     {
         var manaBefore = deck.CurrentMana;
-        deck.CurrentMana = enforceCap ? Mathf.Clamp(deck.CurrentMana + mana, 0, 10) : Mathf.Max(deck.CurrentMana + mana, 0);
+        deck.CurrentMana = enforceCap ? Mathf.Clamp(deck.CurrentMana + mana, 0, deck.ManaCap) : Mathf.Max(deck.CurrentMana + mana, 0);
         if (manaBefore != deck.CurrentMana)
         {
             OnManaChanged?.Invoke(deck.CurrentMana);
         }
-    }
-
-    public void ResetMana()
-    {
-        
     }
     
     private void Move(Deck deck, ICard card, CardPileType from, CardPileType to)

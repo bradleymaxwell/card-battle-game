@@ -76,8 +76,8 @@ public class LoveBomberBrain : IUnitBrain
         {
             _unitService.Perform(_unit, action);
             var edgeSpaces = _mapService.GetAllEdgeSpaces();
-            var availableEdgeSpaces = edgeSpaces.Where(s => s.Occupant == null);
-            var space = availableEdgeSpaces.ElementAt(Random.Range(0, edgeSpaces.Count));
+            var availableEdgeSpaces = edgeSpaces.Where(s => s.Occupant == null).ToList();
+            var space = availableEdgeSpaces.ElementAt(Random.Range(0, availableEdgeSpaces.Count));
             _selectService.Select(space, TeamType.Enemy);
         };
     }

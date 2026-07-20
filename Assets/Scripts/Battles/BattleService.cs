@@ -4,7 +4,6 @@ using System.Linq;
 using AI;
 using Battles;
 using Map;
-using NUnit.Framework;
 using Units;
 
 public class BattleService : IDisposable
@@ -16,7 +15,7 @@ public class BattleService : IDisposable
     private readonly Logger _logger = new(nameof(BattleService));
     private TeamType Turn { get; set; }
     public event Action<TeamType> OnTurnChanged;
-    private Dictionary<NpcUnit, UnitTurnIntention> _nextTurnIntentionsByUnit = new();
+    private readonly Dictionary<NpcUnit, UnitTurnIntention> _nextTurnIntentionsByUnit = new();
     private bool _isEnded;
     
     public BattleService() : this(
@@ -113,6 +112,8 @@ public class BattleService : IDisposable
         if (isPlayerTurn)
         {
             _cardService.Draw(1);
+            _cardService.IncrementManaCap();
+            _cardService.ResetMana();
         }
         
         OnTurnChanged?.Invoke(team);
