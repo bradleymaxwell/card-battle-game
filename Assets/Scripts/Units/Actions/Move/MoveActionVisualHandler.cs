@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Map;
 using Units.Actions.VisualPlayback;
@@ -60,7 +59,15 @@ namespace Units
                 mapSpacePrefab.transform.position.x,
                 unitTransform.position.y,
                 mapSpacePrefab.transform.position.z);
-
+            
+            var moveDirection = targetPosition - unitTransform.position;
+            moveDirection.y = 0f;
+            if (moveDirection != Vector3.zero)
+            {
+                unitTransform.rotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            }
+            
+            unitPrefab.Animator.SetBool(AnimationConstants.IsMoving, true);
             while (Vector3.Distance(unitTransform.position, targetPosition) > 0.01f)
             {
                 unitTransform.position = Vector3.MoveTowards(
@@ -70,7 +77,8 @@ namespace Units
 
                 yield return null;
             }
-
+            
+            unitPrefab.Animator.SetBool(AnimationConstants.IsMoving, false);
             unitTransform.position = targetPosition;
         }
     }

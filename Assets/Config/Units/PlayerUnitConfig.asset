@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: PlayerUnitConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitConfig
   name: 
-  prefab: {fileID: 1190919035251747360, guid: f970a0ff6daac4bac9c341986f0a18a9, type: 3}
+  prefab: {fileID: 555939938533003795, guid: deb30d0f6aee54cc6ac0980bdb4959ee, type: 3}
   attack: 10
-  health: 50000
+  health: 1000
   actions:
   - {fileID: 11400000, guid: f4259610bc34544afbf4cb81663317f8, type: 2}
   - {fileID: 11400000, guid: 750b61760ecc848f88f97adc23e9e530, type: 2}
