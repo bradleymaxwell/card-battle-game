@@ -10,7 +10,6 @@ public class BattleService : IDisposable
 {
     private readonly MapService _mapService;
     private readonly UnitService _unitService;
-    private readonly CardService _cardService;
     private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
     private readonly Logger _logger = new(nameof(BattleService));
     private TeamType Turn { get; set; }
@@ -20,22 +19,19 @@ public class BattleService : IDisposable
     
     public BattleService() : this(
         Locator.Get<MapService>(), 
-        Locator.Get<UnitService>(),
-        Locator.Get<CardService>())
+        Locator.Get<UnitService>())
     {
     }
 
-    public BattleService(MapService mapService, UnitService unitService, CardService cardService)
+    public BattleService(MapService mapService, UnitService unitService)
     {
         _mapService = mapService;
         _unitService = unitService;
-        _cardService = cardService;
     }
 
     public void Initialize(BattleConfig battleConfig, MapSpaceContainer mapSpaceContainer)
     {
         _mapService.Initialize(mapSpaceContainer);
-        _cardService.Initialize(battleConfig.PlayerDeck);
         _unitsByTeam.Clear();
         var enemyTeam = new List<IUnit>();
         foreach (var unitConfig in battleConfig.EnemyUnits)
@@ -105,15 +101,6 @@ public class BattleService : IDisposable
         foreach (var unit in teamUnits)
         {
             _unitService.AdjustEnergy(unit, 2);
-        }
-        
-        var isPlayerTurn = team == TeamType.Player;
-        _cardService.SetActive(isPlayerTurn);
-        if (isPlayerTurn)
-        {
-            _cardService.Draw(1);
-            _cardService.IncrementManaCap();
-            _cardService.ResetMana();
         }
         
         OnTurnChanged?.Invoke(team);

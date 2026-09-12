@@ -2,10 +2,14 @@ namespace Units
 {
     public class ActionPerformResult
     {
-        public int EnergyConsumed { get; set; }
-
-        public ActionPerformResult(int energyConsumed)
+        public IAction Action { get; }
+        public IUnit Performer { get; }
+        public int EnergyConsumed { get; }
+        
+        public ActionPerformResult(IAction action, IUnit performer, int energyConsumed)
         {
+            Action = action;
+            Performer = performer;
             EnergyConsumed = energyConsumed;
         }
     }

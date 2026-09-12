@@ -23,7 +23,7 @@ namespace Units.KissOfDeath
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult(_config.EnergyCost);
+            var result = new ActionPerformResult(this, userSpace.Occupant, _config.EnergyCost);
             var nearbySpaces = _mapService.GetAreaSpaces(targetSpace, _config.Radius);
             var otherTeamSpaces = nearbySpaces.Where(s => s.Occupant != null && s.Occupant.Team != userSpace.Occupant.Team);
             foreach (var space in otherTeamSpaces)

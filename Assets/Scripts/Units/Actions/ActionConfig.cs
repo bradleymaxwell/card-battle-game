@@ -1,3 +1,4 @@
+using Units.VisualPlayback;
 using UnityEngine;
 
 namespace Units
@@ -15,6 +16,9 @@ namespace Units
         
         [SerializeField] private string description;
         public string Description => description;
+        
+        [SerializeField] private ActionVisualConfig visual;
+        public ActionVisualConfig Visual => visual;       
         
         public abstract IAction Action { get; }
     }

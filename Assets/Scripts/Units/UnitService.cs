@@ -13,9 +13,12 @@ namespace Units
         private readonly Logger _logger = new(nameof(UnitService));
         private readonly MapService _mapService;
         private readonly SelectService _selectService;
+        
         public event Action<IUnit> OnUnitDefeated;
         public event Action<TeamType, IUnit> OnActiveUnitChanged;
         public event Action<IUnit> OnUnitSpawned;
+        public event Action<ActionPerformResult> OnActionPerformed;
+        
         private readonly Dictionary<TeamType, IUnit> _activeUnitByTeam = new();
         public IList<IUnit> Units { get; } = new List<IUnit>();
         
@@ -83,6 +86,7 @@ namespace Units
         {
             var result = action.OnPerform(userSpace, targetSpace);
             AdjustEnergy(unit, -result.EnergyConsumed);
+            OnActionPerformed?.Invoke(result);
         }
 
         public void SetActiveUnit(TeamType team, IUnit unit)

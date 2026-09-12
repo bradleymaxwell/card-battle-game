@@ -6,6 +6,7 @@ using Targeting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[Obsolete]
 public class CardService
 {
     private readonly Dictionary<TeamType, Deck> _decks = new();

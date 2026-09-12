@@ -18,7 +18,7 @@ namespace Units.MotherOfAllLoveBombs
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult(_config.EnergyCost);
+            var result = new ActionPerformResult(this, userSpace.Occupant, _config.EnergyCost);
             var hitSpaces = _mapService.GetAreaSpaces(userSpace, _config.Radius, includeCenterSpace: false);
             var otherTeamSpaces = hitSpaces.Where(s => s.Occupant != null && s.Occupant.Team != userSpace.Occupant.Team);
             foreach (var space in otherTeamSpaces)

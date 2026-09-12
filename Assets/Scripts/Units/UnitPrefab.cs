@@ -17,18 +17,12 @@ public class UnitPrefab : MonoBehaviour, IPoolable
     public void Bind(IUnit unit)
     {
         Unit = unit;
-        unit.OnMapSpaceChanged += OnMapSpaceUpdated;
         var space = _mapService.GetSpace(unit);
         OnMapSpaceUpdated(space);
     }
 
     public void Reset()
     {
-        if (Unit != null)
-        {
-            Unit.OnMapSpaceChanged -= OnMapSpaceUpdated;
-        }
-        
         Unit = null;
     }
 

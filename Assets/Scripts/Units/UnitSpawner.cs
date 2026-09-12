@@ -10,6 +10,7 @@ public class UnitSpawner : MonoBehaviour
     private UnitService _unitService;
     private PoolService _poolService;
     private IDictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>> _unitViews = new Dictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>>();
+    private readonly Logger _logger = new(nameof(UnitSpawner));
     
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class UnitSpawner : MonoBehaviour
 
     private void OnEnable()
     {
+        Locator.Register(this);
         _unitService.OnUnitSpawned += OnUnitSpawned;
         _unitService.OnUnitDefeated += OnUnitDefeated;
     }
@@ -35,6 +37,18 @@ public class UnitSpawner : MonoBehaviour
             _unitService.OnUnitSpawned -= OnUnitSpawned;
             _unitService.OnUnitDefeated -= OnUnitDefeated;
         }
+    }
+
+    public UnitPrefab GetUnitPrefab(IUnit unit)
+    {
+        var found = _unitViews.TryGetValue(unit, out var views);
+        if (!found)
+        {
+            _logger.LogError($"Could not find a spawned unit prefab instance bound for unit: {unit.Config.Name}");
+            return null;
+        }
+        
+        return views.Item1;
     }
     
     private void OnUnitSpawned(IUnit unit)
