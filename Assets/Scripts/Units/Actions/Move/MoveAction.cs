@@ -42,7 +42,7 @@ namespace Units
         {
             var maxDistance = Config.EnergyCost != 0 ? userSpace.Occupant.CurrentEnergy / Config.EnergyCost : int.MaxValue;
             var shortestPath = _mapService.GetShortestPath(userSpace, targetSpace, maxDistance, includeStartSpace: false);
-            var result = new MoveActionPerformResult(this, userSpace.Occupant, shortestPath.Count * Config.EnergyCost, shortestPath);
+            var result = new MoveActionPerformResult(this, userSpace.Occupant, shortestPath.Count * Config.EnergyCost, targetSpace, shortestPath);
             _mapService.Move(userSpace.Occupant, targetSpace.Q, targetSpace.R);
             return result;
         }

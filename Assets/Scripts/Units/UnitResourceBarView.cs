@@ -41,7 +41,6 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     public void Bind(UnitPrefab unitPrefab)
     {
         _unitPrefab = unitPrefab;
-        _unitPrefab.Unit.OnCurrentHealthChanged += Refresh;
         _unitPrefab.Unit.OnCurrentEnergyChanged += Refresh;
         _unitService.OnActiveUnitChanged += OnActiveUnitChanged;
         var activeUnit = _unitService.GetActiveUnit(_unitPrefab.Unit.Team);
@@ -54,7 +53,30 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         _logger.Log($"{gameObject.name} bound to {unitPrefab.Unit.Team}");
         Refresh(_unitPrefab.Unit.CurrentHealth);
     }
+    
+    public void Unbind()
+    {
+        if (!_unitPrefab)
+        {
+            return;
+        }
 
+        if (_unitPrefab.Unit == null)
+        {
+            return;
+        }
+        
+        _unitPrefab = null;
+    }
+    
+    public void Refresh(int _)
+    {
+        healthSlider.maxValue = _unitPrefab.Unit.Config.Health;
+        healthSlider.value = _unitPrefab.Unit.CurrentHealth;
+        energySlider.maxValue = _unitPrefab.Unit.Energy;
+        energySlider.value = _unitPrefab.Unit.CurrentEnergy;
+    }
+    
     private void OnActiveUnitChanged(TeamType team, IUnit unit)
     {
         if (team != TeamType.Player)
@@ -90,30 +112,6 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
             TeamType.Enemy => enemyHealthColor,
             _ => _fillImage.color
         };
-    }
-    
-    public void Unbind()
-    {
-        if (!_unitPrefab)
-        {
-            return;
-        }
-
-        if (_unitPrefab.Unit == null)
-        {
-            return;
-        }
-        
-        _unitPrefab.Unit.OnCurrentHealthChanged -= Refresh;
-        _unitPrefab = null;
-    }
-
-    private void Refresh(int _)
-    {
-        healthSlider.maxValue = _unitPrefab.Unit.Config.Health;
-        healthSlider.value = _unitPrefab.Unit.CurrentHealth;
-        energySlider.maxValue = _unitPrefab.Unit.Energy;
-        energySlider.value = _unitPrefab.Unit.CurrentEnergy;
     }
 
     private void UpdateScreenPosition()

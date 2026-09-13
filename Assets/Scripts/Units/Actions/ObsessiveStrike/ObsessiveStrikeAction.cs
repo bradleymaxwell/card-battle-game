@@ -24,7 +24,7 @@ namespace Units.ObsessiveStrike
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult(this, userSpace.Occupant, _config.EnergyCost);
+            var result = new ActionPerformResult(this, userSpace.Occupant, _config.EnergyCost, targetSpace);
             if (_previousTarget != targetSpace.Occupant)
             {
                 _stacks = 0;

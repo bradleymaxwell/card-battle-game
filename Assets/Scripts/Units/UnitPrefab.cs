@@ -1,14 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
 using Map;
 using Units;
 using UnityEngine;
+using Action = System.Action;
 
 [RequireComponent(typeof(Animator))]
 public class UnitPrefab : MonoBehaviour, IPoolable
 {
     [SerializeField] private float yOffset = 1f;
-    public IUnit Unit { get; private set; }
     private MapService _mapService;
-    private Logger _logger = new(nameof(UnitPrefab));
+    private IDictionary<string, IList<Action>> _callbacksByEventName = new Dictionary<string, IList<Action>>();
+    public IUnit Unit { get; private set; }
     public Animator Animator { get; private set; }
     
     private void Awake()
@@ -24,6 +27,35 @@ public class UnitPrefab : MonoBehaviour, IPoolable
         OnMapSpaceUpdated(space);
     }
 
+    public void SubscribeToAnimationEvent(string eventName, Action callback)
+    {
+        var found = _callbacksByEventName.TryGetValue(eventName, out var callbacks);
+        if (!found)
+        {
+            _callbacksByEventName.Add(eventName, new List<Action> { callback });
+        }
+        else
+        {
+            callbacks.Add(callback);
+        }
+    }
+
+    public void RaiseAnimationEvent(string eventName)
+    {
+        var found = _callbacksByEventName.TryGetValue(eventName, out var callbacks);
+        if (!found)
+        {
+            return;
+        }
+        
+        foreach (var callback in callbacks)
+        {
+            callback?.Invoke();
+        }
+        
+        callbacks.Clear();
+    }
+    
     public void Reset()
     {
         Unit = null;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Map;
 using Units.Actions.VisualPlayback;
@@ -33,7 +34,7 @@ namespace Units
                 yield break;
             }
 
-            var unitPrefab = _unitSpawner.GetUnitPrefab(result.Performer);
+            var (unitPrefab, _) = _unitSpawner.GetUnitViews(result.Performer);
             if (unitPrefab == null)
             {
                 _logger.LogError($"no unit prefab instance found for unit: {result.Performer} and therefore cannot playback move");
@@ -54,32 +55,20 @@ namespace Units
                 yield break;
             }
 
-            var unitTransform = unitPrefab.transform;
-            var targetPosition = new Vector3(
-                mapSpacePrefab.transform.position.x,
-                unitTransform.position.y,
-                mapSpacePrefab.transform.position.z);
-            
-            var moveDirection = targetPosition - unitTransform.position;
-            moveDirection.y = 0f;
-            if (moveDirection != Vector3.zero)
-            {
-                unitTransform.rotation = Quaternion.LookRotation(moveDirection, Vector3.up);
-            }
-            
+            unitPrefab.Face(mapSpacePrefab);
             unitPrefab.Animator.SetBool(AnimationConstants.IsMoving, true);
-            while (Vector3.Distance(unitTransform.position, targetPosition) > 0.01f)
+            while (Vector3.Distance(unitPrefab.transform.position, mapSpacePrefab.transform.position) > 0.01f)
             {
-                unitTransform.position = Vector3.MoveTowards(
-                    unitTransform.position,
-                    targetPosition,
+                unitPrefab.transform.position = Vector3.MoveTowards(
+                    unitPrefab.transform.position,
+                    mapSpacePrefab.transform.position,
                     _config.Speed * Time.deltaTime);
 
                 yield return null;
             }
             
             unitPrefab.Animator.SetBool(AnimationConstants.IsMoving, false);
-            unitTransform.position = targetPosition;
+            unitPrefab.transform.position = mapSpacePrefab.transform.position;
         }
     }
 }

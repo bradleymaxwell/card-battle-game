@@ -10,11 +10,13 @@ namespace Units
         public MoveActionPerformResult(
             IAction action, 
             IUnit performer,
-            int energyConsumed, 
+            int energyConsumed,
+            MapSpace targetSpace,
             IList<MapSpace> path) : base(
             action,
             performer,
-            energyConsumed)
+            energyConsumed,
+            targetSpace)
         {
             Path = path;
         }
