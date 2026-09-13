@@ -10,13 +10,13 @@ namespace Units
     {
         private readonly Logger _logger = new(nameof(MoveActionVisualHandler));
         private readonly MoveActionVisualConfig _config;
-        private readonly UnitSpawner _unitSpawner;
+        private readonly UnitViewManager _unitViewManager;
         private readonly MapService _mapService;
         
         public MoveActionVisualHandler(MoveActionVisualConfig config)
         {
             _config = config;
-            _unitSpawner = Locator.Get<UnitSpawner>();
+            _unitViewManager = Locator.Get<UnitViewManager>();
             _mapService = Locator.Get<MapService>();
         }
 
@@ -34,7 +34,7 @@ namespace Units
                 yield break;
             }
 
-            var (unitPrefab, _) = _unitSpawner.GetUnitViews(result.Performer);
+            var (unitPrefab, _) = _unitViewManager.GetUnitViews(result.Performer);
             if (unitPrefab == null)
             {
                 _logger.LogError($"no unit prefab instance found for unit: {result.Performer} and therefore cannot playback move");

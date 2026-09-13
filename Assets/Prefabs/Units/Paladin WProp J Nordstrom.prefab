@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b7575dc531a4884a8042fb9e6631bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitPrefab
-  yOffset: 1
+  yOffset: 0
 --- !u!95 &4044497944121375710
 Animator:
   serializedVersion: 7

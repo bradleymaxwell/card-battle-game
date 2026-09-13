@@ -38,12 +38,20 @@ namespace Units
             return hasEnoughEnergy;
         }
 
+        public override int GetEnergyCost(MapSpace userSpace, MapSpace targetSpace)
+        {
+            var maxDistance = Config.EnergyCost != 0 ? userSpace.Occupant.CurrentEnergy / Config.EnergyCost : int.MaxValue;
+            var shortestPath = _mapService.GetShortestPath(userSpace, targetSpace, maxDistance, includeStartSpace: false);
+            return shortestPath.Count * Config.EnergyCost;
+        }
+        
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
             var result = new MoveActionPerformResult();
             var maxDistance = Config.EnergyCost != 0 ? userSpace.Occupant.CurrentEnergy / Config.EnergyCost : int.MaxValue;
             var shortestPath = _mapService.GetShortestPath(userSpace, targetSpace, maxDistance, includeStartSpace: false);
             result.Path = shortestPath;
+            result.EnergyConsumed = shortestPath.Count * Config.EnergyCost;
             _mapService.Move(userSpace.Occupant, targetSpace.Q, targetSpace.R);
             return result;
         }

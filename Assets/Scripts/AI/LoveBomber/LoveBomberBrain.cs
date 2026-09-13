@@ -15,11 +15,11 @@ public class LoveBomberBrain : IUnitBrain
     private readonly UnitService _unitService;
     private readonly BattleService _battleService;
     private readonly SelectService _selectService;
-    
     private const int ObsessiveStrike = 0;
     private const int ToxicLovePotion = 1;
     private const int CreeperCupid = 2;
     private const int MotherOfAllLoveBombs = 3;
+    private const int Move = 4;
 
     private bool _isMotherOfAllLoveBombsDetonated;
     private bool _isObsessiveStrikeTurn = true;
@@ -122,7 +122,7 @@ public class LoveBomberBrain : IUnitBrain
                     }
                 }
                 
-                _mapService.Move(_unit, targetMoveSpace.Q, targetMoveSpace.R);
+                ExecuteMove(targetMoveSpace.Q, targetMoveSpace.R);
             }
             
             _unitService.Perform(_unit, obsessiveStrike);
@@ -140,11 +140,19 @@ public class LoveBomberBrain : IUnitBrain
             var targetSpace = _mapService.GetClosestReachableSpace(_unit, 0, 0, 100);
             if (targetSpace != null)
             {
-                _mapService.Move(_unit, targetSpace.Q, targetSpace.R);
+                ExecuteMove(targetSpace.Q, targetSpace.R);
             }
 
             _unitService.Perform(_unit, action);
             _isMotherOfAllLoveBombsDetonated = true;
         };
+    }
+
+    private void ExecuteMove(int q, int r)
+    {
+        var moveAction = _unit.Actions[Move];
+        _unitService.Perform(_unit, moveAction);
+        var space = _mapService.GetSpace(q, r);
+        _selectService.Select(space, TeamType.Enemy);
     }
 }

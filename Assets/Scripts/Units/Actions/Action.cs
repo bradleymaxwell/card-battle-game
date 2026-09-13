@@ -6,6 +6,7 @@ namespace Units
     public abstract class Action : IAction
     {
         public ActionConfig Config { get; }
+
         public Sprite Icon => Config.Icon;
         
         protected Action(ActionConfig config)
@@ -23,6 +24,11 @@ namespace Units
             }
             
             return hasEnergy && inRange;
+        }
+        
+        public virtual int GetEnergyCost(MapSpace userSpace, MapSpace targetSpace)
+        {
+            return Config.EnergyCost;
         }
 
         public abstract ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace);

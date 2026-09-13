@@ -84,13 +84,18 @@ namespace Units
 
         private void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace)
         {
-            // need to get the target first as that unit might have been removed from the map after the action is executed
+            // some values need to be calculated before action is performed due to potential state changes
+            var energyCost = action.GetEnergyCost(userSpace, targetSpace);
             var target = targetSpace.Occupant;
+            
             var result = action.OnPerform(userSpace, targetSpace);
+            
             result.Performer = unit;
             result.Action = action;
             result.TargetSpace = targetSpace;
             result.Target = target;
+            result.EnergyConsumed = energyCost;
+            
             AdjustEnergy(unit, -result.EnergyConsumed);
             OnActionPerformed?.Invoke(result);
         }

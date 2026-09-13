@@ -9,5 +9,6 @@ namespace Units
         ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace);
         Sprite Icon { get; }
         ActionConfig Config { get; }
+        int GetEnergyCost(MapSpace userSpace, MapSpace targetSpace);
     }
 }
