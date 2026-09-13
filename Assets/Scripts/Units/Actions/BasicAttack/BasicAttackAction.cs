@@ -23,7 +23,7 @@ namespace Units
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult(this, userSpace.Occupant, _config.EnergyCost, targetSpace);
+            var result = new ActionPerformResult();
             _unitService.Damage(targetSpace.Occupant, userSpace.Occupant.Config.Attack);
             return result;
         }

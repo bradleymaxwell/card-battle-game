@@ -21,7 +21,7 @@ namespace Units.CreeperCupid
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult(this, userSpace.Occupant, _config.EnergyCost, targetSpace);
+            var result = new ActionPerformResult();
             var config = new SpawnConfig(_config.CupidUnit, targetSpace.Q, targetSpace.R, TeamType.Enemy)
             {
                 BrainConfig = _config.CupidBrain

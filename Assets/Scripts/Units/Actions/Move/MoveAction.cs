@@ -40,9 +40,10 @@ namespace Units
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
+            var result = new MoveActionPerformResult();
             var maxDistance = Config.EnergyCost != 0 ? userSpace.Occupant.CurrentEnergy / Config.EnergyCost : int.MaxValue;
             var shortestPath = _mapService.GetShortestPath(userSpace, targetSpace, maxDistance, includeStartSpace: false);
-            var result = new MoveActionPerformResult(this, userSpace.Occupant, shortestPath.Count * Config.EnergyCost, targetSpace, shortestPath);
+            result.Path = shortestPath;
             _mapService.Move(userSpace.Occupant, targetSpace.Q, targetSpace.R);
             return result;
         }

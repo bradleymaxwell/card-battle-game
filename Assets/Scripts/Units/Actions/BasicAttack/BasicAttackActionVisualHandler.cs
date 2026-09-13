@@ -18,15 +18,15 @@ namespace Units
         public IEnumerator PlayCor(ActionPerformResult result)
         {
             var (unitPrefab, _) = _unitSpawner.GetUnitViews(result.Performer);
-            var (targetPrefab, targetResourceBar) = _unitSpawner.GetUnitViews(result.Target.Occupant);
+            var (targetPrefab, targetResourceBar) = _unitSpawner.GetUnitViews(result.Target);
             
             unitPrefab.Face(targetPrefab);
             unitPrefab.SubscribeToAnimationEvent(AnimationConstants.OnHit, () => _isHitLanded = true);
             unitPrefab.Animator.SetTrigger(AnimationConstants.Attack);
             yield return new WaitUntil(() => _isHitLanded);
-            if (result.Target.Occupant.CurrentHealth <= 0)
+            if (result.Target.CurrentHealth <= 0)
             {
-                _unitSpawner.OnUnitDefeated(result.Target.Occupant);
+                _unitSpawner.OnUnitDefeated(result.Target);
             }
             else
             {

@@ -19,7 +19,7 @@ namespace Units.ToxicLovePotion
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult(this, userSpace.Occupant, _config.EnergyCost, targetSpace);
+            var result = new ActionPerformResult();
             var hitSpaces = _mapService.GetAreaSpaces(targetSpace, _config.Radius);
             var hitPlayerSpaces = hitSpaces.Where(s => s.Occupant is { Team: TeamType.Player }).ToList();
             var damage = _config.Damage / hitPlayerSpaces.Count;
