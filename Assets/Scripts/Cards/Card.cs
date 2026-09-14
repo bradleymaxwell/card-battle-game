@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
-using Battles;
 using Targeting;
 
 namespace Cards
 {
+    [Obsolete]
     public abstract class Card : ICard
     {
         public CardConfig Config { get; }

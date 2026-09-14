@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace Cards.AdjustHealth
 {
+    [Obsolete]
     [CreateAssetMenu(menuName = "Game Config/Card/Adjust Health", fileName = "AdjustHealthCard")]
     public class AdjustHealthCardConfig : CardConfig
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Battles;
@@ -8,6 +9,7 @@ using UnityEngine;
 
 namespace Cards.AdjustEnergy
 {
+    [Obsolete]
     public class AdjustEnergyCard : Card
     {
         private readonly AdjustEnergyCardConfig _config;

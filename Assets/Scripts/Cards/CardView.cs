@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[Obsolete]
 [RequireComponent(typeof(Button))]
 public class CardView : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExitHandler
 {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Battles;
@@ -7,6 +8,7 @@ using Units;
 
 namespace Cards.AdjustHealth
 {
+    [Obsolete]
     public class AdjustHealthCard : Card
     {
         private readonly AdjustHealthCardConfig _config;

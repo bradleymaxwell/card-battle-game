@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Battles;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 
 namespace Cards
 {
+    [Obsolete]
     public class CardViewManager : MonoBehaviour
     {
         [SerializeField] private CardView cardViewPrefab;
