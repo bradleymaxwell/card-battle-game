@@ -16,6 +16,7 @@ MonoBehaviour:
   name: Kiss of Death
   icon: {fileID: 0}
   description: 
+  visual: {fileID: 11400000, guid: 0743e96405c51477a80b607b1e806bbb, type: 2}
   radius: 1
   damage: 50
   range: 1
