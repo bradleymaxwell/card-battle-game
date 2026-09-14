@@ -29,7 +29,7 @@ public class UnitViewManager : MonoBehaviour
         {
             OnUnitSpawned(unit);
         }
-    }
+   } 
 
     private void OnEnable()
     {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CreeperCupidUnitConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitConfig
   name: Creeper Cupid
-  prefab: {fileID: 2145881141446392477, guid: f2996ea3020a541cdb405082c727b0e5, type: 3}
+  prefab: {fileID: 3134112898623610277, guid: 05606cb8ecbf441e6b828a26ab0ecf8e, type: 3}
   attack: 0
   health: 100
   actions:

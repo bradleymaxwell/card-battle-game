@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Map;
 using Units;
@@ -8,9 +7,9 @@ using Action = System.Action;
 [RequireComponent(typeof(Animator))]
 public class UnitPrefab : MonoBehaviour, IPoolable
 {
-    [SerializeField] private float yOffset = 1f;
+    [SerializeField] private float yOffset;
     private MapService _mapService;
-    private IDictionary<string, IList<Action>> _callbacksByEventName = new Dictionary<string, IList<Action>>();
+    private readonly IDictionary<string, IList<Action>> _callbacksByEventName = new Dictionary<string, IList<Action>>();
     public IUnit Unit { get; private set; }
     public Animator Animator { get; private set; }
     

@@ -16,3 +16,4 @@ MonoBehaviour:
   name: 'Chase '
   icon: {fileID: 0}
   description: 
+  visual: {fileID: 11400000, guid: 7f9dc1d475f964d95829abf053ca2f8b, type: 2}
