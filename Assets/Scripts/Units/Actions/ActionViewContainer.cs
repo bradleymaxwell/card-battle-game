@@ -51,7 +51,7 @@ namespace Units
                 while (_actionViews.Count != unit.Config.Actions.Count)
                 {
                     var actionView = _poolService.Get(actionViewPrefab);
-                    actionView.transform.SetParent(transform);
+                    actionView.transform.SetParent(transform, false);
                     _actionViews.Add(actionView);
                 }
             }
