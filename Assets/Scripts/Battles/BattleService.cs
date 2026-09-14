@@ -8,6 +8,7 @@ using Units;
 
 public class BattleService : IDisposable
 {
+    public bool IsInitialized { get; private set; }
     private readonly MapService _mapService;
     private readonly UnitService _unitService;
     private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
@@ -31,6 +32,7 @@ public class BattleService : IDisposable
 
     public void Initialize(BattleConfig battleConfig, MapSpaceContainer mapSpaceContainer)
     {
+        IsInitialized = false;
         _mapService.Initialize(mapSpaceContainer);
         _unitsByTeam.Clear();
         var enemyTeam = new List<IUnit>();
@@ -59,6 +61,7 @@ public class BattleService : IDisposable
         _unitService.OnUnitSpawned += OnUnitSpawned;
         _isEnded = false;
         StartTurn(TeamType.Player);
+        IsInitialized = true;
     }
 
     public void EndTurn(TeamType team)

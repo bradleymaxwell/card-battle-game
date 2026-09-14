@@ -4,4 +4,5 @@ public static class AnimationConstants
     public const string Attack = "Attack";
     public const string OnHit = "OnHit";
     public const string OnFinish = "OnFinish";
+    public const string Summon = "Summon";
 }
