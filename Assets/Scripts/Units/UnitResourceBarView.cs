@@ -41,7 +41,7 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     public void Bind(UnitPrefab unitPrefab)
     {
         _unitPrefab = unitPrefab;
-        _unitPrefab.Unit.OnCurrentEnergyChanged += Refresh;
+        _unitPrefab.Unit.OnCurrentEnergyChanged += RefreshEnergy;
         _unitService.OnActiveUnitChanged += OnActiveUnitChanged;
         var activeUnit = _unitService.GetActiveUnit(_unitPrefab.Unit.Team);
         if (activeUnit == _unitPrefab.Unit)
@@ -51,10 +51,16 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         
         SetHealthBarColor();
         _logger.Log($"{gameObject.name} bound to {unitPrefab.Unit.Team}");
-        Refresh(_unitPrefab.Unit.CurrentHealth);
+        Refresh();
+    }
+
+    public void RefreshHealth()
+    {
+        healthSlider.maxValue = _unitPrefab.Unit.Config.Health;
+        healthSlider.value = _unitPrefab.Unit.CurrentHealth;
     }
     
-    public void Unbind()
+    private void Unbind()
     {
         if (!_unitPrefab)
         {
@@ -69,10 +75,14 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         _unitPrefab = null;
     }
     
-    public void Refresh(int _)
+    private void Refresh()
     {
-        healthSlider.maxValue = _unitPrefab.Unit.Config.Health;
-        healthSlider.value = _unitPrefab.Unit.CurrentHealth;
+        RefreshHealth();
+        RefreshEnergy();
+    }
+
+    private void RefreshEnergy(int _ = 0)
+    {
         energySlider.maxValue = _unitPrefab.Unit.Energy;
         energySlider.value = _unitPrefab.Unit.CurrentEnergy;
     }

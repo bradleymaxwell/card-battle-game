@@ -18,6 +18,8 @@ namespace Units
         
         public IEnumerator PlayCor(ActionPerformResult result)
         {
+            _isHitLanded = false;
+            _isAttackFinished = false;
             var (unitPrefab, _) = _unitViewManager.GetUnitViews(result.Performer);
             var (targetPrefab, targetResourceBar) = _unitViewManager.GetUnitViews(result.Target);
             
@@ -32,8 +34,7 @@ namespace Units
             }
             else
             {
-                // play damaged animation on target prefab
-                targetResourceBar.Refresh(0);
+                targetResourceBar.RefreshHealth();
             }
             
             yield return new WaitUntil(() => _isAttackFinished);

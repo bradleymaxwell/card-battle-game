@@ -16,6 +16,7 @@ MonoBehaviour:
   name: Obsessive Strike
   icon: {fileID: 0}
   description: 
+  visual: {fileID: 11400000, guid: e1cdbf5701f6f44a4affb942d2ec6a46, type: 2}
   percentIncreasePerStack:
   - 0.4
   - 0.8
