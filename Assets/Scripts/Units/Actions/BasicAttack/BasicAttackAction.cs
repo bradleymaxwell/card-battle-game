@@ -25,6 +25,7 @@ namespace Units
         {
             var result = new ActionPerformResult();
             _unitService.Damage(targetSpace.Occupant, userSpace.Occupant.Config.Attack);
+            result.HealthAdjustmentByUnit[targetSpace.Occupant] = -userSpace.Occupant.Config.Attack;
             return result;
         }
     }

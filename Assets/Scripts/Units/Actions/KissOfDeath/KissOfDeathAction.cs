@@ -25,7 +25,7 @@ namespace Units.KissOfDeath
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new AoEActionPerformResult();
+            var result = new ActionPerformResult();
             var nearbySpaces = _mapService.GetAreaSpaces(targetSpace, _config.Radius);
             var otherTeamSpaces = nearbySpaces.Where(s => s.Occupant != null && s.Occupant.Team != userSpace.Occupant.Team);
             var unitsHit = new List<IUnit>();
@@ -33,10 +33,10 @@ namespace Units.KissOfDeath
             {
                 unitsHit.Add(space.Occupant);
                 _unitService.Damage(space.Occupant, _config.Damage);
+                result.HealthAdjustmentByUnit[space.Occupant] = -_config.Damage;
             }
             
             _unitService.Eliminate(userSpace.Occupant);
-            result.UnitsHit = unitsHit;
             return result;
         }
     }

@@ -32,7 +32,9 @@ namespace Units.ObsessiveStrike
             }
             
             var damage = GetDamage();
-            _unitService.Damage(_previousTarget, damage);
+            var target = targetSpace.Occupant;
+            _unitService.Damage(target, damage);
+            result.HealthAdjustmentByUnit[target] = -damage;
             _stacks = Mathf.Min(_stacks + 1, _config.PercentIncreasePerStack.Count);
             return result;
         }

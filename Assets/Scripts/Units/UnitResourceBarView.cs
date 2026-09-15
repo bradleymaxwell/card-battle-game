@@ -59,6 +59,11 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         healthSlider.maxValue = _unitPrefab.Unit.Config.Health;
         healthSlider.value = _unitPrefab.Unit.CurrentHealth;
     }
+
+    public void AdjustCurrentHealth(int adjustment)
+    {
+        healthSlider.value = Mathf.Clamp(healthSlider.value + adjustment, 0, healthSlider.maxValue);
+    }
     
     private void Unbind()
     {

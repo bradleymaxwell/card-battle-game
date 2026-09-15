@@ -35,6 +35,19 @@ public class UnitViewManager : MonoBehaviour
     {
         Locator.Register(this);
     }
+    
+    public void OnHealthAdjusted(IUnit unit, int adjustment)
+    {
+        if (unit.CurrentHealth <= 0)
+        {
+            OnUnitDefeated(unit);
+        }
+        else
+        {
+            var (_, resourceBar) = GetUnitViews(unit);
+            resourceBar.AdjustCurrentHealth(adjustment);
+        }
+    }
 
     public Tuple<UnitPrefab, UnitResourceBarView> GetUnitViews(IUnit unit)
     {

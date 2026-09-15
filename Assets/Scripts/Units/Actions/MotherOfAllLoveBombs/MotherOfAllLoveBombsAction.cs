@@ -24,6 +24,7 @@ namespace Units.MotherOfAllLoveBombs
             foreach (var space in otherTeamSpaces)
             {
                 _unitService.Damage(space.Occupant, _config.Damage);
+                result.HealthAdjustmentByUnit[space.Occupant] = -_config.Damage;
             }
 
             return result;

@@ -21,21 +21,14 @@ namespace Units
             _isHitLanded = false;
             _isAttackFinished = false;
             var (unitPrefab, _) = _unitViewManager.GetUnitViews(result.Performer);
-            var (targetPrefab, targetResourceBar) = _unitViewManager.GetUnitViews(result.Target);
+            var (targetPrefab, _) = _unitViewManager.GetUnitViews(result.Target);
             
             unitPrefab.Face(targetPrefab);
             unitPrefab.SubscribeToAnimationEvent(AnimationConstants.OnHit, () => _isHitLanded = true);
             unitPrefab.SubscribeToAnimationEvent(AnimationConstants.OnFinish, () => _isAttackFinished = true);
             unitPrefab.Animator.SetTrigger(AnimationConstants.Attack);
             yield return new WaitUntil(() => _isHitLanded);
-            if (result.Target.CurrentHealth <= 0)
-            {
-                _unitViewManager.OnUnitDefeated(result.Target);
-            }
-            else
-            {
-                targetResourceBar.RefreshHealth();
-            }
+            _unitViewManager.OnHealthAdjusted(result.Target, result.HealthAdjustmentByUnit[result.Target]);
             
             yield return new WaitUntil(() => _isAttackFinished);
         }

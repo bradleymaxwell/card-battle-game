@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Map;
 
 namespace Units
@@ -9,5 +10,6 @@ namespace Units
         public int EnergyConsumed { get; set; }
         public MapSpace TargetSpace { get; set; }
         public IUnit Target { get; set; }
+        public Dictionary<IUnit, int> HealthAdjustmentByUnit { get; } = new();
     }
 }

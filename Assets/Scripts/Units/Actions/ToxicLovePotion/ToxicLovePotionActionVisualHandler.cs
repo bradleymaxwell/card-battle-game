@@ -26,13 +26,7 @@ namespace Units.ToxicLovePotion
         
         public IEnumerator PlayCor(ActionPerformResult result)
         {
-            if (result is not AoEActionPerformResult aoeResult)
-            {
-                _logger.LogError($"in order to play the toxic love potion action visuals, the result must be of type: {typeof(AoEActionPerformResult)}");
-                yield break;
-            }
-            
-            var space = _mapService.GetPrefab(aoeResult.TargetSpace);
+            var space = _mapService.GetPrefab(result.TargetSpace);
             var (unitPrefab, _) = _unitViewManager.GetUnitViews(result.Performer);
             unitPrefab.Face(space);
             
@@ -43,18 +37,12 @@ namespace Units.ToxicLovePotion
             var explosionVfx = _poolService.Get(_config.ExplosionVfx);
             explosionVfx.transform.position = new Vector3(space.transform.position.x, 0.1f, space.transform.position.z);
             explosionVfx.ParticleSystem.Play(true);
-            foreach (var unit in aoeResult.UnitsHit)
+            foreach (var (unit, adjustment) in result.HealthAdjustmentByUnit)
             {
-                var (_, hitUnitResourceBar) = _unitViewManager.GetUnitViews(unit);
-                if (unit.CurrentHealth <= 0)
-                {
-                    _unitViewManager.OnUnitDefeated(unit);
-                }
-                else
-                {
-                    hitUnitResourceBar.RefreshHealth();
-                }
+                _unitViewManager.OnHealthAdjusted(unit, adjustment);
             }
+            
+            yield return new WaitWhile(() => explosionVfx.ParticleSystem.IsAlive(true));
         }
     }
 }

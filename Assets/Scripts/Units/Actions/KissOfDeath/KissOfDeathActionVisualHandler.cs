@@ -23,12 +23,6 @@ namespace Units.KissOfDeath
         
         public IEnumerator PlayCor(ActionPerformResult result)
         {
-            if (result is not AoEActionPerformResult kissResult)
-            {
-                _logger.LogError($"in order to play the kiss of death action visuals, the result must be of type: {typeof(AoEActionPerformResult)}");
-                yield break;
-            }
-
             // face the target and kiss them
             var (unitPrefab, _) = _unitViewManager.GetUnitViews(result.Performer);
             var (targetPrefab, _) = _unitViewManager.GetUnitViews(result.Target);
@@ -43,22 +37,12 @@ namespace Units.KissOfDeath
             
             // hardcoded fix to make sure the explosion occurs vertically roughly where the user stands
             explosionVfx.transform.position = new Vector3(unitPrefab.transform.position.x, 0.5f, unitPrefab.transform.position.z);
-            
             _unitViewManager.OnUnitDefeated(result.Performer);
             explosionVfx.ParticleSystem.Play(true);
             
-            // refresh the health bar of all the hit units
-            foreach (var unit in kissResult.UnitsHit)
+            foreach (var (unit, adjustment) in result.HealthAdjustmentByUnit)
             {
-                var (_, hitUnitResourceBar) = _unitViewManager.GetUnitViews(unit);
-                if (unit.CurrentHealth <= 0)
-                {
-                    _unitViewManager.OnUnitDefeated(unit);
-                }
-                else
-                {
-                    hitUnitResourceBar.RefreshHealth();
-                }
+                _unitViewManager.OnHealthAdjusted(unit, adjustment);
             }
 
             yield return new WaitWhile(() => explosionVfx.ParticleSystem.IsAlive(true));
