@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Map;
+using Units.Actions;
 
 namespace Units.KissOfDeath
 {
@@ -24,7 +25,7 @@ namespace Units.KissOfDeath
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new KissOfDeathActionPerformResult();
+            var result = new AoEActionPerformResult();
             var nearbySpaces = _mapService.GetAreaSpaces(targetSpace, _config.Radius);
             var otherTeamSpaces = nearbySpaces.Where(s => s.Occupant != null && s.Occupant.Team != userSpace.Occupant.Team);
             var unitsHit = new List<IUnit>();

@@ -16,5 +16,6 @@ MonoBehaviour:
   name: Toxic Love Potion
   icon: {fileID: 0}
   description: 
+  visual: {fileID: 11400000, guid: edb9ed68981954996b4b3b72513d6481, type: 2}
   radius: 1
   damage: 100

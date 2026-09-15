@@ -1,6 +1,7 @@
 using System.Linq;
 using Battles;
 using Map;
+using Units.Actions;
 
 namespace Units.ToxicLovePotion
 {
@@ -19,13 +20,13 @@ namespace Units.ToxicLovePotion
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult();
+            var result = new AoEActionPerformResult();
             var hitSpaces = _mapService.GetAreaSpaces(targetSpace, _config.Radius);
-            var hitPlayerSpaces = hitSpaces.Where(s => s.Occupant is { Team: TeamType.Player }).ToList();
-            var damage = _config.Damage / hitPlayerSpaces.Count;
-            foreach (var space in hitPlayerSpaces)
+            result.UnitsHit = hitSpaces.Where(s => s.Occupant is { Team: TeamType.Player }).Select(s => s.Occupant).ToList();
+            var damage = _config.Damage / result.UnitsHit.Count;
+            foreach (var unit in result.UnitsHit)
             {
-                _unitService.Damage(space.Occupant, damage);
+                _unitService.Damage(unit, damage);
             }
 
             return result;

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Units.KissOfDeath
+namespace Units.Actions
 {
-    public class KissOfDeathActionPerformResult : ActionPerformResult
+    public class AoEActionPerformResult : ActionPerformResult
     {
         public IList<IUnit> UnitsHit { get; set; }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Units.Actions;
 using Units.Actions.VisualPlayback;
 using UnityEngine;
 
@@ -22,9 +23,9 @@ namespace Units.KissOfDeath
         
         public IEnumerator PlayCor(ActionPerformResult result)
         {
-            if (result is not KissOfDeathActionPerformResult kissResult)
+            if (result is not AoEActionPerformResult kissResult)
             {
-                _logger.LogError($"in order to play the kiss of death action visuals, the result must be of type: {typeof(KissOfDeathActionPerformResult)}");
+                _logger.LogError($"in order to play the kiss of death action visuals, the result must be of type: {typeof(AoEActionPerformResult)}");
                 yield break;
             }
 
