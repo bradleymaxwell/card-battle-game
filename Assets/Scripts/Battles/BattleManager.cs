@@ -1,10 +1,10 @@
-using Cysharp.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    private UnitViewManager _unitViewManager;
-    private ActionVisualPlaybackManager _actionVisualPlaybackManager;
+    [SerializeField] private UnitViewManager unitViewManager;
+    [SerializeField] private VisualPlaybackManager visualPlaybackManager;
     private BattleService _battleService;
 
     private void Awake()
@@ -12,13 +12,16 @@ public class BattleManager : MonoBehaviour
         _battleService = Locator.Get<BattleService>();
     }
     
-    private async UniTaskVoid Start()
+    private void Start()
     {
-        _unitViewManager = Locator.Get<UnitViewManager>();
-        _actionVisualPlaybackManager = Locator.Get<ActionVisualPlaybackManager>();
-        await UniTask.WaitUntil(() => _battleService.IsInitialized);
-        _unitViewManager.Initialize();
-        _actionVisualPlaybackManager.Initialize();
+        StartCoroutine(StartCor());
+    }
+
+    private IEnumerator StartCor()
+    {
+        yield return new WaitUntil(() => _battleService.IsInitialized);
+        unitViewManager.Initialize();
+        visualPlaybackManager.Initialize();
         _battleService.StartNextTurn();
     }
 }

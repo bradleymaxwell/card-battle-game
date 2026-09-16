@@ -17,25 +17,22 @@ namespace Battles
         private void OnEnable()
         {
             button.onClick.AddListener(OnClick);
-            _battleService.OnTurnChanged += OnTurnChanged;
         }
         
         private void OnDisable()
         {
             button.onClick.RemoveListener(OnClick);
-            if (_battleService != null)
-            {
-                _battleService.OnTurnChanged -= OnTurnChanged;
-            }
         }
         
         private void OnClick()
         {
-            
-            _battleService.StartNextTurn();
+            if (_battleService.IsTurn(TeamType.Player))
+            {
+                _battleService.StartNextTurn();
+            }
         }
 
-        private void OnTurnChanged(IUnit unit)
+        public void OnTurnChanged(IUnit unit)
         {
             button.gameObject.SetActive(unit.Team == TeamType.Player);
         }

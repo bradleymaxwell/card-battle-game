@@ -12,14 +12,14 @@ public class UnitViewManager : MonoBehaviour
     private PoolService _poolService;
     private readonly IDictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>> _unitViews = new Dictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>>();
     private readonly Logger _logger = new(nameof(UnitViewManager));
-    
+
     private void Awake()
     {
         Locator.Register(this);
         _unitService = Locator.Get<UnitService>();
         _poolService = Locator.Get<PoolService>();
     }
-
+    
     public void Initialize()
     {
         foreach (var unit in _unitService.Units)
@@ -40,7 +40,7 @@ public class UnitViewManager : MonoBehaviour
             resourceBar.AdjustCurrentHealth(adjustment);
         }
     }
-
+    
     public Tuple<UnitPrefab, UnitResourceBarView> GetUnitViews(IUnit unit)
     {
         var found = _unitViews.TryGetValue(unit, out var views);

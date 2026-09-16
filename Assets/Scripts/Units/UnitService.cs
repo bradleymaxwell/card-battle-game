@@ -13,9 +13,9 @@ namespace Units
         private readonly Logger _logger = new(nameof(UnitService));
         private readonly MapService _mapService;
         private readonly SelectService _selectService;
+        private bool _isActionsAllowed;
         
         public event Action<IUnit> OnUnitDefeated;
-        public event Action<TeamType, IUnit> OnActiveUnitChanged;
         public event Action<IUnit> OnUnitSpawned;
         public event Action<ActionPerformResult> OnActionPerformed;
         
@@ -69,8 +69,18 @@ namespace Units
             return unit;
         }
 
+        public void ToggleActions(bool allowed)
+        {
+            _isActionsAllowed = allowed;
+        }
+        
         public void Perform(IUnit unit, IAction action)
         {
+            if (!_isActionsAllowed)
+            {
+                return;
+            }
+            
             var unitSpace = _mapService.GetSpace(unit);
             var selectConfig = new SelectContextConfig(unit.Team, SelectContextType.Map);
             var context = new SelectContext<MapSpace>(
@@ -84,6 +94,16 @@ namespace Units
 
         private void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace)
         {
+            if (!_isActionsAllowed)
+            {
+                return;
+            }
+
+            if (unit == null || action == null || userSpace?.Occupant != unit)
+            {
+                return;
+            }
+            
             // some values need to be calculated before action is performed due to potential state changes
             var energyCost = action.GetEnergyCost(userSpace, targetSpace);
             var target = targetSpace.Occupant;
@@ -111,13 +131,11 @@ namespace Units
             }
             
             _activeUnitByTeam[team] = unit;
-            OnActiveUnitChanged?.Invoke(team, unit);
         }
 
         public void DeactivateUnit(TeamType team)
         {
             _activeUnitByTeam.Remove(team);
-            OnActiveUnitChanged?.Invoke(team, null);
         }
 
         public IUnit GetActiveUnit(TeamType team)

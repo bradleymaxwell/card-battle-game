@@ -41,8 +41,6 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     public void Bind(UnitPrefab unitPrefab)
     {
         _unitPrefab = unitPrefab;
-        _unitPrefab.Unit.OnCurrentEnergyChanged += RefreshEnergy;
-        _unitService.OnActiveUnitChanged += OnActiveUnitChanged;
         var activeUnit = _unitService.GetActiveUnit(_unitPrefab.Unit.Team);
         if (activeUnit == _unitPrefab.Unit)
         {
@@ -86,13 +84,13 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         RefreshEnergy();
     }
 
-    private void RefreshEnergy(int _ = 0)
+    public void RefreshEnergy(int _ = 0)
     {
         energySlider.maxValue = _unitPrefab.Unit.Energy;
         energySlider.value = _unitPrefab.Unit.CurrentEnergy;
     }
     
-    private void OnActiveUnitChanged(TeamType team, IUnit unit)
+    public void OnActiveUnitChanged(TeamType team, IUnit unit)
     {
         if (team != TeamType.Player)
         {

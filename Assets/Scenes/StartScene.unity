@@ -1185,6 +1185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a68d9b24907c47a997f6fe36c5beeee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
+  unitViewManager: {fileID: 1627127351}
+  visualPlaybackManager: {fileID: 632014773}
 --- !u!4 &351507290
 Transform:
   m_ObjectHideFlags: 0
@@ -2728,6 +2730,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455d9bc5702d34e97ae377d1b5f97fff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ActionVisualPlaybackManager
+  endTurnView: {fileID: 621218457}
+  actionViewContainer: {fileID: 820639854}
+  unitViewManager: {fileID: 1627127351}
 --- !u!4 &632014774
 Transform:
   m_ObjectHideFlags: 0

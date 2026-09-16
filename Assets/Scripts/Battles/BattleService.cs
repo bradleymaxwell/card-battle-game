@@ -14,12 +14,13 @@ public class BattleService : IDisposable
     private readonly UnitService _unitService;
     private readonly IDictionary<TeamType, IList<IUnit>> _unitsByTeam = new Dictionary<TeamType, IList<IUnit>>();
     private readonly Logger _logger = new(nameof(BattleService));
-    public event Action<IUnit> OnTurnChanged;
+    public event Action<IUnit, IUnit> OnTurnChanged;
+    public event Action<TeamType> OnBattleEnded;
     private readonly Dictionary<NpcUnit, UnitTurnIntention> _nextTurnIntentionsByUnit = new();
     private bool _isEnded;
     private IList<IUnit> _turnQueue;
     private IList<IUnit> _turnOrder;
-    private IUnit _previousUnit;
+    private IUnit _activeUnit;
     
     public BattleService() : this(
         Locator.Get<MapService>(), 
@@ -62,6 +63,8 @@ public class BattleService : IDisposable
         _unitsByTeam[TeamType.Player] = playerTeam;
         _unitService.OnUnitDefeated += OnUnitDefeated;
         _unitService.OnUnitSpawned += OnUnitSpawned;
+        _unitService.ToggleActions(true);
+        
         _turnOrder = GenerateTurnOrder();
         _turnQueue = new List<IUnit>(_turnOrder);
         
@@ -80,6 +83,11 @@ public class BattleService : IDisposable
         teamUnits.Remove(unit);
         _turnOrder.Remove(unit);
         _turnQueue.Remove(unit);
+        if (unit is NpcUnit npc)
+        {
+            _nextTurnIntentionsByUnit.Remove(npc);
+        }
+        
         _logger.Log($"{unit.Config.Name} ({unit.Team}) defeated!");
         if (teamUnits.Count <= 0)
         {
@@ -96,9 +104,9 @@ public class BattleService : IDisposable
             return;
         }
         
-        if (_previousUnit != null)
+        if (_activeUnit != null)
         {
-            _unitService.DeactivateUnit(_previousUnit.Team);
+            _unitService.DeactivateUnit(_activeUnit.Team);
         }
 
         if (_turnQueue is not { Count: > 0 })
@@ -112,11 +120,13 @@ public class BattleService : IDisposable
             return;
         }
         
+        var previousUnit = _activeUnit;
+        _activeUnit = unit;
         _turnQueue.RemoveAt(0);
         _logger.Log($"Starting turn for {unit.Config.Name} ({unit.Team})");
         _unitService.SetActiveUnit(unit.Team, unit);
         _unitService.AdjustEnergy(unit, 2);
-        OnTurnChanged?.Invoke(unit);
+        OnTurnChanged?.Invoke(previousUnit, unit);
         if (unit.Team == TeamType.Enemy)
         {
             PlayEnemyTurn();
@@ -129,8 +139,8 @@ public class BattleService : IDisposable
         {
             return;
         }
-        
-        var unit = _unitService.GetActiveUnit(TeamType.Enemy);
+
+        var unit = _activeUnit;
         _logger.Log($"playing enemy turn for {unit.Config.Name} ({unit.Team})");
         var npc = (NpcUnit)unit;
         if (_nextTurnIntentionsByUnit.TryGetValue(npc, out var intention))
@@ -172,6 +182,9 @@ public class BattleService : IDisposable
     {
         _isEnded = true;
         _nextTurnIntentionsByUnit.Clear();
+        _turnQueue.Clear();
+        _unitService.ToggleActions(false);
+        OnBattleEnded?.Invoke(wonTeam);
         _logger.Log($"Battle ended. {wonTeam} team won!");
     }
 
@@ -219,5 +232,10 @@ public class BattleService : IDisposable
         {
             _unitService.OnUnitDefeated -= OnUnitDefeated;
         }
+    }
+
+    public bool IsTurn(TeamType team)
+    {
+        return _activeUnit?.Team == team;
     }
 }

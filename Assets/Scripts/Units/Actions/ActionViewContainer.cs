@@ -7,30 +7,17 @@ namespace Units
     public class ActionViewContainer : MonoBehaviour
     {
         [SerializeField] private ActionView actionViewPrefab;
-        private UnitService _unitService;
         private PoolService _poolService;
         private readonly IList<ActionView> _actionViews = new List<ActionView>();
         
         private void Awake()
         {
-            _unitService = Locator.Get<UnitService>();
             _poolService = Locator.Get<PoolService>();
         }
 
-        private void OnEnable()
+        public void OnActiveUnitChanged(TeamType team, IUnit unit)
         {
-            _unitService.OnActiveUnitChanged += OnActiveUnitChanged;
-            OnActiveUnitChanged(TeamType.Player, _unitService.GetActiveUnit(TeamType.Player));
-        }
-
-        private void OnActiveUnitChanged(TeamType team, IUnit unit)
-        {
-            if (team != TeamType.Player)
-            {
-                return;
-            }
-
-            if (unit == null)
+            if (team != TeamType.Player || unit == null)
             {
                 gameObject.SetActive(false);
                 return;
