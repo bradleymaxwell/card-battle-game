@@ -47,7 +47,7 @@ public class UnitViewManager : MonoBehaviour
         if (!found)
         {
             _logger.LogError($"Could not find any existing views bound for unit: {unit.Config.Name}");
-            return null;
+            return new Tuple<UnitPrefab, UnitResourceBarView>(null, null);
         }
         
         return views;
