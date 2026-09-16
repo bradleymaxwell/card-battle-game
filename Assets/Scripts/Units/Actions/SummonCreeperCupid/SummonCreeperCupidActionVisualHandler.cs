@@ -27,7 +27,11 @@ public class SummonCreeperCupidActionVisualHandler : IActionVisualHandler
         unitPrefab.Face(space);
         unitPrefab.Animator.SetTrigger(AnimationConstants.Summon);
         yield return new WaitUntil(() => _isSummoned);
-        _unitViewManager.OnUnitSpawned(result.TargetSpace.Occupant);
+        foreach (var (spawnedUnit, spawnSpace) in result.SpawnSpaceByUnit)
+        {
+            _unitViewManager.OnUnitSpawned(spawnedUnit, spawnSpace);
+        }
+        
         yield return new WaitUntil(() => _isFinished);
     }
 }

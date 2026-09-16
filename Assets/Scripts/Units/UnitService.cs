@@ -128,6 +128,7 @@ namespace Units
         public void Damage(IUnit unit, int damage)
         {
             SetHealth(unit, unit.CurrentHealth - Mathf.Abs(damage));
+            _logger.Log($"Dealt {Mathf.Abs(damage)} damage to {unit.Config.Name}. Health of {unit.Config.Name} = {unit.CurrentHealth}");
             if (unit.CurrentHealth <= 0)
             {
                 Eliminate(unit);

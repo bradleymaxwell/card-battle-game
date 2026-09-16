@@ -11,5 +11,6 @@ namespace Units
         public MapSpace TargetSpace { get; set; }
         public IUnit Target { get; set; }
         public Dictionary<IUnit, int> HealthAdjustmentByUnit { get; } = new();
+        public Dictionary<IUnit, MapSpace> SpawnSpaceByUnit { get; } = new();
     }
 }

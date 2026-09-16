@@ -8,7 +8,7 @@ public class BattleSceneLifecycle : SceneLifecycle
     [SerializeField] private MapSpaceContainer mapSpaceContainer;
     [SerializeField] private BattleConfig battleConfig;
     private BattleService _battleService;
-
+    
     public override void Initialize()
     {
         base.Initialize();

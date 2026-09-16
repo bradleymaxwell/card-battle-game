@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Units;
@@ -7,16 +6,19 @@ using UnityEngine;
 public class ActionVisualPlaybackManager : MonoBehaviour
 {
     private UnitService _unitService;
+    private BattleService _battleService;
     private readonly Logger _logger = new(nameof(ActionVisualPlaybackManager));
     private readonly Queue<ActionPerformResult> _actionResultsToPlay = new();
     private bool _isPlaying;
     
     private void Awake()
     {
+        Locator.Register(this);
         _unitService = Locator.Get<UnitService>();
+        _battleService = Locator.Get<BattleService>();
     }
 
-    private void OnEnable()
+    public void Initialize()
     {
         _unitService.OnActionPerformed += OnActionPerformed;
     }

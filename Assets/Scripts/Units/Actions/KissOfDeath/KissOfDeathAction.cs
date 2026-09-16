@@ -31,9 +31,10 @@ namespace Units.KissOfDeath
             var unitsHit = new List<IUnit>();
             foreach (var space in otherTeamSpaces)
             {
-                unitsHit.Add(space.Occupant);
-                _unitService.Damage(space.Occupant, _config.Damage);
-                result.HealthAdjustmentByUnit[space.Occupant] = -_config.Damage;
+                var target = space.Occupant;
+                unitsHit.Add(target);
+                _unitService.Damage(target, _config.Damage);
+                result.HealthAdjustmentByUnit[target] = -_config.Damage;
             }
             
             _unitService.Eliminate(userSpace.Occupant);

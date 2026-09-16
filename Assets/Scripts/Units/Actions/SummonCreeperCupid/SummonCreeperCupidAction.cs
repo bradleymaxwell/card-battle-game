@@ -7,11 +7,13 @@ namespace Units.CreeperCupid
     {
         private readonly SummonCreeperCupidActionConfig _config;
         private readonly UnitService _unitService;
+        private readonly MapService _mapService;
         
         public SummonCreeperCupidAction(SummonCreeperCupidActionConfig config) : base(config)
         {
             _config = config;
             _unitService = Locator.Get<UnitService>();
+            _mapService = Locator.Get<MapService>();
         }
 
         public override bool CanPerform(MapSpace userSpace, MapSpace targetSpace)
@@ -27,7 +29,9 @@ namespace Units.CreeperCupid
                 BrainConfig = _config.CupidBrain
             };
             
-            _unitService.Spawn(config);
+            var unit = _unitService.Spawn(config);
+            var space = _mapService.GetSpace(unit);
+            result.SpawnSpaceByUnit[unit] = space;
             return result;
         }
     }

@@ -1,6 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Map;
 using Units;
 using UnityEngine;
 
@@ -10,30 +10,22 @@ public class UnitViewManager : MonoBehaviour
     [SerializeField] private UnitResourceBarView resourceBarViewPrefab;
     private UnitService _unitService;
     private PoolService _poolService;
-    private BattleService _battleService;
     private readonly IDictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>> _unitViews = new Dictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>>();
     private readonly Logger _logger = new(nameof(UnitViewManager));
     
     private void Awake()
     {
+        Locator.Register(this);
         _unitService = Locator.Get<UnitService>();
         _poolService = Locator.Get<PoolService>();
-        _battleService = Locator.Get<BattleService>();
-        StartCoroutine(StartCor());
     }
 
-    private IEnumerator StartCor()
+    public void Initialize()
     {
-        yield return new WaitUntil(() => _battleService.IsInitialized);
         foreach (var unit in _unitService.Units)
         {
             OnUnitSpawned(unit);
         }
-   } 
-
-    private void OnEnable()
-    {
-        Locator.Register(this);
     }
     
     public void OnHealthAdjusted(IUnit unit, int adjustment)
@@ -73,11 +65,12 @@ public class UnitViewManager : MonoBehaviour
         _poolService.Return(views.Item2);
         _unitViews.Remove(unit);
     }
-    
-    public void OnUnitSpawned(IUnit unit)
+
+    public void OnUnitSpawned(IUnit unit, MapSpace space = null)
     {
         var unitView = _poolService.Get(unit.Config.Prefab);
         unitView.Bind(unit);
+        unitView.Spawn(space);
         var resourceBarView = _poolService.Get(resourceBarViewPrefab);
         resourceBarView.transform.SetParent(canvas.transform, false);
         resourceBarView.Bind(unitView);

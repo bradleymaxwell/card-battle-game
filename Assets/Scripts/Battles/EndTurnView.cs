@@ -1,3 +1,4 @@
+using Units;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,12 +31,13 @@ namespace Battles
         
         private void OnClick()
         {
-            _battleService.EndTurn(TeamType.Player);
+            
+            _battleService.StartNextTurn();
         }
 
-        private void OnTurnChanged(TeamType turn)
+        private void OnTurnChanged(IUnit unit)
         {
-            button.gameObject.SetActive(turn == TeamType.Player);
+            button.gameObject.SetActive(unit.Team == TeamType.Player);
         }
     }
 }

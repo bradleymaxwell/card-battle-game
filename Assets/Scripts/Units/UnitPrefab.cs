@@ -22,8 +22,6 @@ public class UnitPrefab : MonoBehaviour, IPoolable
     public void Bind(IUnit unit)
     {
         Unit = unit;
-        var space = _mapService.GetSpace(unit);
-        OnMapSpaceUpdated(space);
     }
 
     public void SubscribeToAnimationEvent(string eventName, Action callback)
@@ -60,8 +58,9 @@ public class UnitPrefab : MonoBehaviour, IPoolable
         Unit = null;
     }
 
-    private void OnMapSpaceUpdated(MapSpace mapSpace)
+    public void Spawn(MapSpace mapSpace = null)
     {
+        mapSpace ??= _mapService.GetSpace(Unit);
         var mapSpacePrefab = _mapService.GetPrefab(mapSpace);
         transform.position = new Vector3(mapSpacePrefab.transform.position.x, yOffset, mapSpacePrefab.transform.position.z);
     }
