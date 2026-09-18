@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Paladin
   prefab: {fileID: 555939938533003795, guid: deb30d0f6aee54cc6ac0980bdb4959ee, type: 3}
   attack: 10
-  health: 100
+  health: 1000
   actions:
   - {fileID: 11400000, guid: f4259610bc34544afbf4cb81663317f8, type: 2}
   - {fileID: 11400000, guid: 750b61760ecc848f88f97adc23e9e530, type: 2}

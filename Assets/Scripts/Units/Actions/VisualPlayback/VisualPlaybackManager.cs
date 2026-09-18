@@ -83,7 +83,7 @@ public class VisualPlaybackManager : MonoBehaviour
     {
         if (previousUnit != null)
         {
-            var (_, previousUnitResourceBar) = unitViewManager.GetUnitViews(previousUnit);
+            var (_, previousUnitResourceBar) = unitViewManager.GetUnitViews(previousUnit, throwIfNotFound: false);
             if (previousUnitResourceBar != null)
             {
                 previousUnitResourceBar.OnActiveUnitChanged(previousUnit.Team, null);

@@ -41,13 +41,17 @@ public class UnitViewManager : MonoBehaviour
         }
     }
     
-    public Tuple<UnitPrefab, UnitResourceBarView> GetUnitViews(IUnit unit)
+    public Tuple<UnitPrefab, UnitResourceBarView> GetUnitViews(IUnit unit, bool throwIfNotFound = true)
     {
         var found = _unitViews.TryGetValue(unit, out var views);
         if (!found)
         {
-            _logger.LogError($"Could not find any existing views bound for unit: {unit.Config.Name}");
-            return new Tuple<UnitPrefab, UnitResourceBarView>(null, null);
+            if (throwIfNotFound)
+            {
+                _logger.LogError($"Could not find any existing views bound for unit: {unit.Config.Name}");
+            }
+            
+            return new Tuple<UnitPrefab, UnitResourceBarView>(null, null); 
         }
         
         return views;

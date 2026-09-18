@@ -28,11 +28,9 @@ namespace Units.KissOfDeath
             var result = new ActionPerformResult();
             var nearbySpaces = _mapService.GetAreaSpaces(targetSpace, _config.Radius);
             var otherTeamSpaces = nearbySpaces.Where(s => s.Occupant != null && s.Occupant.Team != userSpace.Occupant.Team);
-            var unitsHit = new List<IUnit>();
             foreach (var space in otherTeamSpaces)
             {
                 var target = space.Occupant;
-                unitsHit.Add(target);
                 _unitService.Damage(target, _config.Damage);
                 result.HealthAdjustmentByUnit[target] = -_config.Damage;
             }

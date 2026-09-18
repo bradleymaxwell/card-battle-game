@@ -1,4 +1,3 @@
-using Battles;
 using DefaultNamespace;
 using Targeting;
 using UnityEngine;
@@ -11,7 +10,7 @@ public class PlayerHoverTracker : MonoBehaviour
     private Camera _camera;
     private InputAction _pointAction;
     private IHoverable _target;
-    private SelectService _selectService;
+    private DomainEventService _domainEventService;
     
     private void Awake()
     {
@@ -19,7 +18,7 @@ public class PlayerHoverTracker : MonoBehaviour
         var inputService = Locator.Get<InputService>();
         _pointAction = inputService.GetAction(PlayerInputConstants.UI, PlayerInputConstants.Point);
         _clickAction = inputService.GetAction(PlayerInputConstants.UI, PlayerInputConstants.Click);
-        _selectService = Locator.Get<SelectService>();
+        _domainEventService = Locator.Get<DomainEventService>();
     }
     
     private void Update()
@@ -42,7 +41,6 @@ public class PlayerHoverTracker : MonoBehaviour
 
         var pointerPosition = _pointAction.ReadValue<Vector2>();
         var ray = _camera.ScreenPointToRay(pointerPosition);
-
         if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, targetMask))
         {
             ClearTarget();

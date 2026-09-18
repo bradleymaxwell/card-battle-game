@@ -1,4 +1,6 @@
 using Battles;
+using Cysharp.Threading.Tasks;
+using DefaultNamespace.Tooltips;
 using Targeting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,7 +9,7 @@ using UnityEngine.UI;
 namespace Units
 {
     [RequireComponent(typeof(Button))]
-    public class ActionView : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExitHandler
+    public class ActionView : MonoBehaviour, IPoolable, IPointerEnterHandler, IPointerExitHandler, ITooltipProvider
     {
         [SerializeField] private Image image;
         [SerializeField] private Image selectedBackground;
@@ -16,6 +18,8 @@ namespace Units
         private IAction _action;
         private UnitService _unitService;
         private SelectService _selectService;
+        private DomainEventService _domainEventService;
+        private TooltipManager _tooltipManager;
         private bool _isSelected;
         
         private void Awake()
@@ -23,6 +27,7 @@ namespace Units
             _button = GetComponent<Button>();
             _unitService = Locator.Get<UnitService>();
             _selectService = Locator.Get<SelectService>();
+            _domainEventService = Locator.Get<DomainEventService>();
         }
 
         private void OnEnable()
@@ -83,6 +88,11 @@ namespace Units
             {
                 selectedBackground.gameObject.SetActive(true);
             }
+            
+            UniTask.Create(() => _domainEventService.RaiseAsync(new HoveredElementUpdatedDomainEvent
+            {
+                HoveredElement = gameObject
+            })).Forget();
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -91,6 +101,16 @@ namespace Units
             {
                 selectedBackground.gameObject.SetActive(false);
             }
+            
+            UniTask.Create(() => _domainEventService.RaiseAsync(new HoveredElementUpdatedDomainEvent
+            {
+                HoveredElement = null
+            })).Forget();
+        }
+        
+        public string GetTooltip()
+        {
+            return _action.Config.Description;
         }
 
         private void OnSelect()
@@ -124,6 +144,5 @@ namespace Units
         }
         
         public GameObject Prefab { get; set; }
-       
     }
 }
