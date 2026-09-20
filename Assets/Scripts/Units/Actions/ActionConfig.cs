@@ -14,6 +14,7 @@ namespace Units
         [SerializeField] private Sprite icon;
         public Sprite Icon => icon;
         
+        [TextArea(3, 5)]
         [SerializeField] private string description;
         public string Description => description;
         

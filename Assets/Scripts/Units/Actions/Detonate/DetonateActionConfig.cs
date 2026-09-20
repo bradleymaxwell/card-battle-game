@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Units.KissOfDeath
 {
-    [ CreateAssetMenu(menuName = "Game Config/Action/Kiss of Death")]
-    public class KissOfDeathActionConfig : ActionConfig, IRangedAction
+    [ CreateAssetMenu(menuName = "Game Config/Action/Detonate")]
+    public class DetonateActionConfig : ActionConfig, IRangedAction
     {
         [SerializeField] private int radius;
         public int Radius => radius;
@@ -14,6 +14,6 @@ namespace Units.KissOfDeath
         [SerializeField] private int range;
         public int Range => range;
         
-        public override IAction Action => new KissOfDeathAction(this);
+        public override IAction Action => new DetonateAction(this);
     }
 }

@@ -12,11 +12,16 @@ public class UnitPrefab : MonoBehaviour, IPoolable
     private readonly IDictionary<string, IList<Action>> _callbacksByEventName = new Dictionary<string, IList<Action>>();
     public IUnit Unit { get; private set; }
     public Animator Animator { get; private set; }
+    private Material _defaultMaterial;
+    private Renderer _renderer;
+    private Logger _logger = new(nameof(UnitPrefab));
     
     private void Awake()
     {
         _mapService = Locator.Get<MapService>();
         Animator = GetComponent<Animator>();
+        _renderer = GetComponent<Renderer>();
+        _defaultMaterial = _renderer?.material;
     }
     
     public void Bind(IUnit unit)
@@ -24,6 +29,17 @@ public class UnitPrefab : MonoBehaviour, IPoolable
         Unit = unit;
     }
 
+    public void SetMaterial(Material material)
+    {
+        if (!_renderer || !material)
+        {
+            _logger.LogWarning($"Cannot set material for {gameObject.name} because it has no renderer or material, so ignoring request");
+            return;
+        }
+        
+        _renderer.material = material;
+    }
+    
     public void SubscribeToAnimationEvent(string eventName, Action callback)
     {
         var found = _callbacksByEventName.TryGetValue(eventName, out var callbacks);
@@ -56,6 +72,11 @@ public class UnitPrefab : MonoBehaviour, IPoolable
     public void Reset()
     {
         Unit = null;
+        _callbacksByEventName.Clear();
+        if (_renderer && _defaultMaterial)
+        {
+            _renderer.material = _defaultMaterial;
+        }
     }
 
     public void Spawn(MapSpace mapSpace = null)

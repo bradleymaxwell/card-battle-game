@@ -2,6 +2,7 @@ using Battles;
 using Cysharp.Threading.Tasks;
 using DefaultNamespace.Tooltips;
 using Targeting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace Units
     {
         [SerializeField] private Image image;
         [SerializeField] private Image selectedBackground;
+        [SerializeField] private TextMeshProUGUI manaCostText;
         private Button _button;
         private IUnit _unit;
         private IAction _action;
@@ -21,6 +23,7 @@ namespace Units
         private DomainEventService _domainEventService;
         private TooltipManager _tooltipManager;
         private bool _isSelected;
+        private Color _canAffordColor;
         
         private void Awake()
         {
@@ -28,6 +31,7 @@ namespace Units
             _unitService = Locator.Get<UnitService>();
             _selectService = Locator.Get<SelectService>();
             _domainEventService = Locator.Get<DomainEventService>();
+            _canAffordColor = manaCostText.color;
         }
 
         private void OnEnable()
@@ -70,6 +74,8 @@ namespace Units
             var canPerform = _unit.CurrentEnergy >= _action.Config.EnergyCost;
             _button.interactable = canPerform;
             image.color = canPerform ? Color.white : Color.gray;
+            manaCostText.text = _action.Config.EnergyCost.ToString();
+            manaCostText.color = _unit.CurrentEnergy >= _action.Config.EnergyCost ? _canAffordColor : Color.softRed;
         }
 
         private void OnCurrentEnergyChanged(int _)

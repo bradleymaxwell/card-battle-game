@@ -3,16 +3,15 @@ using System.Collections;
 using Units.Actions.VisualPlayback;
 using UnityEngine;
 
-namespace Units.KissOfDeath
+namespace Units.Detonate
 {
-    public class KissOfDeathActionVisualHandler : IActionVisualHandler
+    public class DetonateActionVisualHandler : IActionVisualHandler
     {
-        private readonly KissOfDeathActionVisualConfig _config;
+        private readonly DetonateActionVisualConfig _config;
         private readonly UnitViewManager _unitViewManager;
         private readonly PoolService _poolService;
-        private bool _isKissed;
         
-        public KissOfDeathActionVisualHandler(KissOfDeathActionVisualConfig config)
+        public DetonateActionVisualHandler(DetonateActionVisualConfig config)
         {
             _config = config;
             _unitViewManager = Locator.Get<UnitViewManager>();
@@ -21,20 +20,11 @@ namespace Units.KissOfDeath
         
         public IEnumerator PlayCor(ActionPerformResult result)
         {
-            // face the target and kiss them
             var (unitPrefab, _) = _unitViewManager.GetUnitViews(result.Performer);
-            var (targetPrefab, _) = _unitViewManager.GetUnitViews(result.Target);
-            unitPrefab.Face(targetPrefab);
-            
-            unitPrefab.SubscribeToAnimationEvent(AnimationConstants.OnHit, () => _isKissed = true);
-            unitPrefab.Animator.SetTrigger(AnimationConstants.Attack);
-            yield return new WaitUntil(() => _isKissed);
-            
-            // when the kiss lands, remove the unit prefab and emit particles
+            unitPrefab.SetMaterial(_config.DetonateMaterial);
+            yield return new WaitForSeconds(1f);
             var explosionVfx = _poolService.Get(_config.ExplosionVfx);
-            
-            // hardcoded fix to make sure the explosion occurs vertically roughly where the user stands
-            explosionVfx.transform.position = new Vector3(unitPrefab.transform.position.x, 0.5f, unitPrefab.transform.position.z);
+            explosionVfx.transform.position = new Vector3(unitPrefab.transform.position.x, 0.1f, unitPrefab.transform.position.z);
             _unitViewManager.OnUnitDefeated(result.Performer);
             explosionVfx.ParticleSystem.Play(true);
             

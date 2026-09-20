@@ -5,13 +5,13 @@ using Units.Actions;
 
 namespace Units.KissOfDeath
 {
-    public class KissOfDeathAction : Action
+    public class DetonateAction : Action
     {
-        private readonly KissOfDeathActionConfig _config;
+        private readonly DetonateActionConfig _config;
         private readonly MapService _mapService;
         private readonly UnitService _unitService;
         
-        public KissOfDeathAction(KissOfDeathActionConfig config) : base(config)
+        public DetonateAction(DetonateActionConfig config) : base(config)
         {
             _config = config;
             _mapService = Locator.Get<MapService>();
@@ -26,7 +26,7 @@ namespace Units.KissOfDeath
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
             var result = new ActionPerformResult();
-            var nearbySpaces = _mapService.GetAreaSpaces(targetSpace, _config.Radius);
+            var nearbySpaces = _mapService.GetAreaSpaces(userSpace, _config.Radius);
             var otherTeamSpaces = nearbySpaces.Where(s => s.Occupant != null && s.Occupant.Team != userSpace.Occupant.Team);
             foreach (var space in otherTeamSpaces)
             {

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe63b653c21149a3bac9f32cbeeaa22c, type: 3}
+  m_Name: DetonateVisualConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Units.Detonate.DetonateActionVisualConfig
+  explosionVfx: {fileID: 2188465302878066891, guid: b0461f2949baa45a29cb7827151b8906, type: 3}
+  detonateMaterial: {fileID: 2100000, guid: 8f7b33ab64e594d799c374bdecba1ead, type: 2}
