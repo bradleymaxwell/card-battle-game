@@ -24,8 +24,9 @@ namespace Units
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
             var result = new ActionPerformResult();
-            _unitService.Damage(targetSpace.Occupant, userSpace.Occupant.Config.Attack);
-            result.HealthAdjustmentByUnit[targetSpace.Occupant] = -userSpace.Occupant.Config.Attack;
+            var target = targetSpace.Occupant;
+            _unitService.Damage(target, userSpace.Occupant.Config.Attack);
+            result.HealthAdjustmentByUnit[target] = -userSpace.Occupant.Config.Attack;
             return result;
         }
     }

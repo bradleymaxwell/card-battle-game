@@ -14,14 +14,17 @@ public class UnitPrefab : MonoBehaviour, IPoolable
     public Animator Animator { get; private set; }
     private Material _defaultMaterial;
     private Renderer _renderer;
-    private Logger _logger = new(nameof(UnitPrefab));
+    private readonly Logger _logger = new(nameof(UnitPrefab));
     
     private void Awake()
     {
         _mapService = Locator.Get<MapService>();
         Animator = GetComponent<Animator>();
         _renderer = GetComponent<Renderer>();
-        _defaultMaterial = _renderer?.material;
+        if (_renderer)
+        {
+            _defaultMaterial = _renderer?.material;
+        }
     }
     
     public void Bind(IUnit unit)

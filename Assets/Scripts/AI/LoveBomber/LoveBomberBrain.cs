@@ -20,9 +20,10 @@ public class LoveBomberBrain : IUnitBrain
     private const int CreeperCupid = 2;
     private const int MotherOfAllLoveBombs = 3;
     private const int Move = 4;
+    private const int SetupGaslightExplosives = 5;
 
     private bool _isMotherOfAllLoveBombsDetonated;
-    private bool _isObsessiveStrikeTurn = true;
+    private bool _isObsessiveStrikeTurn;
     
     public LoveBomberBrain(LoveBomberBrainConfig config)
     {
@@ -36,6 +37,8 @@ public class LoveBomberBrain : IUnitBrain
     public void Initialize(IUnit unit)
     {
         _unit = unit;
+        _isMotherOfAllLoveBombsDetonated = false;
+        _isObsessiveStrikeTurn = true;
     }
 
     public UnitTurnIntention GetTurnIntention()
@@ -50,22 +53,69 @@ public class LoveBomberBrain : IUnitBrain
         if (_isObsessiveStrikeTurn)
         {
             SetObsessiveStrikeAs(intention);
-            return intention;
+            _isObsessiveStrikeTurn = false;
         }
-
-        var actionChoice = Random.Range(ToxicLovePotion, CreeperCupid + 1);
-        switch (actionChoice)
+        else
         {
-            case ToxicLovePotion:
-                SetToxicLovePotionAs(intention);
-                return intention;
-            case CreeperCupid:
-                SetCreeperCupidAs(intention);
-                break;
+            var actionChoice = Random.Range(ToxicLovePotion, CreeperCupid + 1);
+            switch (actionChoice)
+            {
+                case ToxicLovePotion:
+                    SetToxicLovePotionAs(intention);
+                    break;
+                case CreeperCupid:
+                    SetCreeperCupidAs(intention);
+                    break;
+            }
+            
+            _isObsessiveStrikeTurn = true;
         }
 
-        _isObsessiveStrikeTurn = true;
+        if (!_isMotherOfAllLoveBombsDetonated)
+        {
+            AddSetupExplosivesTo(intention);
+        }
+        
         return intention;
+    }
+
+    private void AddSetupExplosivesTo(UnitTurnIntention intention)
+    {
+        var onExecute = intention.OnExecute;
+        intention.OnExecute = () =>
+        {
+            onExecute?.Invoke();
+            var setupGaslightExplosives = _unit.Actions[SetupGaslightExplosives];
+            for (var i = 0; i < _config.GaslightExplosivesPerTurn; i++)
+            {
+                var currentSpace = _mapService.GetSpace(_unit);
+                var spaces = _mapService.GetAreaSpaces(currentSpace, _config.GaslightExplosiveSearchRadius, false);
+                var availableSpaces = spaces
+                    .Where(s => s.Occupant == null)
+                    .OrderBy(_ => Random.value);
+
+                foreach (var potentialSpace in availableSpaces)
+                {
+                    if (setupGaslightExplosives.CanPerform(currentSpace, potentialSpace))
+                    {
+                        _unitService.Perform(_unit, setupGaslightExplosives);
+                        _selectService.Select(potentialSpace, TeamType.Enemy);
+                        break;
+                    }
+
+                    var closestReachableNeighbor = _mapService.GetClosestReachableNeighborSpace(_unit, potentialSpace.Q, potentialSpace.R, _config.GaslightExplosiveSearchRadius + 1);
+                    if (closestReachableNeighbor == null)
+                    {
+                        continue;
+                    }
+
+                    ExecuteMove(closestReachableNeighbor.Q, closestReachableNeighbor.R);
+                    _unitService.Perform(_unit, setupGaslightExplosives);
+                    _selectService.Select(potentialSpace, TeamType.Enemy);
+                    break;
+                }
+            }
+        };
     }
 
     private void SetCreeperCupidAs(UnitTurnIntention intention)

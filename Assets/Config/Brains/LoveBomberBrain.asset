@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: LoveBomberBrain
   m_EditorClassIdentifier: Assembly-CSharp::AI.LoveBomber.LoveBomberBrainConfig
   motherOfAllLoveBombsThreshold: 10
+  gaslightExplosivesPerTurn: 2
+  gaslightExplosiveSearchRadius: 3

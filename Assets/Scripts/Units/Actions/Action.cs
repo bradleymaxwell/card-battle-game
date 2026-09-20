@@ -18,7 +18,7 @@ namespace Units
         {
             var hasEnergy = userSpace.Occupant.CurrentEnergy - Config.EnergyCost >= 0;
             var inRange = true;
-            if (Config is IRangedAction rangedAction)
+            if (Config is IRangedAction rangedAction && rangedAction.Range > 0)
             {
                 inRange = userSpace.GetDistanceTo(targetSpace) <= rangedAction.Range;
             }

@@ -5,14 +5,14 @@ using Units;
 using Units.Actions.VisualPlayback;
 using UnityEngine;
 
-public class SummonCreeperCupidActionVisualHandler : IActionVisualHandler
+public class SummonUnitActionVisualHandler : IActionVisualHandler
 {
     private readonly UnitViewManager _unitViewManager;
     private readonly MapService _mapService;
     private bool _isSummoned;
     private bool _isFinished;
     
-    public SummonCreeperCupidActionVisualHandler()
+    public SummonUnitActionVisualHandler()
     {
         _unitViewManager = Locator.Get<UnitViewManager>();
         _mapService = Locator.Get<MapService>();

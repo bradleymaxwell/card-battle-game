@@ -153,6 +153,34 @@ namespace Map
                 .FirstOrDefault();
         }
         
+        public MapSpace GetClosestReachableNeighborSpace(IUnit unit, int q, int r, int maxDistance)
+        {
+            var startSpace = GetSpace(unit);
+            if (startSpace == null)
+            {
+                return null;
+            }
+
+            var targetSpace = GetSpace(q, r);
+            if (targetSpace == null)
+            {
+                return null;
+            }
+
+            var reachablePaths = GetReachablePaths(startSpace, maxDistance);
+            if (reachablePaths.Count <= 0)
+            {
+                return null;
+            }
+
+            return GetNeighbors(targetSpace)
+                .Where(neighbor => neighbor.Occupant == null)
+                .Where(reachablePaths.ContainsKey)
+                .OrderBy(neighbor => reachablePaths[neighbor].Count)
+                .ThenBy(startSpace.GetDistanceTo)
+                .FirstOrDefault();
+        }
+        
         public IList<MapSpace> GetAllEdgeSpaces()
         {
             return _mapSpaces.Where(space => GetNeighbors(space).Count() < 6).ToList();

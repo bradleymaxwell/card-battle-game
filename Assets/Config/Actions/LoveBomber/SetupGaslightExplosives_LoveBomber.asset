@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2292a121153846d8b1a219728cbda351, type: 3}
-  m_Name: SummonCreeperCupid_LoveBomber
-  m_EditorClassIdentifier: Assembly-CSharp::Units.CreeperCupid.SummonCreeperCupidActionConfig
+  m_Name: SetupGaslightExplosives_LoveBomber
+  m_EditorClassIdentifier: Assembly-CSharp::Units.CreeperCupid.SummonUnitActionConfig
   energyCost: 0
-  name: Creeper Cupid
+  name: Setup Explosives
   icon: {fileID: 0}
   description: 
   visual: {fileID: 11400000, guid: 6b9919304bcb9405da030edcaa52dfdf, type: 2}
-  unit: {fileID: 11400000, guid: ed16a6a785a4c4d5896ede1b7ede6a04, type: 2}
-  brain: {fileID: 11400000, guid: e577ae5515074464a8ad71c917823e41, type: 2}
-  range: -1
+  unit: {fileID: 11400000, guid: f7efe24cb37374907acccc0457501651, type: 2}
+  brain: {fileID: 11400000, guid: 26230607b2e87459ca53d99661f59586, type: 2}
+  range: 1

@@ -3,13 +3,13 @@ using Map;
 
 namespace Units.CreeperCupid
 {
-    public class SummonCreeperCupidAction : Action
+    public class SummonUnitAction : Action
     {
-        private readonly SummonCreeperCupidActionConfig _config;
+        private readonly SummonUnitActionConfig _config;
         private readonly UnitService _unitService;
         private readonly MapService _mapService;
         
-        public SummonCreeperCupidAction(SummonCreeperCupidActionConfig config) : base(config)
+        public SummonUnitAction(SummonUnitActionConfig config) : base(config)
         {
             _config = config;
             _unitService = Locator.Get<UnitService>();
@@ -24,9 +24,9 @@ namespace Units.CreeperCupid
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
             var result = new ActionPerformResult();
-            var config = new SpawnConfig(_config.CupidUnit, targetSpace.Q, targetSpace.R, TeamType.Enemy)
+            var config = new SpawnConfig(_config.Unit, targetSpace.Q, targetSpace.R, TeamType.Enemy)
             {
-                BrainConfig = _config.CupidBrain
+                BrainConfig = _config.Brain
             };
             
             var unit = _unitService.Spawn(config);

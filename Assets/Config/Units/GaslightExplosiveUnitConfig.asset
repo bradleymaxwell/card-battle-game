@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b989ac8f69d490c8237c4950bf937b8, type: 3}
   m_Name: GaslightExplosiveUnitConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitConfig
-  name: 
-  prefab: {fileID: 0}
+  name: Box of Gaslight Explosives
+  prefab: {fileID: 3228590261360608068, guid: 95997aca460834eb1af89de732e2be2a, type: 3}
   attack: 0
-  health: 0
-  actions: []
+  health: 1
+  actions:
+  - {fileID: 11400000, guid: 7636f46909237474890bd4da67b77c30, type: 2}
