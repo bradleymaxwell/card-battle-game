@@ -16,5 +16,7 @@ MonoBehaviour:
   name: M.O.A.L.B
   icon: {fileID: 0}
   description: 
+  visual: {fileID: 0}
   radius: 2
   damage: 200
+  gaslightExplosiveConfig: {fileID: 11400000, guid: f7efe24cb37374907acccc0457501651, type: 2}

@@ -10,6 +10,9 @@ namespace Units.MotherOfAllLoveBombs
         
         [SerializeField] private int damage;
         public int Damage => damage;
+
+        [SerializeField] private UnitConfig gaslightExplosiveConfig;
+        public UnitConfig GaslightExplosiveConfig => gaslightExplosiveConfig;       
         
         public override IAction Action => new MotherOfAllLoveBombsAction(this);
     }

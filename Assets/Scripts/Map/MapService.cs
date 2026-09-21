@@ -43,6 +43,11 @@ namespace Map
             unit.OnMapSpaceChanged?.Invoke(newSpace);
         }
 
+        public IList<MapSpace> GetAllMapSpaces()
+        {
+            return _mapSpaces;
+        }
+
         public MapSpacePrefab GetPrefab(MapSpace mapSpace)
         {
             if (_prefabsBySpace.TryGetValue(mapSpace, out var prefab))
