@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MoveConfig_LoveBomber
   m_EditorClassIdentifier: Assembly-CSharp::Units.MoveActionConfig
   energyCost: 0
-  name: 
+  name: Move
   icon: {fileID: 0}
   description: 
   visual: {fileID: 11400000, guid: 7f9dc1d475f964d95829abf053ca2f8b, type: 2}
