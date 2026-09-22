@@ -194,6 +194,8 @@ public class LoveBomberBrain : IUnitBrain
             }
 
             _unitService.Perform(_unit, action);
+            var space = _mapService.GetSpace(_unit);
+            _selectService.Select(space, TeamType.Enemy);
             _isMotherOfAllLoveBombsDetonated = true;
         };
     }

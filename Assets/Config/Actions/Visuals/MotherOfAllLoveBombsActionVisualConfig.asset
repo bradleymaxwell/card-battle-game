@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bd8c546ad944cda8e23ba086eb4c8f3, type: 3}
+  m_Name: MotherOfAllLoveBombsActionVisualConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Units.MotherOfAllLoveBombs.MotherOfAllLoveBombsActionVisualConfig
+  explosionVfx: {fileID: 3333359490627422501, guid: 8fab619434eab49fcb584a1beb8cd063, type: 3}
+  detonateMaterial: {fileID: 2100000, guid: 8f7b33ab64e594d799c374bdecba1ead, type: 2}

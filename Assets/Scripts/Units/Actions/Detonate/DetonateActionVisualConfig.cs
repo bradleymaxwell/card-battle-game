@@ -8,10 +8,7 @@ namespace Units.Detonate
     public class DetonateActionVisualConfig : ActionVisualConfig
     {
         [SerializeField] private PooledParticleSystem explosionVfx;
-        public PooledParticleSystem ExplosionVfx => explosionVfx;
-
-        [SerializeField] private Material detonateMaterial;
-        public Material DetonateMaterial => detonateMaterial;       
+        public PooledParticleSystem ExplosionVfx => explosionVfx; 
         
         public override IActionVisualHandler Handler => new DetonateActionVisualHandler(this);
     }

@@ -24,7 +24,7 @@ namespace Units.MotherOfAllLoveBombs
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var result = new ActionPerformResult();
+            var result = new MotherOfAllLoveBombsActionResult();
             var spaces = _mapService.GetAllMapSpaces();
             foreach (var space in spaces)
             {
@@ -43,7 +43,7 @@ namespace Units.MotherOfAllLoveBombs
                 if (space.Occupant.Config != _config.GaslightExplosiveConfig)
                 {
                     continue;
-                }
+                }   
                 
                 var detonateAction = space.Occupant.Actions.FirstOrDefault(a => a is DetonateAction);
                 if (detonateAction == null)
@@ -51,9 +51,11 @@ namespace Units.MotherOfAllLoveBombs
                     _logger.LogError($"could not find detonate action for {space.Occupant.Config.Name}, which needs to be triggered by the M.O.A.L.B");
                     continue;
                 }
-                    
-                _unitService.Perform(space.Occupant, detonateAction);
-                _selectService.Select(space, space.Occupant.Team);
+                
+                // not invoking callbacks because we don't want to treat this as its own action, but rather a sub action within the M.O.A.L.B
+                // emitting the event would cause the sub actions to be visually displayed before this action's visual handler plays
+                _unitService.Perform(space.Occupant, detonateAction, isSubAction: true, r => result.DetonationResults.Add(r));
+                _selectService.Select(space, space.Occupant.Team); 
             }
 
             return result;

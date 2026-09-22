@@ -21,8 +21,6 @@ namespace Units.Detonate
         public IEnumerator PlayCor(ActionPerformResult result)
         {
             var (unitPrefab, _) = _unitViewManager.GetUnitViews(result.Performer);
-            unitPrefab.SetMaterial(_config.DetonateMaterial);
-            yield return new WaitForSeconds(1f);
             var explosionVfx = _poolService.Get(_config.ExplosionVfx);
             explosionVfx.transform.position = new Vector3(unitPrefab.transform.position.x, 0.1f, unitPrefab.transform.position.z);
             _unitViewManager.OnUnitDefeated(result.Performer);

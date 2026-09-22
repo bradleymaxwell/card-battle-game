@@ -17,11 +17,6 @@ namespace Units.KissOfDeath
             _mapService = Locator.Get<MapService>();
             _unitService = Locator.Get<UnitService>();
         }
-        
-        public override bool CanPerform(MapSpace userSpace, MapSpace targetSpace)
-        {
-            return base.CanPerform(userSpace, targetSpace) && targetSpace.Occupant != null && userSpace.Occupant.Team != targetSpace.Occupant.Team;
-        } 
 
         public override ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace)
         {
@@ -29,7 +24,7 @@ namespace Units.KissOfDeath
             var nearbySpaces = _mapService.GetAreaSpaces(userSpace, _config.Radius);
             var otherTeamSpaces = nearbySpaces.Where(s => s.Occupant != null && s.Occupant.Team != userSpace.Occupant.Team);
             foreach (var space in otherTeamSpaces)
-            {
+           {
                 var target = space.Occupant;
                 _unitService.Damage(target, _config.Damage);
                 result.HealthAdjustmentByUnit[target] = -_config.Damage;

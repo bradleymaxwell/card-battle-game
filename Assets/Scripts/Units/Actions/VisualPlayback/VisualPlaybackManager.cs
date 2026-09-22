@@ -18,6 +18,7 @@ public class VisualPlaybackManager : MonoBehaviour
     
     private void Awake()
     {
+        Locator.Register(this);
         _unitService = Locator.Get<UnitService>();
         _battleService = Locator.Get<BattleService>();
     }
@@ -53,7 +54,7 @@ public class VisualPlaybackManager : MonoBehaviour
         AddToQueue(() => PlayActionCor(result));
     }
 
-    private IEnumerator PlayActionCor(ActionPerformResult result)
+    public IEnumerator PlayActionCor(ActionPerformResult result)
     {
         if (result.EnergyConsumed > 0)
         {

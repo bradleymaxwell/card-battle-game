@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitConfig
   name: Paladin
   prefab: {fileID: 555939938533003795, guid: deb30d0f6aee54cc6ac0980bdb4959ee, type: 3}
-  attack: 10
+  attack: 60
   health: 10000
   actions:
   - {fileID: 11400000, guid: f4259610bc34544afbf4cb81663317f8, type: 2}

@@ -74,7 +74,7 @@ namespace Units
             _isActionsAllowed = allowed;
         }
         
-        public void Perform(IUnit unit, IAction action)
+        public void Perform(IUnit unit, IAction action, bool isSubAction = false, Action<ActionPerformResult> onPerformed = null)
         {
             if (!_isActionsAllowed)
             {
@@ -86,13 +86,13 @@ namespace Units
             var context = new SelectContext<MapSpace>(
                 selectConfig, 
                 mapSpace => action.CanPerform(unitSpace, mapSpace),
-                selectedMapSpaces => OnPerform(unit, action, unitSpace, selectedMapSpaces.First())
+                selectedMapSpaces => OnPerform(unit, action, unitSpace, selectedMapSpaces.First(), isSubAction, onPerformed)
                 );
             
             _selectService.RequestSelection(context);
         }
 
-        private void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace)
+        private void OnPerform(IUnit unit, IAction action, MapSpace userSpace, MapSpace targetSpace, bool isSubAction, Action<ActionPerformResult> onPerformed)
         {
             if (!_isActionsAllowed)
             {
@@ -117,7 +117,12 @@ namespace Units
             result.EnergyConsumed = energyCost;
             
             AdjustEnergy(unit, -result.EnergyConsumed);
-            OnActionPerformed?.Invoke(result);
+            _logger.Log($"Performed {action.Config.Name} by {unit.Config.Name}");
+            onPerformed?.Invoke(result);
+            if (!isSubAction)
+            {
+                OnActionPerformed?.Invoke(result);
+            }
         }
 
         public void SetActiveUnit(TeamType team, IUnit unit)
