@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Units.KissOfDeath
 {
     [ CreateAssetMenu(menuName = "Game Config/Action/Detonate")]
-    public class DetonateActionConfig : ActionConfig, IRangedAction
+    public class DetonateActionConfig : ActionConfig, IRangedAction, IActionConfigProvider
     {
         [SerializeField] private int radius;
         public int Radius => radius;

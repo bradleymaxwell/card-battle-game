@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Units.MotherOfAllLoveBombs
 {
     [CreateAssetMenu(menuName = "Game Config/Action/Mother of All Love Bombs")]
-    public class MotherOfAllLoveBombsActionConfig : ActionConfig
+    public class MotherOfAllLoveBombsActionConfig : ActionConfig, IActionConfigProvider
     {
         [SerializeField] private int radius;
         public int Radius => radius;

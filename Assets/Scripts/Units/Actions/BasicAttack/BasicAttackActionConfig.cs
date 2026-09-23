@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Units
 {
     [CreateAssetMenu(fileName = "BasicAttackActionConfig", menuName = "Game Config/Action/Basic Attack")]
-    public class BasicAttackActionConfig : ActionConfig, IRangedAction
+    public class BasicAttackActionConfig : ActionConfig, IRangedAction, IActionConfigProvider
     {
         [SerializeField] private int range;
         public int Range => range;

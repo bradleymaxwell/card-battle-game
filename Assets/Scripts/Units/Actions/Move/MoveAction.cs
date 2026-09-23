@@ -4,13 +4,13 @@ namespace Units
 {
     public class MoveAction : Action
     {
-        private readonly MapService _mapService;
+        private readonly IMapService _mapService;
         
-        public MoveAction(ActionConfig config) : this(config, Locator.Get<MapService>())
+        public MoveAction(IMoveActionConfigProvider config) : this(config, Locator.Get<MapService>())
         {
         }
 
-        public MoveAction(ActionConfig config, MapService mapService) : base(config)
+        public MoveAction(IActionConfigProvider config, IMapService mapService) : base(config)
         {
             _mapService = mapService;
         }
@@ -33,9 +33,8 @@ namespace Units
             {
                 return false;
             }
-            
-            var hasEnoughEnergy = shortestPath.Count * Config.EnergyCost <= userSpace.Occupant.CurrentEnergy;
-            return hasEnoughEnergy;
+
+            return true;
         }
 
         public override int GetEnergyCost(MapSpace userSpace, MapSpace targetSpace)

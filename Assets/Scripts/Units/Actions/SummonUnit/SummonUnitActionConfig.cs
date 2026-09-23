@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Units.CreeperCupid
 {
     [CreateAssetMenu(menuName = "Game Config/Action/Summon Unit", fileName =  "SummonUnitActionConfig")]
-    public class SummonUnitActionConfig : ActionConfig, IRangedAction
+    public class SummonUnitActionConfig : ActionConfig, IRangedAction, IActionConfigProvider
     {
         [SerializeField] private UnitConfig unit;
         public UnitConfig Unit => unit;

@@ -5,18 +5,18 @@ namespace Units
 {
     public abstract class Action : IAction
     {
-        public ActionConfig Config { get; }
+        public IActionConfigProvider Config { get; }
 
         public Sprite Icon => Config.Icon;
         
-        protected Action(ActionConfig config)
+        protected Action(IActionConfigProvider config)
         {
             Config = config;
         }
         
         public virtual bool CanPerform(MapSpace userSpace, MapSpace targetSpace)
         {
-            var hasEnergy = userSpace.Occupant.CurrentEnergy - Config.EnergyCost >= 0;
+            var hasEnergy = userSpace.Occupant.CurrentEnergy - GetEnergyCost(userSpace, targetSpace) >= 0;
             var inRange = true;
             if (Config is IRangedAction rangedAction && rangedAction.Range > 0)
             {

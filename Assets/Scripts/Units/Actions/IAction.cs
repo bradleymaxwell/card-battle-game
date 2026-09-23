@@ -8,7 +8,7 @@ namespace Units
         bool CanPerform(MapSpace userSpace, MapSpace targetSpace);
         ActionPerformResult OnPerform(MapSpace userSpace, MapSpace targetSpace);
         Sprite Icon { get; }
-        ActionConfig Config { get; }
+        IActionConfigProvider Config { get; }
         int GetEnergyCost(MapSpace userSpace, MapSpace targetSpace);
     }
 }

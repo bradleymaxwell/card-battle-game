@@ -4,7 +4,7 @@ using Units;
 
 namespace Map
 {
-    public class MapService
+    public class MapService : IMapService
     {
         private readonly IList<MapSpace> _mapSpaces = new List<MapSpace>();
         private readonly Logger _logger = new(nameof(MapService));

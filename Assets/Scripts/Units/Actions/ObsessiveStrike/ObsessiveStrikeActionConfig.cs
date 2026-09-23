@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Units.ObsessiveStrike
 {
     [CreateAssetMenu(menuName = "Game Config/Action/Obsessive Strike", fileName =  "ObsessiveStrikeActionConfig")]
-    public class ObsessiveStrikeActionConfig : ActionConfig, IRangedAction
+    public class ObsessiveStrikeActionConfig : ActionConfig, IRangedAction, IActionConfigProvider
     {
         [SerializeField] private List<float> percentIncreasePerStack;
         public List<float> PercentIncreasePerStack => percentIncreasePerStack;

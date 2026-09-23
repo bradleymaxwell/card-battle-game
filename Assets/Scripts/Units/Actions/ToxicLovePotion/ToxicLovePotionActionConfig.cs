@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Units.ToxicLovePotion
 {
     [CreateAssetMenu(menuName = "Game Config/Action/Toxic Love Potion")]
-    public class ToxicLovePotionActionConfig : ActionConfig
+    public class ToxicLovePotionActionConfig : ActionConfig, IActionConfigProvider
     {
         [SerializeField] private int radius;
         public int Radius => radius;
