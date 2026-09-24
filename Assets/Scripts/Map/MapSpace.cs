@@ -28,5 +28,26 @@ namespace Map
 
             return (qDistance + rDistance + sDistance) / 2;
         }
+        
+        public bool IsNeighbourOf(MapSpace other)
+        {
+            return GetDistanceTo(other) == 1;
+        }
+
+        public MapDirection GetDirectionTo(MapSpace other)
+        {
+            var q = Q - other.Q;
+            var r = R - other.R;
+            return (q, r) switch
+            {
+                (-1, 0) => MapDirection.Left,
+                (1, 0) => MapDirection.Right,
+                (-1, 1) => MapDirection.LeftUp,
+                (0, 1) => MapDirection.RightUp,
+                (0, -1) => MapDirection.LeftDown,
+                (1, -1) => MapDirection.RightDown,
+                _ => MapDirection.None
+            };
+        }
     }
 }

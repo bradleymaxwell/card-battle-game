@@ -7,6 +7,7 @@ namespace Map
         LeftUp,
         RightUp,
         LeftDown,
-        RightDown
+        RightDown,
+        None
     }
 }

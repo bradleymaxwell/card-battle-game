@@ -38,7 +38,7 @@ public class MapSpaceContainer : MonoBehaviour
             return null;
         }
 
-        var (offsetQ, offsetR) = GetOffset(direction);
+        var (offsetQ, offsetR) = direction.GetOffset();
         return CreateSpace(reference.Q + offsetQ, reference.R + offsetR);
     }
 
@@ -49,7 +49,7 @@ public class MapSpaceContainer : MonoBehaviour
             return false;
         }
 
-        var (offsetQ, offsetR) = GetOffset(direction);
+        var (offsetQ, offsetR) = direction.GetOffset();
         var q = reference.Q + offsetQ;
         var r = reference.R + offsetR;
 
@@ -88,7 +88,7 @@ public class MapSpaceContainer : MonoBehaviour
             return anchorPosition;
         }
 
-        var (offsetQ, offsetR) = GetOffset(direction);
+        var (offsetQ, offsetR) = direction.GetOffset();
         var q = reference.Q + offsetQ;
         var r = reference.R + offsetR;
 
@@ -154,27 +154,6 @@ public class MapSpaceContainer : MonoBehaviour
 
             space.transform.position = GetWorldPosition(space.Q, space.R);
             space.name = $"Space ({space.Q}, {space.R})";
-        }
-    }
-    
-    private (int q, int r) GetOffset(MapDirection direction)
-    {
-        switch (direction)
-        {
-            case MapDirection.Left:
-                return (-1, 0);
-            case MapDirection.Right:
-                return (1, 0);
-            case MapDirection.LeftUp:
-                return (-1, 1);
-            case MapDirection.RightUp:
-                return (0, 1);
-            case MapDirection.LeftDown:
-                return (0, -1);
-            case MapDirection.RightDown:
-                return (1, -1);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
         }
     }
 

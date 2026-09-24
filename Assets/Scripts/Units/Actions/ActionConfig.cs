@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Units
 {
-    public abstract class ActionConfig : ScriptableObject
+    public abstract class ActionConfig : ScriptableObject, IActionConfigProvider
     {
         [SerializeField] private int energyCost;
         public int EnergyCost => energyCost;
