@@ -7,7 +7,7 @@ using Map;
 using Units;
 using Random = UnityEngine.Random;
 
-public class BattleService : IDisposable
+public class BattleService : IBattleService, IDisposable
 {
     public bool IsInitialized { get; private set; }
     private readonly MapService _mapService;
@@ -76,25 +76,10 @@ public class BattleService : IDisposable
     {
         return _unitsByTeam.TryGetValue(team, out var units) ? units : new List<IUnit>();
     }
-
-    private void OnUnitDefeated(IUnit unit)
+    
+    public bool IsTurn(TeamType team)
     {
-        var teamUnits = _unitsByTeam[unit.Team];
-        teamUnits.Remove(unit);
-        _turnOrder.Remove(unit);
-        _turnQueue.Remove(unit);
-        if (unit is NpcUnit npc)
-        {
-            _nextTurnIntentionsByUnit.Remove(npc);
-        }
-        
-        _logger.Log($"{unit.Config.Name} ({unit.Team}) defeated!");
-        if (teamUnits.Count <= 0)
-        {
-            var wonTeam = 1 - unit.Team;
-            _unitService.DeactivateUnit(unit.Team);
-            End(wonTeam);
-        }
+        return _activeUnit?.Team == team;
     }
 
     public void StartNextTurn()
@@ -233,9 +218,24 @@ public class BattleService : IDisposable
             _unitService.OnUnitDefeated -= OnUnitDefeated;
         }
     }
-
-    public bool IsTurn(TeamType team)
+    
+    private void OnUnitDefeated(IUnit unit)
     {
-        return _activeUnit?.Team == team;
+        var teamUnits = _unitsByTeam[unit.Team];
+        teamUnits.Remove(unit);
+        _turnOrder.Remove(unit);
+        _turnQueue.Remove(unit);
+        if (unit is NpcUnit npc)
+        {
+            _nextTurnIntentionsByUnit.Remove(npc);
+        }
+        
+        _logger.Log($"{unit.Config.Name} ({unit.Team}) defeated!");
+        if (teamUnits.Count <= 0)
+        {
+            var wonTeam = 1 - unit.Team;
+            _unitService.DeactivateUnit(unit.Team);
+            End(wonTeam);
+        }
     }
 }

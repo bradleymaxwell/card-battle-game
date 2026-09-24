@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace Targeting
 {
-    public class SelectService : IDisposable
+    public class SelectService : ISelectService, IDisposable
     {
         private readonly InputAction _cancelAction;
         private readonly IDictionary<TeamType, ISelectContext> _activeContextByTeam = new Dictionary<TeamType, ISelectContext>();

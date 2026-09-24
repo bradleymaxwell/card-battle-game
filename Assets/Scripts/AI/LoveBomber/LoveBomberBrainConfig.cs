@@ -3,7 +3,7 @@ using UnityEngine;
 namespace AI.LoveBomber
 {
     [CreateAssetMenu(menuName = "Game Config/Brain/Love Bomber")]
-    public class LoveBomberBrainConfig : UnitBrainConfig
+    public class LoveBomberBrainConfig : UnitBrainConfig, ILoveBomberBrainConfigProvider
     {
         [SerializeField] private float motherOfAllLoveBombsThreshold;
         public float MotherOfAllLoveBombsThreshold => motherOfAllLoveBombsThreshold;

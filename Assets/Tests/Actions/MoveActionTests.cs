@@ -34,6 +34,7 @@ public class MoveActionTests
         var userSpace = A.Fake<MapSpace>();
         var targetSpace = A.Fake<MapSpace>();
         targetSpace.Occupant = A.Fake<IUnit>();
+        targetSpace.Occupant = null;
         
         // Act
         var result = _sut.CanPerform(userSpace, targetSpace);

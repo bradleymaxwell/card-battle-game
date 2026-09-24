@@ -9,29 +9,43 @@ using UnityEngine;
 
 public class LoveBomberBrain : IUnitBrain
 {
-    private readonly LoveBomberBrainConfig _config;
+    private readonly ILoveBomberBrainConfigProvider _config;
     private IUnit _unit;
-    private readonly MapService _mapService;
-    private readonly UnitService _unitService;
-    private readonly BattleService _battleService;
-    private readonly SelectService _selectService;
-    private const int ObsessiveStrike = 0;
-    private const int ToxicLovePotion = 1;
-    private const int CreeperCupid = 2;
-    private const int MotherOfAllLoveBombs = 3;
-    private const int Move = 4;
-    private const int SetupGaslightExplosives = 5;
+    private readonly IMapService _mapService;
+    private readonly IUnitService _unitService;
+    private readonly IBattleService _battleService;
+    private readonly ISelectService _selectService;
+    public const int ObsessiveStrike = 0;
+    public const int ToxicLovePotion = 1;
+    public const int CreeperCupid = 2;
+    public const int MotherOfAllLoveBombs = 3;
+    public const int Move = 4;
+    public const int SetupGaslightExplosives = 5;
 
     private bool _isMotherOfAllLoveBombsDetonated;
     private bool _isObsessiveStrikeTurn;
     
-    public LoveBomberBrain(LoveBomberBrainConfig config)
+    public LoveBomberBrain(LoveBomberBrainConfig config) : this(
+        config,
+        Locator.Get<IMapService>(),
+        Locator.Get<IUnitService>(),
+        Locator.Get<IBattleService>(),
+        Locator.Get<ISelectService>())
+    {
+    }
+    
+    public LoveBomberBrain(
+        ILoveBomberBrainConfigProvider config,
+        IMapService mapService,
+        IUnitService unitService,
+        IBattleService battleService,
+        ISelectService selectService)
     {
         _config = config;
-        _mapService = Locator.Get<MapService>();
-        _unitService = Locator.Get<UnitService>();
-        _battleService = Locator.Get<BattleService>();
-        _selectService = Locator.Get<SelectService>();
+        _mapService = mapService;
+        _unitService = unitService;
+        _battleService = battleService;
+        _selectService = selectService;
     }
 
     public void Initialize(IUnit unit)

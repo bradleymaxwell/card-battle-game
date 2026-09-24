@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Units
 {
-    public class UnitService
+    public class UnitService : IUnitService
     {
         private readonly Logger _logger = new(nameof(UnitService));
         private readonly MapService _mapService;

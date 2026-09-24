@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Units
 {
     [CreateAssetMenu(menuName = "Game Config/Unit")]
-    public class UnitConfig : ScriptableObject
+    public class UnitConfig : ScriptableObject, IUnitConfigProvider
     {
         [SerializeField] private new string name;
         public string Name => name;

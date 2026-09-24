@@ -11,7 +11,7 @@ namespace Units
         Action<MapSpace> OnMapSpaceChanged { get; set; }
         TeamType Team { get; }
         int CurrentHealth { get; set; }
-        UnitConfig Config { get; }
+        IUnitConfigProvider Config { get; }
         int CurrentEnergy { get; set; }
         int Energy { get; }
         IList<IAction> Actions { get; }
