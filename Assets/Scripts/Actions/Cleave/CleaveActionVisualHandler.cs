@@ -25,8 +25,7 @@ public class CleaveActionVisualHandler : IActionVisualHandler
         yield return new WaitUntil(() => _isHitLanded);
         foreach (var (target, adjustment) in result.HealthAdjustmentByUnit)
         {
-            var (_, targetResourceBar) = _unitViewManager.GetUnitViews(target);
-            targetResourceBar.AdjustCurrentHealth(adjustment);
+            _unitViewManager.OnHealthAdjusted(target, adjustment);
         }
     }
 }

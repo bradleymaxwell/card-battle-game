@@ -40,7 +40,7 @@ namespace Units.MotherOfAllLoveBombs
                     continue;
                 }
 
-                if (space.Occupant.Config != _config.GaslightExplosiveConfig)
+                if (!ReferenceEquals(space.Occupant.Config, _config.GaslightExplosiveConfig))
                 {
                     continue;
                 }   
