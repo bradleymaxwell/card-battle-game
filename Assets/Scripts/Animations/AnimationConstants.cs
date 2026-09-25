@@ -7,4 +7,5 @@ public static class AnimationConstants
     public const string Summon = "Summon";
     public const string Throw = "Throw";
     public const string Cast = "Cast";
+    public const string SideSlash = "SideSlash";
 }

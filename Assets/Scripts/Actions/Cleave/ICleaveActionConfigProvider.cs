@@ -4,8 +4,7 @@ namespace Units.Cleave
 {
     public interface ICleaveActionConfigProvider : IActionConfigProvider
     {
-        int BaseDamage { get; }
-        IList<float> DamagePercentIncreasePerHit { get; }
+        IList<float> PercentDamagePerHit { get; }
         int PerfectHitThreshold { get; }
         float PerfectHitDamagePercentIncrease { get; }
     }

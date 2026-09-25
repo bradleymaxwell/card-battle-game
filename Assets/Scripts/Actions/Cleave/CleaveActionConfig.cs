@@ -1,16 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Units.Cleave
 {
     [CreateAssetMenu(menuName = "Game Config/Action/Cleave")]
     public class CleaveActionConfig : ActionConfig, ICleaveActionConfigProvider
     {
-        [SerializeField] private int baseDamage;
-        public int BaseDamage => baseDamage;
-        
-        [SerializeField] private List<float> damagePercentIncreasePerHit;
-        public IList<float> DamagePercentIncreasePerHit => damagePercentIncreasePerHit;
+        [FormerlySerializedAs("damagePercentIncreasePerHit")] [SerializeField] private List<float> percentDamagePerHit;
+        public IList<float> PercentDamagePerHit => percentDamagePerHit;
         
         [SerializeField] private int perfectHitThreshold;
         public int PerfectHitThreshold => perfectHitThreshold;

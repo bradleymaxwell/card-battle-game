@@ -39,37 +39,34 @@ public class CleaveAction : Action
     {
         var result = new ActionPerformResult();
         var direction = userSpace.GetDirectionTo(targetSpace);
-        var left1 = direction.GetLeft();
-        var left2 = left1.GetLeft();
+        var relativeLeft = direction.GetLeft();
+        var relativeLeftDown = relativeLeft.GetLeft();
         
-        var left1Offset = left1.GetOffset();
-        var left2Offset = left2.GetOffset();
+        var leftOffset = relativeLeft.GetOffset();
+        var leftDownOffset = relativeLeftDown.GetOffset();
         
-        var left1Space = _mapService.GetSpace(left1Offset.q, left1Offset.r);
-        var left2Space = _mapService.GetSpace(left2Offset.q, left2Offset.r);
+        var leftSpace = _mapService.GetSpace(userSpace.Q + leftOffset.q, userSpace.R + leftOffset.r);
+        var leftDownSpace = _mapService.GetSpace(userSpace.Q +leftDownOffset.q, userSpace.R + leftDownOffset.r);
 
-        var spaces = new[] { left2Space, left1Space, targetSpace };
+        var spaces = new[] { leftDownSpace, leftSpace, targetSpace };
         var hitSpaces = spaces.Where(space => space?.Occupant != null && space.Occupant.Team != userSpace.Occupant.Team).ToList();
         result.IsPerfectHit = hitSpaces.Count >= _config.PerfectHitThreshold;
-        var modifierIndex = -1;
+        var modifierIndex = 0;
         foreach (var space in hitSpaces)
         {
-            float damage = _config.BaseDamage;
-            if (modifierIndex >= 0)
-            {
-                var modifier = _config.DamagePercentIncreasePerHit.ElementAt(modifierIndex);
-                damage += 1f + modifier;
-            }
-            
+            var target = space.Occupant;
+            var modifier = _config.PercentDamagePerHit.ElementAt(modifierIndex);
+            float damage = userSpace.Occupant.Config.Attack;
+            damage *= modifier;
             if (result.IsPerfectHit)
             {
                 damage *= 1f + _config.PerfectHitDamagePercentIncrease;
             }
             
             var roundedDamage = Mathf.CeilToInt(damage);
-            _unitService.Damage(space.Occupant, roundedDamage);
+            _unitService.Damage(target, roundedDamage);
             modifierIndex++;
-            result.HealthAdjustmentByUnit.Add(space.Occupant, -roundedDamage);
+            result.HealthAdjustmentByUnit.Add(target, -roundedDamage);
         }
 
         return result;

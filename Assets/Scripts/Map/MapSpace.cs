@@ -36,8 +36,8 @@ namespace Map
 
         public MapDirection GetDirectionTo(MapSpace other)
         {
-            var q = Q - other.Q;
-            var r = R - other.R;
+            var q = other.Q - Q;
+            var r = other.R - R;
             return (q, r) switch
             {
                 (-1, 0) => MapDirection.Left,

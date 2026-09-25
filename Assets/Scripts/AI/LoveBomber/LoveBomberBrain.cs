@@ -25,12 +25,12 @@ public class LoveBomberBrain : IUnitBrain
     private bool _isMotherOfAllLoveBombsDetonated;
     private bool _isObsessiveStrikeTurn;
     
-    public LoveBomberBrain(LoveBomberBrainConfig config) : this(
+    public LoveBomberBrain(ILoveBomberBrainConfigProvider config) : this(
         config,
-        Locator.Get<IMapService>(),
-        Locator.Get<IUnitService>(),
-        Locator.Get<IBattleService>(),
-        Locator.Get<ISelectService>())
+        Locator.Get<MapService>(),
+        Locator.Get<UnitService>(),
+        Locator.Get<BattleService>(),
+        Locator.Get<SelectService>())
     {
     }
     

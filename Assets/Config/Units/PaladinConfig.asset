@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b989ac8f69d490c8237c4950bf937b8, type: 3}
-  m_Name: PlayerUnitConfig
+  m_Name: PaladinConfig
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitConfig
   name: Paladin
   prefab: {fileID: 555939938533003795, guid: deb30d0f6aee54cc6ac0980bdb4959ee, type: 3}
-  attack: 60
-  health: 10000
+  attack: 30
+  health: 150
   actions:
   - {fileID: 11400000, guid: f4259610bc34544afbf4cb81663317f8, type: 2}
   - {fileID: 11400000, guid: 750b61760ecc848f88f97adc23e9e530, type: 2}
+  - {fileID: 11400000, guid: 1db41130774474b75883139ae114290d, type: 2}
