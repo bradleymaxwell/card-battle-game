@@ -14,5 +14,6 @@ namespace Map
         MapSpace GetClosestReachableSpace(IUnit unit, int q, int r, int maxDistance);
         MapSpace GetSpace(int q, int r);
         IList<MapSpace> GetAreaSpaces(MapSpace centerSpace, int radius, bool includeCenterSpace = true);
+        void Initialize(MapSpaceContainer mapSpaceContainer);
     }
 }

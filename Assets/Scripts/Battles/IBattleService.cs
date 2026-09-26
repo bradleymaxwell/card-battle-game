@@ -5,7 +5,7 @@ namespace Battles
 {
     public interface IBattleService
     {
-        void Initialize(BattleConfig battleConfig, MapSpaceContainer mapSpaceContainer);
+        void Initialize(IBattleConfigProvider battleConfig, MapSpaceContainer mapSpaceContainer);
         IList<IUnit> GetTeamUnits(TeamType team);
         bool IsTurn(TeamType team);
         void StartNextTurn();

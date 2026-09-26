@@ -8,21 +8,15 @@ using UnityEngine;
 namespace Battles
 {
     [CreateAssetMenu(menuName = "Game Config/Battle")]
-    public class BattleConfig : ScriptableObject
+    public class BattleConfig : ScriptableObject, IBattleConfigProvider
     {
         [Header("Player")]
         [SerializeField] private List<BattleUnitConfig> playerUnits;
         public IReadOnlyList<BattleUnitConfig> PlayerUnits => playerUnits;
         
-        [SerializeField] private DeckConfig playerDeck;
-        public DeckConfig PlayerDeck => playerDeck;
-        
         [Header("Enemy")]
         [SerializeField] private List<BattleUnitConfig> enemyUnits;
         public IReadOnlyList<BattleUnitConfig> EnemyUnits => enemyUnits;
-        
-        [SerializeField] private DeckConfig enemyDeck;
-        public DeckConfig EnemyDeck => enemyDeck;
     }
     
     [Serializable]
