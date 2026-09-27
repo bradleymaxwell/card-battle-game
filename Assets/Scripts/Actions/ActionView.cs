@@ -74,7 +74,16 @@ namespace Units
             var canPerform = _unit.CurrentEnergy >= _action.Config.EnergyCost;
             _button.interactable = canPerform;
             image.color = canPerform ? Color.white : Color.gray;
-            manaCostText.text = _action.Config.EnergyCost.ToString();
+            if (_action.Config.EnergyCost <= 0)
+            {
+                manaCostText.gameObject.SetActive(false);
+            }
+            else
+            {
+                manaCostText.text = _action.Config.EnergyCost.ToString();
+                manaCostText.gameObject.SetActive(true);
+            }
+            
             manaCostText.color = _unit.CurrentEnergy >= _action.Config.EnergyCost ? _canAffordColor : Color.softRed;
         }
 
