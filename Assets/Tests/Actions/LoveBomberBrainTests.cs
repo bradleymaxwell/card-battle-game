@@ -43,7 +43,8 @@ public class LoveBomberBrainTests
         // Arrange
         var unit = CreateLoveBomber(currentHealth: 5);
         var motherOfAllLoveBombs = unit.Actions[LoveBomberBrain.MotherOfAllLoveBombs];
-        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(10);
+        A.CallTo(() => unit.Config.Health).Returns(15);
+        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(0.5f);
         _sut.Initialize(unit);
 
         // Act
@@ -64,7 +65,8 @@ public class LoveBomberBrainTests
             Occupant = unit
         };
 
-        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(10);
+        A.CallTo(() => unit.Config.Health).Returns(15);
+        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(0.5f);
         A.CallTo(() => _mapService.GetClosestReachableSpace(unit, 0, 0, 100)).Returns(null);
         A.CallTo(() => _mapService.GetSpace(unit)).Returns(currentSpace);
         _sut.Initialize(unit);
@@ -84,7 +86,8 @@ public class LoveBomberBrainTests
         // Arrange
         var unit = CreateLoveBomber(currentHealth: 100);
         var obsessiveStrike = unit.Actions[LoveBomberBrain.ObsessiveStrike];
-        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(10);
+        A.CallTo(() => unit.Config.Health).Returns(100);
+        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(0.5f);
         _sut.Initialize(unit);
 
         // Act
@@ -117,8 +120,9 @@ public class LoveBomberBrainTests
         };
 
         var adjacentOpenSpace = new MapSpace(3, 0);
-
-        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(10);
+        
+        A.CallTo(() => loveBomberUnit.Config.Health).Returns(100);
+        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(0.5f);
         A.CallTo(() => _battleService.GetTeamUnits(TeamType.Player)).Returns(new List<IUnit> { playerUnit });
         A.CallTo(() => _mapService.GetSpace(loveBomberUnit)).Returns(loveBomberSpace);
         A.CallTo(() => _mapService.GetSpace(playerUnit)).Returns(playerSpace);
@@ -158,7 +162,8 @@ public class LoveBomberBrainTests
 
         var availableSpace = new MapSpace(1, 0);
         const int gaslightExplosivesPerTurn = 2;
-        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(10);
+        A.CallTo(() => loveBomberUnit.Config.Health).Returns(100);
+        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(0.5f);
         A.CallTo(() => _configProvider.GaslightExplosivesPerTurn).Returns(gaslightExplosivesPerTurn);
         A.CallTo(() => _configProvider.GaslightExplosiveSearchRadius).Returns(3);
 
@@ -203,7 +208,8 @@ public class LoveBomberBrainTests
         var targetSpace = new MapSpace(4, 0);
         var closestReachableNeighbor = new MapSpace(3, 0);
         
-        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(10);
+        A.CallTo(() => loveBomberUnit.Config.Health).Returns(100);
+        A.CallTo(() => _configProvider.MotherOfAllLoveBombsThreshold).Returns(0.5f);
         A.CallTo(() => _configProvider.GaslightExplosivesPerTurn).Returns(1);
         A.CallTo(() => _configProvider.GaslightExplosiveSearchRadius).Returns(3);
 

@@ -6,6 +6,7 @@ namespace AI.LoveBomber
     public class LoveBomberBrainConfig : UnitBrainConfig, ILoveBomberBrainConfigProvider
     {
         [SerializeField] private float motherOfAllLoveBombsThreshold;
+        [Range(0, 1)]
         public float MotherOfAllLoveBombsThreshold => motherOfAllLoveBombsThreshold;
 
         [SerializeField] private int gaslightExplosivesPerTurn;

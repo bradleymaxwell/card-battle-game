@@ -58,7 +58,8 @@ public class LoveBomberBrain : IUnitBrain
     public UnitTurnIntention GetTurnIntention()
     {
         var intention = new UnitTurnIntention();
-        if (_unit.CurrentHealth <= _config.MotherOfAllLoveBombsThreshold && !_isMotherOfAllLoveBombsDetonated)
+        var inMoalbRange = _unit.CurrentHealth <= Mathf.FloorToInt(_unit.Config.Health * _config.MotherOfAllLoveBombsThreshold);
+        if (inMoalbRange && !_isMotherOfAllLoveBombsDetonated)
         {
             SetMotherOfAllLoveBombsAs(intention);
             return intention;
