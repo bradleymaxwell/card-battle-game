@@ -12,7 +12,7 @@ namespace Units.MotherOfAllLoveBombs
         private readonly UnitViewManager _unitViewManager;
         private readonly PoolService _poolService;
         private bool _isCastFinished;
-        private VisualPlaybackManager _visualPlaybackManager;
+        private readonly VisualPlaybackManager _visualPlaybackManager;
         
         public MotherOfAllLoveBombsVisualHandler(MotherOfAllLoveBombsActionVisualConfig config)
         {

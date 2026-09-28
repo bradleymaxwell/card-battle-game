@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AI;
+using AI.Passive;
 using Battles;
 using Units;
 using UnityEngine;
+using Action = System.Action;
 
 public class VisualPlaybackManager : MonoBehaviour
 {
@@ -43,17 +46,7 @@ public class VisualPlaybackManager : MonoBehaviour
             _battleService.OnBattleEnded -= OnBattleEnded;
         }
     }
-
-    private void OnBattleEnded(TeamType team)
-    {
-        AddToQueue(() => EndBattleCor(team));
-    }
-
-    private void OnActionPerformed(ActionPerformResult result)
-    {
-        AddToQueue(() => PlayActionCor(result));
-    }
-
+    
     public IEnumerator PlayActionCor(ActionPerformResult result)
     {
         if (result.EnergyConsumed > 0)
@@ -74,34 +67,63 @@ public class VisualPlaybackManager : MonoBehaviour
             
         yield return handler.PlayCor(result);
     }
+
+    private void OnBattleEnded(TeamType team)
+    {
+        AddToQueue(() =>
+        {
+            actionViewContainer.OnActiveUnitChanged(TeamType.Enemy, null);
+            actionViewContainer.OnActiveUnitChanged(TeamType.Player, null);
+            endTurnView.gameObject.SetActive(false);
+        });
+    }
+
+    private void OnActionPerformed(ActionPerformResult result)
+    {
+        AddToQueue(() => PlayActionCor(result));
+    }
     
     private void OnTurnChanged(IUnit previousUnit, IUnit newUnit)
     {
-        AddToQueue(() => PlayChangeTurnCor(previousUnit, newUnit));
-    }
-
-    private IEnumerator PlayChangeTurnCor(IUnit previousUnit, IUnit newUnit)
-    {
-        if (previousUnit != null)
+        var intentionsByUnit = new Dictionary<NpcUnit, UnitTurnIntention>(_battleService.NextTurnIntentionsByUnit);
+        AddToQueue(() =>
         {
-            var (_, previousUnitResourceBar) = unitViewManager.GetUnitViews(previousUnit, throwIfNotFound: false);
-            if (previousUnitResourceBar != null)
+            foreach (var (npcUnit, intention) in intentionsByUnit)
             {
-                previousUnitResourceBar.OnActiveUnitChanged(previousUnit.Team, null);
-                previousUnitResourceBar.RefreshEnergy();
+                if (npcUnit.Brain is PassiveUnitBrain)
+                {
+                    continue;
+                }
+                
+                var (_, npcResourceBar) = unitViewManager.GetUnitViews(npcUnit, throwIfNotFound: false);
+                npcResourceBar?.IndicatorBar.ShowIntention(intention);
             }
-        }
+            
+            if (previousUnit != null)
+            {
+                var (_, previousUnitResourceBar) = unitViewManager.GetUnitViews(previousUnit, throwIfNotFound: false);
+                if (previousUnitResourceBar)
+                {
+                    previousUnitResourceBar.OnActiveUnitChanged(previousUnit.Team, null);
+                    previousUnitResourceBar.RefreshEnergy();
+                }
+            }
         
-        if (newUnit != null)
-        {
-            var (_, newUnitResourceBar) = unitViewManager.GetUnitViews(newUnit);
-            newUnitResourceBar.OnActiveUnitChanged(newUnit.Team, newUnit);
-            actionViewContainer.OnActiveUnitChanged(newUnit.Team, newUnit);
-            newUnitResourceBar.RefreshEnergy();
-        }
+            if (newUnit != null)
+            {
+                var (_, newUnitResourceBar) = unitViewManager.GetUnitViews(newUnit);
+                newUnitResourceBar.OnActiveUnitChanged(newUnit.Team, newUnit);
+                actionViewContainer.OnActiveUnitChanged(newUnit.Team, newUnit);
+                newUnitResourceBar.RefreshEnergy();
+                if (newUnit is NpcUnit)
+                {
+                    // when a new turn starts for an npc, they are about to play back their intention so no longer needs to show
+                    newUnitResourceBar.IndicatorBar.HideIntention();
+                }
+            }
         
-        endTurnView.OnTurnChanged(newUnit);
-        yield break;
+            endTurnView.OnTurnChanged(newUnit);
+        });
     }
 
     private IEnumerator PlayCor()
@@ -121,14 +143,6 @@ public class VisualPlaybackManager : MonoBehaviour
         _isPlaying = false;
     }
 
-    private IEnumerator EndBattleCor(TeamType team)
-    {
-        actionViewContainer.OnActiveUnitChanged(TeamType.Enemy, null);
-        actionViewContainer.OnActiveUnitChanged(TeamType.Player, null);
-        endTurnView.gameObject.SetActive(false);
-        yield break;
-    }
-
     private void AddToQueue(Func<IEnumerator> factory)
     {
         if (factory == null)
@@ -141,5 +155,16 @@ public class VisualPlaybackManager : MonoBehaviour
         {
             StartCoroutine(PlayCor());
         }
+    }
+
+    private void AddToQueue(Action callback)
+    {
+        IEnumerator PlayCallbackCor()
+        {
+            callback?.Invoke();
+            yield break;
+        }
+        
+        AddToQueue(PlayCallbackCor);
     }
 }

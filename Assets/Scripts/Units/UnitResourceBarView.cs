@@ -11,6 +11,8 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
     [SerializeField] private Color enemyHealthColor = Color.red;
     [SerializeField] private Color friendlyHealthColor = Color.green;
     [SerializeField] private Color activeUnitColor = Color.softYellow;
+    [SerializeField] private UnitIndicatorBarView indicatorBarView;
+    public UnitIndicatorBarView IndicatorBar => indicatorBarView;
     private UnitPrefab _unitPrefab;
     private Canvas _canvas;
     private RectTransform _rectTransform;

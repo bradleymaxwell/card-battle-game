@@ -16,10 +16,11 @@ public class BattleService : IBattleService, IDisposable
     private readonly Logger _logger = new(nameof(BattleService));
     public event Action<IUnit, IUnit> OnTurnChanged;
     public event Action<TeamType> OnBattleEnded;
+    public event Action<NpcUnit, UnitTurnIntention> OnTurnIntentionSet;
     public Dictionary<NpcUnit, UnitTurnIntention> NextTurnIntentionsByUnit { get; } = new();
     private bool _isEnded;
-    public IList<IUnit> TurnQueue { get; private set; }
-    public IList<IUnit> TurnOrder { get; private set; }
+    public IList<IUnit> TurnQueue { get; private set; } = new List<IUnit>();
+    public IList<IUnit> TurnOrder { get; private set; } = new List<IUnit>();
     public IUnit ActiveUnit { get; private set; }
     
     public BattleService() : this(
@@ -38,8 +39,9 @@ public class BattleService : IBattleService, IDisposable
     {
         IsInitialized = false;
         _mapService.Initialize(mapSpaceContainer);
+        _unitService.OnUnitDefeated += OnUnitDefeated;
+        _unitService.OnUnitSpawned += OnUnitSpawned;
         UnitsByTeam.Clear();
-        var enemyTeam = new List<IUnit>();
         foreach (var unitConfig in battleConfig.EnemyUnits)
         {
             var config = new SpawnConfig(unitConfig.Unit, unitConfig.StartQ, unitConfig.StartR, TeamType.Enemy)
@@ -47,22 +49,15 @@ public class BattleService : IBattleService, IDisposable
                 BrainConfig = unitConfig.Brain
             };
             
-            var unit = _unitService.Spawn(config);
-            enemyTeam.Add(unit);
+            _unitService.Spawn(config);
         }
         
-        var playerTeam = new List<IUnit>();
         foreach (var unitConfig in battleConfig.PlayerUnits)
         {
             var config = new SpawnConfig(unitConfig.Unit, unitConfig.StartQ, unitConfig.StartR, TeamType.Player);
-            var unit = _unitService.Spawn(config);
-            playerTeam.Add(unit);
+            _unitService.Spawn(config);
         }
 
-        UnitsByTeam[TeamType.Enemy] = enemyTeam;
-        UnitsByTeam[TeamType.Player] = playerTeam;
-        _unitService.OnUnitDefeated += OnUnitDefeated;
-        _unitService.OnUnitSpawned += OnUnitSpawned;
         _unitService.ToggleActions(true);
         
         TurnOrder = GenerateTurnOrder();
@@ -128,18 +123,13 @@ public class BattleService : IBattleService, IDisposable
         var unit = ActiveUnit;
         _logger.Log($"playing enemy turn for {unit.Config.Name} ({unit.Team})");
         var npc = (NpcUnit)unit;
-        if (NextTurnIntentionsByUnit.TryGetValue(npc, out var intention))
-        {
-            intention.OnExecute?.Invoke();
-            _logger.Log($"now executing: {intention.Description}");
-            NextTurnIntentionsByUnit.Remove(npc);
-        }
-        else
+        if (!NextTurnIntentionsByUnit.Remove(npc, out var intention))
         {
             intention = npc.Brain.GetTurnIntention();
-            _logger.Log($"now executing: {intention.Description}");
-            intention?.OnExecute?.Invoke();
         }
+
+        _logger.Log($"now executing: {intention.Description}");
+        intention?.OnExecute?.Invoke();
          
         if (_isEnded)
         {
@@ -149,12 +139,7 @@ public class BattleService : IBattleService, IDisposable
         // if the unit is removed from the battle, then skip getting their next intention
         if (UnitsByTeam[unit.Team].Contains(unit))
         {
-            var nextIntention = npc.Brain.GetTurnIntention();
-            if (nextIntention != null)
-            {
-                _logger.Log($"Next: {nextIntention.Description}");
-                NextTurnIntentionsByUnit[npc] = nextIntention;
-            }
+            SetIntention(npc);
         }
         
         if (!_isEnded)
@@ -175,18 +160,30 @@ public class BattleService : IBattleService, IDisposable
 
     public void OnUnitSpawned(IUnit unit)
     {
-        var team = UnitsByTeam[unit.Team];
-        team.Add(unit);
+        if (UnitsByTeam.TryGetValue(unit.Team, out var team) && !team.Contains(unit))
+        {
+            team.Add(unit);
+        }
+        else
+        {
+            UnitsByTeam[unit.Team] = new List<IUnit> { unit };
+        }
+        
         TurnOrder.Add(unit);
         TurnQueue.Add(unit);
         if (unit is NpcUnit npc)
         {
-            var intention = npc.Brain.GetTurnIntention();
-            if (intention != null)
-            {
-                NextTurnIntentionsByUnit[npc] = intention;
-                _logger.Log($"Next: {intention.Description}");
-            }
+            SetIntention(npc);
+        }
+    }
+
+    private void SetIntention(NpcUnit npc)
+    {
+        var intention = npc.Brain.GetTurnIntention();
+        if (intention != null)
+        {
+            NextTurnIntentionsByUnit[npc] = intention;
+            OnTurnIntentionSet?.Invoke(npc, intention);
         }
     }
     

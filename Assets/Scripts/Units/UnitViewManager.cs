@@ -12,7 +12,7 @@ public class UnitViewManager : MonoBehaviour
     private PoolService _poolService;
     private readonly IDictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>> _unitViews = new Dictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>>();
     private readonly Logger _logger = new(nameof(UnitViewManager));
-
+    
     private void Awake()
     {
         Locator.Register(this);
@@ -79,5 +79,10 @@ public class UnitViewManager : MonoBehaviour
         resourceBarView.transform.SetParent(canvas.transform, false);
         resourceBarView.Bind(unitView);
         _unitViews.Add(unit, new Tuple<UnitPrefab, UnitResourceBarView>(unitView, resourceBarView));
+    }
+
+    public void ShowAllIntentions()
+    {
+        
     }
 }

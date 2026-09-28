@@ -315,7 +315,12 @@ public class BattleServiceTests
     private void StubSpawnedUnits(params IUnit[] units)
     {
         var queue = new Queue<IUnit>(units);
-        A.CallTo(() => _unitService.Spawn(A<SpawnConfig>._)).ReturnsLazily(() => queue.Dequeue());
+        A.CallTo(() => _unitService.Spawn(A<SpawnConfig>._)).ReturnsLazily(() =>
+        {
+            var unit = queue.Dequeue();
+            _sut.OnUnitSpawned(unit);
+            return unit;
+        });
     }
 
     private static IBattleConfigProvider CreateBattleConfig(int enemyCount, int playerCount)

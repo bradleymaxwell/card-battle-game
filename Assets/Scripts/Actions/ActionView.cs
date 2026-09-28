@@ -103,11 +103,11 @@ namespace Units
             {
                 selectedBackground.gameObject.SetActive(true);
             }
-            
-            UniTask.Create(() => _domainEventService.RaiseAsync(new HoveredElementUpdatedDomainEvent
+
+            _domainEventService.Raise(new HoveredElementUpdatedDomainEvent
             {
                 HoveredElement = gameObject
-            })).Forget();
+            });
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -116,11 +116,11 @@ namespace Units
             {
                 selectedBackground.gameObject.SetActive(false);
             }
-            
-            UniTask.Create(() => _domainEventService.RaiseAsync(new HoveredElementUpdatedDomainEvent
+
+            _domainEventService.Raise(new HoveredElementUpdatedDomainEvent
             {
                 HoveredElement = null
-            })).Forget();
+            });
         }
         
         public string GetTooltip()
