@@ -29,6 +29,7 @@ namespace Battles
             if (_battleService.IsTurn(TeamType.Player))
             {
                 _battleService.StartNextTurn();
+                button.gameObject.SetActive(false);
             }
         }
 
