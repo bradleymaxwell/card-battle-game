@@ -97,7 +97,7 @@ public class BattleServiceTests
         _sut.StartNextTurn();
 
         // Assert
-        Assert.That(_sut.ActiveUnit, Is.Not.Null);
+        Assert.That(_sut.ActiveUnit, Is.EqualTo(_sut.TurnOrder[0]));
         Assert.That(_sut.TurnQueue, Is.EquivalentTo(_sut.TurnOrder.Where(unit => unit != _sut.ActiveUnit)));
     }
 
@@ -261,7 +261,7 @@ public class BattleServiceTests
     }
 
     [Test]
-    public void OnUnitSpawnedAddsUnitToTurnOrderAndQueueWhenSpawned()
+    public void OnUnitSpawnedAddsUnitToTurnOrderWhenSpawned()
     {
         // Arrange
         var player = CreateUnit(TeamType.Player, "Player");
@@ -276,7 +276,6 @@ public class BattleServiceTests
 
         // Assert
         Assert.That(_sut.TurnOrder, Does.Contain(spawnedEnemy));
-        Assert.That(_sut.TurnQueue, Does.Contain(spawnedEnemy));
     }
 
     private static IUnit CreateUnit(TeamType team, string name)

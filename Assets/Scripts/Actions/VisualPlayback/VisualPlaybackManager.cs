@@ -13,6 +13,7 @@ public class VisualPlaybackManager : MonoBehaviour
     [SerializeField] private EndTurnView endTurnView;
     [SerializeField] private ActionViewContainer actionViewContainer;
     [SerializeField] private UnitViewManager unitViewManager;
+    [SerializeField] private TurnQueueView turnQueueView;
     private UnitService _unitService;
     private BattleService _battleService;
     private readonly Logger _logger = new(nameof(VisualPlaybackManager));
@@ -52,7 +53,7 @@ public class VisualPlaybackManager : MonoBehaviour
         if (result.EnergyConsumed > 0)
         {
             var (_, resourceBar) = unitViewManager.GetUnitViews(result.Performer);
-            if (resourceBar != null)
+            if (resourceBar)
             {
                 resourceBar.RefreshEnergy();
             }
@@ -123,6 +124,7 @@ public class VisualPlaybackManager : MonoBehaviour
             }
         
             endTurnView.OnTurnChanged(newUnit);
+            turnQueueView.Refresh(_battleService.ActiveUnit, _battleService.TurnQueue, _battleService.TurnOrder);
         });
     }
 

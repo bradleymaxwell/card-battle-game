@@ -16,7 +16,6 @@ public class BattleService : IBattleService, IDisposable
     private readonly Logger _logger = new(nameof(BattleService));
     public event Action<IUnit, IUnit> OnTurnChanged;
     public event Action<TeamType> OnBattleEnded;
-    public event Action<NpcUnit, UnitTurnIntention> OnTurnIntentionSet;
     public Dictionary<NpcUnit, UnitTurnIntention> NextTurnIntentionsByUnit { get; } = new();
     private bool _isEnded;
     public IList<IUnit> TurnQueue { get; private set; } = new List<IUnit>();
@@ -168,9 +167,8 @@ public class BattleService : IBattleService, IDisposable
         {
             UnitsByTeam[unit.Team] = new List<IUnit> { unit };
         }
-        
-        TurnOrder.Add(unit);
-        TurnQueue.Add(unit);
+
+        TurnOrder = GenerateTurnOrder();
         if (unit is NpcUnit npc)
         {
             SetIntention(npc);
@@ -183,25 +181,28 @@ public class BattleService : IBattleService, IDisposable
         if (intention != null)
         {
             NextTurnIntentionsByUnit[npc] = intention;
-            OnTurnIntentionSet?.Invoke(npc, intention);
         }
     }
     
     private IList<IUnit> GenerateTurnOrder()
     {
         var turnOrder = new List<IUnit>();
-        foreach (var team in UnitsByTeam)
+        var playerTeamFound = UnitsByTeam.TryGetValue(TeamType.Player, out var playerTeam);
+        if (playerTeamFound)
         {
-            foreach (var unit in team.Value)
+            foreach (var unit in playerTeam)
             {
                 turnOrder.Add(unit);
             }
         }
-
-        for (var i = 0; i < turnOrder.Count; i++)
+        
+        var enemyTeamFound = UnitsByTeam.TryGetValue(TeamType.Enemy, out var enemyTeam);
+        if (enemyTeamFound)
         {
-            var random = Random.Range(0, turnOrder.Count);
-            (turnOrder[i], turnOrder[random]) = (turnOrder[random], turnOrder[i]);
+            foreach (var unit in enemyTeam)
+            {
+                turnOrder.Add(unit);
+            }
         }
         
         _logger.Log($"Unit turn order: {string.Join(", ", turnOrder.Select(u => u.Config.Name))}");
