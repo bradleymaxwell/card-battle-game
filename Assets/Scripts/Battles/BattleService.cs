@@ -5,7 +5,6 @@ using AI;
 using Battles;
 using Map;
 using Units;
-using Random = UnityEngine.Random;
 
 public class BattleService : IBattleService, IDisposable
 {
@@ -105,6 +104,7 @@ public class BattleService : IBattleService, IDisposable
         _logger.Log($"Starting turn for {unit.Config.Name} ({unit.Team})");
         _unitService.SetActiveUnit(unit.Team, unit);
         _unitService.AdjustEnergy(unit, 2);
+        _unitService.AdjustActionCharges(unit, 1);
         OnTurnChanged?.Invoke(previousUnit, unit);
         if (unit.Team == TeamType.Enemy)
         {

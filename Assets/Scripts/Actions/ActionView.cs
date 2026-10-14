@@ -15,6 +15,7 @@ namespace Units
         [SerializeField] private Image image;
         [SerializeField] private Image selectedBackground;
         [SerializeField] private TextMeshProUGUI manaCostText;
+        [SerializeField] private GameObject cannotUseDarkOverlay;
         private Button _button;
         private IUnit _unit;
         private IAction _action;
@@ -38,6 +39,7 @@ namespace Units
         {
             _button.onClick.AddListener(OnSelect);
             _selectService.OnActiveContextChanged += OnActiveContextChanged;
+            _unitService.OnChargesChanged += OnChargesChanged;
         }
         
         private void OnDisable()
@@ -46,6 +48,11 @@ namespace Units
             if (_selectService != null)
             {
                 _selectService.OnActiveContextChanged -= OnActiveContextChanged;
+            }
+
+            if (_unitService != null)
+            {
+                _unitService.OnChargesChanged -= OnChargesChanged;
             }
         }
 
@@ -71,9 +78,9 @@ namespace Units
         private void Refresh()
         {
             image.sprite = _action.Icon;
-            var canPerform = _unit.CurrentEnergy >= _action.Config.EnergyCost;
+            var canPerform = (_unit.CurrentEnergy >= _action.Config.EnergyCost) && (!_action.Config.ChargesCap.HasValue || _action.Charges > 0);
             _button.interactable = canPerform;
-            image.color = canPerform ? Color.white : Color.gray;
+            cannotUseDarkOverlay.gameObject.SetActive(!canPerform);
             if (_action.Config.EnergyCost <= 0)
             {
                 manaCostText.gameObject.SetActive(false);
@@ -90,6 +97,14 @@ namespace Units
         private void OnCurrentEnergyChanged(int _)
         {
             Refresh();
+        }
+
+        private void OnChargesChanged(IAction action)
+        {
+            if (action == _action)
+            {
+                Refresh();
+            }
         }
 
         public void Reset()

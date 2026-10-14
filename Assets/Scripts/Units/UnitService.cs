@@ -18,6 +18,7 @@ namespace Units
         public event Action<IUnit> OnUnitDefeated;
         public event Action<IUnit> OnUnitSpawned;
         public event Action<ActionPerformResult> OnActionPerformed;
+        public event Action<IAction> OnChargesChanged;
         
         private readonly Dictionary<TeamType, IUnit> _activeUnitByTeam = new();
         public IList<IUnit> Units { get; } = new List<IUnit>();
@@ -69,6 +70,25 @@ namespace Units
             return unit;
         }
 
+        public void AdjustActionCharges(IUnit unit, int change)
+        {
+            foreach (var action in unit.Actions)
+            {
+                AdjustActionCharges(action, change);
+            }
+        }
+        
+        public void AdjustActionCharges(IAction action, int change)
+        {
+            if (!action.Config.ChargesCap.HasValue)
+            {
+                return;
+            }
+            
+            action.Charges = Mathf.Clamp(action.Charges + change, 0, action.Config.ChargesCap.Value);
+            OnChargesChanged?.Invoke(action);
+        }
+
         public void ToggleActions(bool allowed)
         {
             _isActionsAllowed = allowed;
@@ -117,6 +137,7 @@ namespace Units
             result.EnergyConsumed = energyCost;
             
             AdjustEnergy(unit, -result.EnergyConsumed);
+            AdjustActionCharges(action, -1);
             _logger.Log($"Performed {action.Config.Name} by {unit.Config.Name}");
             onPerformed?.Invoke(result);
             if (!isSubAction)
@@ -141,6 +162,7 @@ namespace Units
         public void DeactivateUnit(TeamType team)
         {
             _activeUnitByTeam.Remove(team);
+            _selectService.Cancel(team);
         }
 
         public IUnit GetActiveUnit(TeamType team)

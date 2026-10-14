@@ -10,5 +10,6 @@ namespace Units
         string Description { get; }
         ActionVisualConfig Visual { get; }
         string Name { get; }
+        int? ChargesCap { get; }
     }
 }

@@ -15,6 +15,7 @@ namespace Units
         void Damage(IUnit unit, int damage);
         void AdjustEnergy(IUnit unit, int change);
         void AdjustHealth(IUnit unit, int change);
+        void AdjustActionCharges(IUnit unit, int change);
         void Eliminate(IUnit unit);
         event Action<IUnit> OnUnitDefeated;
         event Action<IUnit> OnUnitSpawned;

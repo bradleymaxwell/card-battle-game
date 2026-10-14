@@ -19,7 +19,12 @@ namespace Units
         public string Description => description;
         
         [SerializeField] private ActionVisualConfig visual;
-        public ActionVisualConfig Visual => visual;       
+        public ActionVisualConfig Visual => visual; 
+        
+        [SerializeField] private int chargesCap = 1;
+        public int? ChargesCap => isChargeCapped ? chargesCap : null;
+
+        [SerializeField] private bool isChargeCapped = true;
         
         public abstract IAction Action { get; }
     }

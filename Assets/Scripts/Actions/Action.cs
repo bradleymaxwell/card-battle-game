@@ -6,9 +6,10 @@ namespace Units
     public abstract class Action : IAction
     {
         public IActionConfigProvider Config { get; }
-
         public Sprite Icon => Config.Icon;
-        
+        public int Charges { get; set; }
+        public Action OnChargesChanged { get; set; }
+
         protected Action(IActionConfigProvider config)
         {
             Config = config;
@@ -16,6 +17,11 @@ namespace Units
         
         public virtual bool CanPerform(MapSpace userSpace, MapSpace targetSpace)
         {
+            if (Config.ChargesCap != null && Charges <= 0)
+            {
+                return false;
+            }
+            
             var hasEnergy = userSpace.Occupant.CurrentEnergy - GetEnergyCost(userSpace, targetSpace) >= 0;
             var inRange = true;
             if (Config is IRangedAction rangedAction && rangedAction.Range > 0)

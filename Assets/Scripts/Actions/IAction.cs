@@ -10,5 +10,7 @@ namespace Units
         Sprite Icon { get; }
         IActionConfigProvider Config { get; }
         int GetEnergyCost(MapSpace userSpace, MapSpace targetSpace);
+        int Charges { get; set; }
+        Action OnChargesChanged { get; set; }
     }
 }
