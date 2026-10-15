@@ -17,6 +17,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: 
   visual: {fileID: 11400000, guid: de081e49ad04d46bea0bd8e1f6bc2377, type: 2}
+  chargesCap: 1
+  isChargeCapped: 1
   radius: 2
   damage: 150
   gaslightExplosiveConfig: {fileID: 11400000, guid: f7efe24cb37374907acccc0457501651, type: 2}

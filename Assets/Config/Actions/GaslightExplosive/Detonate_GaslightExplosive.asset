@@ -18,6 +18,8 @@ MonoBehaviour:
   description: Catch alight, exploding and dealing damage to all adjacent player
     units.
   visual: {fileID: 11400000, guid: cb7a103b55004416596364825b3cf522, type: 2}
+  chargesCap: 1
+  isChargeCapped: 0
   radius: 1
   damage: 25
   range: 0

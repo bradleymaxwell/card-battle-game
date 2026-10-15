@@ -17,6 +17,8 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: 
   visual: {fileID: 11400000, guid: 6b9919304bcb9405da030edcaa52dfdf, type: 2}
+  chargesCap: 1
+  isChargeCapped: 0
   unit: {fileID: 11400000, guid: f7efe24cb37374907acccc0457501651, type: 2}
   brain: {fileID: 11400000, guid: 26230607b2e87459ca53d99661f59586, type: 2}
   range: 1

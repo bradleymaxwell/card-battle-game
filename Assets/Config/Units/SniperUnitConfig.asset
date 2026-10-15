@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b989ac8f69d490c8237c4950bf937b8, type: 3}
+  m_Name: SniperUnitConfig
+  m_EditorClassIdentifier: Scripts::Units.UnitConfig
+  name: Sniper
+  prefab: {fileID: 6716186241294859920, guid: c877703c2cc1343f588d063f23a93d00, type: 3}
+  attack: 45
+  health: 100000
+  actions:
+  - {fileID: 11400000, guid: 4f1d37fad4c014bc8a36bd6d9723e772, type: 2}
+  - {fileID: 11400000, guid: 89b89e1657ef8405f81f9dd697ea4557, type: 2}
