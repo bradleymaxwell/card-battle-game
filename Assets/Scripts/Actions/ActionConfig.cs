@@ -24,7 +24,7 @@ namespace Units
         [SerializeField] private int chargesCap = 1;
         public int? ChargesCap => isChargeCapped ? chargesCap : null;
 
-        [SerializeField] private bool isChargeCapped = true;
+        [SerializeField] private bool isChargeCapped;
         
         public abstract IAction Action { get; }
     }
