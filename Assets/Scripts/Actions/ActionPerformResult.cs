@@ -13,5 +13,6 @@ namespace Units
         public Dictionary<IUnit, int> HealthAdjustmentByUnit { get; } = new();
         public Dictionary<IUnit, MapSpace> SpawnSpaceByUnit { get; } = new();
         public bool IsPerfectHit { get; set; }
+        public IList<MapSpace> ProjectileTravelPath { get; set; } = new List<MapSpace>();
     }
 }

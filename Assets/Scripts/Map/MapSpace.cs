@@ -49,5 +49,37 @@ namespace Map
                 _ => MapDirection.None
             };
         }
+
+        public bool IsOnSameDirectionalAxisAs(MapSpace other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            
+            return Q == other.Q || R == other.R || (Q + R == other.Q + other.R);
+        }
+        
+        public (int q, int r) GetDirectionStep(MapSpace targetSpace)
+        {
+            var qDifference = targetSpace.Q - Q;
+            var rDifference = targetSpace.R - R;
+            if (rDifference == 0)
+            {
+                return qDifference > 0 ? (1, 0) : (-1, 0);
+            }
+
+            if (qDifference == 0)
+            {
+                return rDifference > 0 ? (0, 1) : (0, -1);
+            }
+
+            if (qDifference + rDifference == 0)
+            {
+                return qDifference > 0 ? (1, -1) : (-1, 1);
+            }
+
+            return (0, 0);
+        }
     }
 }

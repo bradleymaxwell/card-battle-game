@@ -4,10 +4,13 @@ using Units;
 using UnityEngine;
 using Action = System.Action;
 
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Animator), typeof(Collider))]
 public class UnitPrefab : MonoBehaviour, IPoolable
 {
     [SerializeField] private float yOffset;
+    [SerializeField] private Transform projectileSource;
+    public Transform ProjectileSource => projectileSource;
+    
     private MapService _mapService;
     private readonly IDictionary<string, IList<Action>> _callbacksByEventName = new Dictionary<string, IList<Action>>();
     public IUnit Unit { get; private set; }

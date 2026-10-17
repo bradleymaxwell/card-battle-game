@@ -23,6 +23,60 @@ namespace Map
             }
         }
 
+        public IList<MapSpace> GetDirectionPath(MapSpace startSpace, MapSpace targetSpace, bool includeStartSpace, int? maxDistance = null)
+        {
+            var path = new List<MapSpace>();
+            if (startSpace == null || targetSpace == null || !startSpace.IsOnSameDirectionalAxisAs(targetSpace))
+            {
+                return path;
+            }
+
+            if (includeStartSpace)
+            {
+                path.Add(startSpace);
+            }
+
+            if (startSpace == targetSpace)
+            {
+                return path;
+            }
+
+            var direction = startSpace.GetDirectionStep(targetSpace);
+            if (direction == (0, 0))
+            {
+                return new List<MapSpace>();
+            }
+
+            var currentQ = startSpace.Q + direction.q;
+            var currentR = startSpace.R + direction.r;
+            while (currentQ != targetSpace.Q || currentR != targetSpace.R)
+            {
+                var currentSpace = GetSpace(currentQ, currentR);
+                if (currentSpace == null)
+                {
+                    return new List<MapSpace>();
+                }
+
+                path.Add(currentSpace);
+                if (maxDistance.HasValue && (includeStartSpace ? path.Count - 1 : path.Count) >= maxDistance.Value)
+                {
+                    return path;
+                }
+                
+                currentQ += direction.q;
+                currentR += direction.r;
+            }
+
+            var finalSpace = GetSpace(targetSpace.Q, targetSpace.R);
+            if (finalSpace == null)
+            {
+                return new List<MapSpace>();
+            }
+
+            path.Add(finalSpace);
+            return path;
+        }
+
         public void Move(IUnit unit, int q, int r)
         {
             var newSpace = _mapSpaces.FirstOrDefault(m => m.Q == q && m.R == r);

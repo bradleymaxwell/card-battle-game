@@ -15,5 +15,6 @@ namespace Map
         MapSpace GetSpace(int q, int r);
         IList<MapSpace> GetAreaSpaces(MapSpace centerSpace, int radius, bool includeCenterSpace = true);
         void Initialize(MapSpaceContainer mapSpaceContainer);
+        IList<MapSpace> GetDirectionPath(MapSpace startSpace, MapSpace targetSpace, bool includeStart, int? maxDistance = null);
     }
 }

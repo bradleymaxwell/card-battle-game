@@ -16,7 +16,7 @@ MonoBehaviour:
   name: 
   icon: {fileID: 21300000, guid: 530bcabb1501d8148a19a77465ecac03, type: 3}
   description: Basic attack
-  visual: {fileID: 11400000, guid: e1cdbf5701f6f44a4affb942d2ec6a46, type: 2}
+  visual: {fileID: 11400000, guid: 6e0956d124bf947758d6507c03b9ebd8, type: 2}
   chargesCap: 1
   isChargeCapped: 1
   range: 2

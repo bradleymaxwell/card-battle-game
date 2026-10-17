@@ -27,6 +27,7 @@ namespace Units
             var target = targetSpace.Occupant;
             _unitService.Damage(target, userSpace.Occupant.Config.Attack);
             result.HealthAdjustmentByUnit[target] = -userSpace.Occupant.Config.Attack;
+            result.ProjectileTravelPath = new [] { targetSpace };
             return result;
         }
     }
