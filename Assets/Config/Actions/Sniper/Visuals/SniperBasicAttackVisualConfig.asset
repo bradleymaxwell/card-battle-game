@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SniperBasicAttackVisualConfig
   m_EditorClassIdentifier: Scripts::Actions.PiercingProjectile.PiercingProjectileActionVisualConfig
   projectilePrefab: {fileID: 4953111136394794379, guid: 1a3360b1fc65a42e7a492067d33caa46, type: 3}
-  speed: 10
+  speed: 20

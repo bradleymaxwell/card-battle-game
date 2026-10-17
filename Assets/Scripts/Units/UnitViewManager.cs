@@ -10,6 +10,7 @@ public class UnitViewManager : MonoBehaviour
     [SerializeField] private UnitResourceBarView resourceBarViewPrefab;
     private UnitService _unitService;
     private PoolService _poolService;
+    private PopupTextManager _popupTextManager;
     private readonly IDictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>> _unitViews = new Dictionary<IUnit, Tuple<UnitPrefab, UnitResourceBarView>>();
     private readonly Logger _logger = new(nameof(UnitViewManager));
     
@@ -18,6 +19,7 @@ public class UnitViewManager : MonoBehaviour
         Locator.Register(this);
         _unitService = Locator.Get<UnitService>();
         _poolService = Locator.Get<PoolService>();
+        _popupTextManager = Locator.Get<PopupTextManager>();
     }
     
     public void Initialize()
@@ -28,7 +30,7 @@ public class UnitViewManager : MonoBehaviour
         }
     }
     
-    public void OnHealthAdjusted(IUnit unit, int adjustment)
+    public void OnHealthAdjusted(IUnit unit, int adjustment, bool isPerfectHit = false)
     {
         if (unit.CurrentHealth <= 0)
         {
@@ -36,8 +38,12 @@ public class UnitViewManager : MonoBehaviour
         }
         else
         {
-            var (_, resourceBar) = GetUnitViews(unit);
+            var (unitPrefab, resourceBar) = GetUnitViews(unit);
             resourceBar.AdjustCurrentHealth(adjustment);
+            if (isPerfectHit)
+            {
+                _popupTextManager.Display("Perfect!", unitPrefab.transform.position);
+            }
         }
     }
     

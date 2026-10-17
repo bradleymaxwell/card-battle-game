@@ -15,6 +15,7 @@ namespace Units.PiercingProjectile
         private readonly UnitViewManager _unitViewManager;
         private readonly MapService _mapService;
         private readonly PoolService _poolService;
+        private readonly PopupTextManager _popupTextManager;
         private bool _isHit;
         private bool _isProjectileStopped;
         
@@ -24,6 +25,7 @@ namespace Units.PiercingProjectile
             _unitViewManager = Locator.Get<UnitViewManager>();
             _mapService = Locator.Get<MapService>();
             _poolService = Locator.Get<PoolService>();
+            _popupTextManager = Locator.Get<PopupTextManager>();
         }
 
         public IEnumerator PlayCor(ActionPerformResult result)
@@ -47,7 +49,7 @@ namespace Units.PiercingProjectile
                     if (!hitUnits.Contains(hitUnit) && result.HealthAdjustmentByUnit.TryGetValue(hitUnit.Unit, out var adjustment))
                     {
                         hitUnits.Add(hitUnit);
-                        _unitViewManager.OnHealthAdjusted(hitUnit.Unit, adjustment);
+                        _unitViewManager.OnHealthAdjusted(hitUnit.Unit, adjustment, result.IsPerfectHit);
                     }
                 },
                 () =>
