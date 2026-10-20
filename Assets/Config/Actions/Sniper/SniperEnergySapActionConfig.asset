@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a93c48ad89f4d64b68f2b534f67812c, type: 3}
+  m_Name: SniperEnergySapActionConfig
+  m_EditorClassIdentifier: Scripts::Units.EnergySap.EnergySapActionConfig
+  energyCost: 0
+  name: 
+  icon: {fileID: 0}
+  description: 
+  visual: {fileID: 0}
+  chargesCap: 1
+  isChargeCapped: 0
+  sapAmount: 0
+  perfectHitPercentEnergyThreshold: 0
+  perfectBonusSnapAmount: 0

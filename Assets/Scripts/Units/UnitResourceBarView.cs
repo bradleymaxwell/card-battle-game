@@ -65,6 +65,11 @@ public class UnitResourceBarView : MonoBehaviour, IPoolable
         healthSlider.value = Mathf.Clamp(healthSlider.value + adjustment, 0, healthSlider.maxValue);
     }
     
+    public void AdjustCurrentEnergy(int adjustment)
+    {
+        energySlider.value = Mathf.Clamp(energySlider.value + adjustment, 0, energySlider.maxValue);
+    }
+    
     private void Unbind()
     {
         if (!_unitPrefab)

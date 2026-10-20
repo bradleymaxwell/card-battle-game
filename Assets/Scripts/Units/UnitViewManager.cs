@@ -86,9 +86,4 @@ public class UnitViewManager : MonoBehaviour
         resourceBarView.Bind(unitView);
         _unitViews.Add(unit, new Tuple<UnitPrefab, UnitResourceBarView>(unitView, resourceBarView));
     }
-
-    public void ShowAllIntentions()
-    {
-        
-    }
 }

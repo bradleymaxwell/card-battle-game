@@ -55,7 +55,7 @@ public class VisualPlaybackManager : MonoBehaviour
             var (_, resourceBar) = unitViewManager.GetUnitViews(result.Performer);
             if (resourceBar)
             {
-                resourceBar.RefreshEnergy();
+                resourceBar.AdjustCurrentEnergy(-result.EnergyConsumed);
             }
         }
         

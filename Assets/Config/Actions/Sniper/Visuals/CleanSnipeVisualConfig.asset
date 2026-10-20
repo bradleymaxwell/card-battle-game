@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: CleanSnipeVisualConfig
   m_EditorClassIdentifier: Scripts::Actions.PiercingProjectile.PiercingProjectileActionVisualConfig
   projectilePrefab: {fileID: 1186325741188297852, guid: 47592cb89922b458988913542268aa95, type: 3}
-  speed: 8
+  speed: 10

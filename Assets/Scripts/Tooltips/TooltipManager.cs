@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using DefaultNamespace;
 using DefaultNamespace.Tooltips;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TooltipManager : MonoBehaviour, IDomainEventListener<HoveredElementUpdatedDomainEvent>
 {
@@ -11,7 +12,7 @@ public class TooltipManager : MonoBehaviour, IDomainEventListener<HoveredElement
     private PoolService _poolService;
     private InputService _inputService;
     private TooltipPrefab _activeTooltip;
-    private Logger _logger = new(nameof(TooltipManager));
+    private readonly Logger _logger = new(nameof(TooltipManager));
     
     private void Awake()
     {
@@ -57,9 +58,51 @@ public class TooltipManager : MonoBehaviour, IDomainEventListener<HoveredElement
         }
 
         var pointAction = _inputService.GetAction(PlayerInputConstants.UI, PlayerInputConstants.Point);
-        _activeTooltip.transform.position = pointAction.ReadValue<Vector2>();
+        var pointerPosition = pointAction.ReadValue<Vector2>();
+
         _activeTooltip.UpdateMessage(tooltipProvider.GetTooltip());
         _activeTooltip.gameObject.SetActive(true);
+
+        var tooltipRect = _activeTooltip.RectTransform;
+        var canvasRect = canvas.GetComponent<RectTransform>();
+        var canvasCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            pointerPosition,
+            canvasCamera,
+            out var localPointerPosition
+        );
+
+        tooltipRect.anchoredPosition = localPointerPosition;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(tooltipRect);
+        Canvas.ForceUpdateCanvases();
+
+        var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvasRect, tooltipRect);
+        var canvasBounds = canvasRect.rect;
+
+        var adjustment = Vector2.zero;
+
+        if (bounds.min.x < canvasBounds.xMin)
+        {
+            adjustment.x = canvasBounds.xMin - bounds.min.x;
+        }
+        else if (bounds.max.x > canvasBounds.xMax)
+        {
+            adjustment.x = canvasBounds.xMax - bounds.max.x;
+        }
+
+        if (bounds.min.y < canvasBounds.yMin)
+        {
+            adjustment.y = canvasBounds.yMin - bounds.min.y;
+        }
+        else if (bounds.max.y > canvasBounds.yMax)
+        {
+            adjustment.y = canvasBounds.yMax - bounds.max.y;
+        }
+
+        tooltipRect.anchoredPosition += adjustment;
         return UniTask.CompletedTask;
     }
 }

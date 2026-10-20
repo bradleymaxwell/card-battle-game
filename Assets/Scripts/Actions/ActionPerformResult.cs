@@ -14,5 +14,6 @@ namespace Units
         public Dictionary<IUnit, MapSpace> SpawnSpaceByUnit { get; } = new();
         public bool IsPerfectHit { get; set; }
         public IList<MapSpace> ProjectileTravelPath { get; set; } = new List<MapSpace>();
+        public Dictionary<IUnit, int> EnergyAdjustmentByUnit { get; } = new();
     }
 }
